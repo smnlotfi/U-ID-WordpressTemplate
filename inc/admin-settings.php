@@ -48,9 +48,6 @@ function uid_register_settings() {
 	add_settings_section( 'uid_header_main', '', '__return_false', 'uid_header_options' );
 
 	add_settings_field( 'logo_id', __( 'لوگو', 'uid-theme' ), 'uid_field_logo', 'uid_header_options', 'uid_header_main', array( 'group' => 'uid_header_options', 'key' => 'logo_id', 'desc' => __( 'در صورت خالی بودن، آرم پیش‌فرض SVG سایت نمایش داده می‌شود.', 'uid-theme' ) ) );
-	add_settings_field( 'show_login', __( 'دکمه «ورود به پنل»', 'uid-theme' ), 'uid_field_checkbox', 'uid_header_options', 'uid_header_main', array( 'group' => 'uid_header_options', 'key' => 'show_login', 'default' => 1, 'label' => __( 'نمایش داده شود', 'uid-theme' ) ) );
-	add_settings_field( 'login_text', __( 'متن دکمه ورود به پنل', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_main', array( 'group' => 'uid_header_options', 'key' => 'login_text', 'default' => __( 'ورود به پنل', 'uid-theme' ) ) );
-	add_settings_field( 'login_url', __( 'لینک دکمه ورود به پنل', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_main', array( 'group' => 'uid_header_options', 'key' => 'login_url', 'default' => '#contact' ) );
 	add_settings_field( 'show_phone', __( 'دکمه تماس تلفنی', 'uid-theme' ), 'uid_field_checkbox', 'uid_header_options', 'uid_header_main', array( 'group' => 'uid_header_options', 'key' => 'show_phone', 'default' => 1, 'label' => __( 'نمایش داده شود (از شماره تنظیم‌شده در تب «اطلاعات تماس» استفاده می‌کند)', 'uid-theme' ) ) );
 
 	/* ---------------- لینک‌های ساده منوی هدر ---------------- */
@@ -67,29 +64,23 @@ function uid_register_settings() {
 	/* ---------------- مگامنو (دکمه «خدمات») ---------------- */
 	add_settings_section( 'uid_header_mega', __( 'مگامنو (دکمه «خدمات» در هدر)', 'uid-theme' ), '__return_false', 'uid_header_options' );
 	add_settings_field( 'mega_label', __( 'متن دکمه مگامنو', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_label', 'default' => __( 'خدمات', 'uid-theme' ) ) );
-	add_settings_field( 'mega_col1_title', __( 'عنوان ستون اول', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_col1_title', 'default' => __( 'راهکار یکپارچه', 'uid-theme' ) ) );
-	add_settings_field( 'mega_col2_title', __( 'عنوان ستون دوم', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_col2_title', 'default' => __( 'سرویس‌های هویتی', 'uid-theme' ) ) );
-	add_settings_field( 'mega_col3_title', __( 'عنوان ستون سوم', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_col3_title', 'default' => __( 'فناوری‌ها', 'uid-theme' ) ) );
+	add_settings_field( 'mega_col1_title', __( 'عنوان ستون اول (کارت‌های ویژه)', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_col1_title', 'default' => __( 'راهکارهای یکپارچه', 'uid-theme' ) ) );
+	add_settings_field( 'mega_col2_title', __( 'عنوان ستون دوم', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_col2_title', 'default' => __( 'احراز هویت و هویت فردی', 'uid-theme' ) ) );
+	add_settings_field( 'mega_col3_title', __( 'عنوان ستون سوم', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_col3_title', 'default' => __( 'استعلام و تطبیق مالی', 'uid-theme' ) ) );
+	add_settings_field( 'mega_col4_title', __( 'عنوان ستون چهارم', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_col4_title', 'default' => __( 'فناوری‌ها و منابع', 'uid-theme' ) ) );
 	add_settings_field( 'mega_items', __( 'لینک‌های داخل ستون‌ها', 'uid-theme' ), 'uid_field_repeater', 'uid_header_options', 'uid_header_mega', array(
 		'group' => 'uid_header_options', 'key' => 'mega_items', 'default' => uid_default_mega_items(), 'add_label' => __( 'افزودن لینک مگامنو', 'uid-theme' ),
-		'desc'  => __( 'هر لینک می‌تواند تصویر اختصاصی از کتابخانه رسانه داشته باشد؛ در نبود تصویر، آیکون انتخابی نمایش داده می‌شود.', 'uid-theme' ),
+		'desc'  => __( 'هر لینک می‌تواند تصویر اختصاصی از کتابخانه رسانه داشته باشد؛ در نبود تصویر، آیکون انتخابی نمایش داده می‌شود. آیتم‌های «ستون ۱» به‌صورت کارت بزرگ با زیرنویس نمایش داده می‌شوند؛ ستون‌های ۲ تا ۴ ردیف فشرده‌اند.', 'uid-theme' ),
 		'fields' => array(
-			array( 'key' => 'column', 'type' => 'select', 'label' => __( 'ستون', 'uid-theme' ), 'options' => array( '1' => __( 'ستون ۱', 'uid-theme' ), '2' => __( 'ستون ۲', 'uid-theme' ), '3' => __( 'ستون ۳', 'uid-theme' ) ) ),
-			array( 'key' => 'icon', 'type' => 'select', 'label' => __( 'آیکون پیش‌فرض (در نبود تصویر)', 'uid-theme' ), 'options' => array( 'code' => __( 'کد/API', 'uid-theme' ), 'crypto' => __( 'ارز دیجیتال', 'uid-theme' ), 'doc' => __( 'سند', 'uid-theme' ), 'medal' => __( 'نشان', 'uid-theme' ), 'pin' => __( 'موقعیت', 'uid-theme' ), 'card' => __( 'کارت بانکی', 'uid-theme' ), 'people' => __( 'افراد', 'uid-theme' ), 'scan' => __( 'اسکن چهره', 'uid-theme' ), 'wave' => __( 'امواج/زنده‌بودن', 'uid-theme' ), 'book' => __( 'مستندات', 'uid-theme' ), 'shield' => __( 'امنیت', 'uid-theme' ) ) ),
-			array( 'key' => 'hot', 'type' => 'select', 'label' => __( 'برجسته (رنگ نارنجی)؟', 'uid-theme' ), 'options' => array( '' => __( 'خیر', 'uid-theme' ), '1' => __( 'بله', 'uid-theme' ) ) ),
+			array( 'key' => 'column', 'type' => 'select', 'label' => __( 'ستون', 'uid-theme' ), 'options' => array( '1' => __( 'ستون ۱ (کارت ویژه)', 'uid-theme' ), '2' => __( 'ستون ۲', 'uid-theme' ), '3' => __( 'ستون ۳', 'uid-theme' ), '4' => __( 'ستون ۴', 'uid-theme' ) ) ),
+			array( 'key' => 'icon', 'type' => 'select', 'label' => __( 'آیکون پیش‌فرض (در نبود تصویر)', 'uid-theme' ), 'options' => array( 'code' => __( 'کد/API', 'uid-theme' ), 'crypto' => __( 'ارز دیجیتال', 'uid-theme' ), 'doc' => __( 'سند', 'uid-theme' ), 'medal' => __( 'نشان', 'uid-theme' ), 'pin' => __( 'موقعیت', 'uid-theme' ), 'card' => __( 'کارت بانکی', 'uid-theme' ), 'card-convert' => __( 'تبدیل کارت', 'uid-theme' ), 'card-check' => __( 'تطبیق کارت', 'uid-theme' ), 'lock' => __( 'تطبیق/قفل', 'uid-theme' ), 'people' => __( 'افراد', 'uid-theme' ), 'scan' => __( 'اسکن چهره', 'uid-theme' ), 'wave' => __( 'امواج/زنده‌بودن', 'uid-theme' ), 'book' => __( 'مستندات', 'uid-theme' ), 'glossary' => __( 'واژه‌نامه', 'uid-theme' ), 'simcard' => __( 'سیم‌کارت/شاهکار', 'uid-theme' ), 'shield' => __( 'امنیت', 'uid-theme' ) ) ),
 			array( 'key' => 'image_id', 'type' => 'image', 'label' => __( 'تصویر اختصاصی (اختیاری)', 'uid-theme' ), 'pick_label' => __( 'انتخاب تصویر', 'uid-theme' ) ),
 			array( 'key' => 'image_alt', 'type' => 'text', 'label' => __( 'متن جایگزین تصویر (Alt)', 'uid-theme' ) ),
 			array( 'key' => 'title', 'type' => 'text', 'label' => __( 'عنوان', 'uid-theme' ), 'required' => true ),
-			array( 'key' => 'subtitle', 'type' => 'text', 'label' => __( 'زیرنویس', 'uid-theme' ) ),
+			array( 'key' => 'subtitle', 'type' => 'text', 'label' => __( 'زیرنویس (فقط برای ستون ۱ نمایش داده می‌شود)', 'uid-theme' ) ),
 			array( 'key' => 'url', 'type' => 'text', 'label' => __( 'لینک', 'uid-theme' ) ),
 		),
 	) );
-	add_settings_field( 'mega_flagship_notice', '', 'uid_field_notice', 'uid_header_options', 'uid_header_mega', array( 'text' => __( 'کارت ویژه پایین مگامنو (مثل یوآیدی‌پلاس) جداگانه و پررنگ‌تر نمایش داده می‌شود:', 'uid-theme' ) ) );
-	add_settings_field( 'mega_flagship_image_id', __( 'کارت ویژه — آیکون/تصویر', 'uid-theme' ), 'uid_field_image', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_flagship_image_id', 'pick_label' => __( 'انتخاب تصویر', 'uid-theme' ) ) );
-	add_settings_field( 'mega_flagship_image_alt', __( 'کارت ویژه — متن جایگزین تصویر (Alt)', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_flagship_image_alt', 'default' => '' ) );
-	add_settings_field( 'mega_flagship_title', __( 'کارت ویژه — عنوان', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_flagship_title', 'default' => __( 'یوآیدی‌پلاس (PWA)', 'uid-theme' ) ) );
-	add_settings_field( 'mega_flagship_subtitle', __( 'کارت ویژه — زیرنویس', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_flagship_subtitle', 'default' => __( 'نرخ تکمیل احراز هویت تا ۳٫۱ برابر بالاتر از روش API', 'uid-theme' ) ) );
-	add_settings_field( 'mega_flagship_url', __( 'کارت ویژه — لینک', 'uid-theme' ), 'uid_field_text', 'uid_header_options', 'uid_header_mega', array( 'group' => 'uid_header_options', 'key' => 'mega_flagship_url', 'default' => '/uid-plus/' ) );
 
 	/* ---------------- فوتر ---------------- */
 	register_setting( 'uid_footer_group', 'uid_footer_options', array(
@@ -103,9 +94,9 @@ function uid_register_settings() {
 	add_settings_field( 'linkedin', __( 'لینک لینکدین (خالی = مخفی)', 'uid-theme' ), 'uid_field_text', 'uid_footer_options', 'uid_footer_brand', array( 'group' => 'uid_footer_options', 'key' => 'linkedin', 'default' => '' ) );
 
 	add_settings_section( 'uid_footer_columns', __( 'ستون‌های لینک فوتر', 'uid-theme' ), '__return_false', 'uid_footer_options' );
-	add_settings_field( 'col1_title', __( 'عنوان ستون اول', 'uid-theme' ), 'uid_field_text', 'uid_footer_options', 'uid_footer_columns', array( 'group' => 'uid_footer_options', 'key' => 'col1_title', 'default' => __( 'محصولات', 'uid-theme' ) ) );
-	add_settings_field( 'col2_title', __( 'عنوان ستون دوم', 'uid-theme' ), 'uid_field_text', 'uid_footer_options', 'uid_footer_columns', array( 'group' => 'uid_footer_options', 'key' => 'col2_title', 'default' => __( 'فناوری و مستندات', 'uid-theme' ) ) );
-	add_settings_field( 'col3_title', __( 'عنوان ستون سوم', 'uid-theme' ), 'uid_field_text', 'uid_footer_options', 'uid_footer_columns', array( 'group' => 'uid_footer_options', 'key' => 'col3_title', 'default' => __( 'یوآیدی', 'uid-theme' ) ) );
+	add_settings_field( 'col1_title', __( 'عنوان ستون اول', 'uid-theme' ), 'uid_field_text', 'uid_footer_options', 'uid_footer_columns', array( 'group' => 'uid_footer_options', 'key' => 'col1_title', 'default' => __( 'سرویس‌های هویتی', 'uid-theme' ) ) );
+	add_settings_field( 'col2_title', __( 'عنوان ستون دوم', 'uid-theme' ), 'uid_field_text', 'uid_footer_options', 'uid_footer_columns', array( 'group' => 'uid_footer_options', 'key' => 'col2_title', 'default' => __( 'استعلام و فناوری', 'uid-theme' ) ) );
+	add_settings_field( 'col3_title', __( 'عنوان ستون سوم', 'uid-theme' ), 'uid_field_text', 'uid_footer_options', 'uid_footer_columns', array( 'group' => 'uid_footer_options', 'key' => 'col3_title', 'default' => __( 'یوآیدی و منابع', 'uid-theme' ) ) );
 	add_settings_field( 'footer_links', __( 'لینک‌های داخل ستون‌ها', 'uid-theme' ), 'uid_field_repeater', 'uid_footer_options', 'uid_footer_columns', array(
 		'group' => 'uid_footer_options', 'key' => 'footer_links', 'default' => uid_default_footer_links(), 'add_label' => __( 'افزودن لینک', 'uid-theme' ),
 		'desc'  => __( 'برای لینک داخلی سایت، فقط مسیر را با / وارد کنید (مثل ‎/faq/‏)؛ برای لینک خارجی یا شماره تلفن (‎tel:...‏)، آدرس کامل بنویسید.', 'uid-theme' ),
@@ -113,13 +104,9 @@ function uid_register_settings() {
 			array( 'key' => 'column', 'type' => 'select', 'label' => __( 'ستون', 'uid-theme' ), 'options' => array( '1' => __( 'ستون ۱', 'uid-theme' ), '2' => __( 'ستون ۲', 'uid-theme' ), '3' => __( 'ستون ۳', 'uid-theme' ) ) ),
 			array( 'key' => 'text', 'type' => 'text', 'label' => __( 'متن', 'uid-theme' ), 'required' => true ),
 			array( 'key' => 'url', 'type' => 'text', 'label' => __( 'لینک', 'uid-theme' ) ),
+			array( 'key' => 'tag', 'type' => 'text', 'label' => __( 'برچسب کوچک (اختیاری، مثل «آرشیو»)', 'uid-theme' ) ),
 		),
 	) );
-
-	add_settings_section( 'uid_footer_newsletter', __( 'خبرنامه', 'uid-theme' ), '__return_false', 'uid_footer_options' );
-	add_settings_field( 'newsletter_heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_footer_options', 'uid_footer_newsletter', array( 'group' => 'uid_footer_options', 'key' => 'newsletter_heading', 'default' => __( 'عضویت در خبرنامه', 'uid-theme' ) ) );
-	add_settings_field( 'newsletter_text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_footer_options', 'uid_footer_newsletter', array( 'group' => 'uid_footer_options', 'key' => 'newsletter_text', 'default' => __( 'اخبار محصول و به‌روزرسانی‌های API را دریافت کنید.', 'uid-theme' ) ) );
-	add_settings_field( 'newsletter_button', __( 'متن دکمه', 'uid-theme' ), 'uid_field_text', 'uid_footer_options', 'uid_footer_newsletter', array( 'group' => 'uid_footer_options', 'key' => 'newsletter_button', 'default' => __( 'ثبت', 'uid-theme' ) ) );
 
 	add_settings_section( 'uid_footer_bottom', __( 'پایین فوتر', 'uid-theme' ), '__return_false', 'uid_footer_options' );
 	add_settings_field( 'copyright', __( 'متن کپی‌رایت', 'uid-theme' ), 'uid_field_text', 'uid_footer_options', 'uid_footer_bottom', array( 'group' => 'uid_footer_options', 'key' => 'copyright', 'default' => __( '© ۱۴۰۵ یوآیدی. تمامی حقوق محفوظ است.', 'uid-theme' ) ) );
@@ -715,40 +702,32 @@ function uid_sanitize_contact_options( $input ) {
 
 function uid_sanitize_header_options( $input ) {
 	return array(
-		'logo_id'                 => absint( $input['logo_id'] ?? 0 ),
-		'show_login'              => ! empty( $input['show_login'] ),
-		'login_text'              => sanitize_text_field( $input['login_text'] ?? '' ),
-		'login_url'               => sanitize_text_field( $input['login_url'] ?? '' ),
-		'show_phone'              => ! empty( $input['show_phone'] ),
-		'nav_links'               => uid_sanitize_repeater_rows( $input['nav_links'] ?? '[]', array(
+		'logo_id'         => absint( $input['logo_id'] ?? 0 ),
+		'show_phone'      => ! empty( $input['show_phone'] ),
+		'nav_links'       => uid_sanitize_repeater_rows( $input['nav_links'] ?? '[]', array(
 			array( 'key' => 'text', 'type' => 'text', 'required' => true ),
 			array( 'key' => 'url', 'type' => 'text' ),
 		) ),
-		'mega_label'              => sanitize_text_field( $input['mega_label'] ?? '' ),
-		'mega_col1_title'         => sanitize_text_field( $input['mega_col1_title'] ?? '' ),
-		'mega_col2_title'         => sanitize_text_field( $input['mega_col2_title'] ?? '' ),
-		'mega_col3_title'         => sanitize_text_field( $input['mega_col3_title'] ?? '' ),
-		'mega_items'              => uid_sanitize_repeater_rows( $input['mega_items'] ?? '[]', array(
+		'mega_label'      => sanitize_text_field( $input['mega_label'] ?? '' ),
+		'mega_col1_title' => sanitize_text_field( $input['mega_col1_title'] ?? '' ),
+		'mega_col2_title' => sanitize_text_field( $input['mega_col2_title'] ?? '' ),
+		'mega_col3_title' => sanitize_text_field( $input['mega_col3_title'] ?? '' ),
+		'mega_col4_title' => sanitize_text_field( $input['mega_col4_title'] ?? '' ),
+		'mega_items'      => uid_sanitize_repeater_rows( $input['mega_items'] ?? '[]', array(
 			array( 'key' => 'column', 'type' => 'text' ),
 			array( 'key' => 'icon', 'type' => 'text' ),
-			array( 'key' => 'hot', 'type' => 'text' ),
 			array( 'key' => 'image_id', 'type' => 'image' ),
 			array( 'key' => 'image_alt', 'type' => 'text' ),
 			array( 'key' => 'title', 'type' => 'text', 'required' => true ),
 			array( 'key' => 'subtitle', 'type' => 'text' ),
 			array( 'key' => 'url', 'type' => 'text' ),
 		) ),
-		'mega_flagship_image_id'  => absint( $input['mega_flagship_image_id'] ?? 0 ),
-		'mega_flagship_image_alt' => sanitize_text_field( $input['mega_flagship_image_alt'] ?? '' ),
-		'mega_flagship_title'     => sanitize_text_field( $input['mega_flagship_title'] ?? '' ),
-		'mega_flagship_subtitle'  => sanitize_text_field( $input['mega_flagship_subtitle'] ?? '' ),
-		'mega_flagship_url'       => sanitize_text_field( $input['mega_flagship_url'] ?? '' ),
 	);
 }
 
 function uid_sanitize_footer_options( $input ) {
-	$text_fields = array( 'col1_title', 'col2_title', 'col3_title', 'newsletter_heading', 'newsletter_button', 'copyright' );
-	$textarea_fields = array( 'description', 'newsletter_text' );
+	$text_fields = array( 'col1_title', 'col2_title', 'col3_title', 'copyright' );
+	$textarea_fields = array( 'description' );
 	$url_fields = array( 'instagram', 'linkedin' );
 
 	$out = array();
@@ -765,6 +744,7 @@ function uid_sanitize_footer_options( $input ) {
 		array( 'key' => 'column', 'type' => 'text' ),
 		array( 'key' => 'text', 'type' => 'text', 'required' => true ),
 		array( 'key' => 'url', 'type' => 'text' ),
+		array( 'key' => 'tag', 'type' => 'text' ),
 	) );
 	return $out;
 }

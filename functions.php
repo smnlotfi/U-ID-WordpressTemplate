@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'UID_THEME_VERSION', '0.1.0' );
+define( 'UID_THEME_VERSION', '0.3.0' );
 define( 'UID_THEME_DIR', get_template_directory() );
 define( 'UID_THEME_URI', get_template_directory_uri() );
 
@@ -31,7 +31,7 @@ add_action( 'after_setup_theme', 'uid_theme_setup' );
  * بارگذاری استایل و اسکریپت
  */
 function uid_theme_assets() {
-	wp_enqueue_style( 'uid-google-fonts', 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap', array(), null );
+	wp_enqueue_style( 'uid-google-fonts', 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap', array(), null );
 	wp_enqueue_style( 'uid-style', get_stylesheet_uri(), array(), UID_THEME_VERSION );
 	wp_enqueue_script( 'uid-main', UID_THEME_URI . '/assets/js/main.js', array(), UID_THEME_VERSION, true );
 	wp_localize_script( 'uid-main', 'UID_FORM_CFG', array(

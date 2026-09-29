@@ -75,62 +75,177 @@
   setupCarousels();
   window.addEventListener('resize', setupCarousels);
 
-  // Mobile mega-menu accordion (hover doesn't fire on touch, so intercept the tap)
+  // header scroll state + scroll progress bar
+  var scrollProgress = document.getElementById('scrollProgress');
   (function(){
-    var trigger = document.querySelector('.mega-trigger');
-    var wrap = trigger ? trigger.closest('.nav-item-wrap') : null;
-    if(!trigger || !wrap) return;
-    trigger.addEventListener('click', function(e){
-      if(window.innerWidth <= 900){
-        e.preventDefault();
-        wrap.classList.toggle('mega-open');
+    var ticking = false;
+    function onScroll(){
+      document.body.classList.toggle('scrolled', window.scrollY > 10);
+      if(scrollProgress){
+        var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+        scrollProgress.style.width = pct + '%';
       }
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if(!ticking){ ticking = true; requestAnimationFrame(onScroll); }
+    }, {passive:true});
+    onScroll();
+  })();
+
+  // magnetic nav blob (desktop only, tracks whichever top-level item is hovered/focused)
+  (function(){
+    var links = document.getElementById('navlinks'), blob = document.getElementById('navblob');
+    if(!links || !blob) return;
+    var parked = null;
+    function moveBlob(el){
+      if(!el) return;
+      var pr = links.getBoundingClientRect(), er = el.getBoundingClientRect();
+      blob.style.width = er.width + 'px';
+      blob.style.transform = 'translateX(' + (er.left - pr.left) + 'px)';
+      blob.style.opacity = '1';
+    }
+    function park(){ if(parked) moveBlob(parked); else blob.style.opacity = '0'; }
+    links.querySelectorAll('.navlink').forEach(function(el){
+      el.addEventListener('mouseenter', function(){ moveBlob(el); });
+      el.addEventListener('focus', function(){ moveBlob(el); });
+    });
+    links.addEventListener('mouseleave', park);
+    links.addEventListener('focusout', function(e){ if(!links.contains(e.relatedTarget)) park(); });
+    parked = links.querySelector('.navlink.active');
+    if(parked) requestAnimationFrame(function(){ moveBlob(parked); });
+    window.addEventListener('resize', function(){
+      blob.style.transition = 'none'; park();
+      requestAnimationFrame(function(){ blob.style.transition = ''; });
+    }, {passive:true});
+  })();
+
+  // desktop mega menu (hover opens, click toggles, closes on outside click/Escape)
+  (function(){
+    var mb = document.getElementById('megaBtn'), mg = document.getElementById('mega'), mgT;
+    if(!mb || !mg) return;
+    function megaSet(v){
+      mg.dataset.open = v ? '1' : '0';
+      mb.setAttribute('aria-expanded', v ? 'true' : 'false');
+    }
+    var byHover = false;
+    mb.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      if(mg.dataset.open === '1' && byHover){ byHover = false; return; }
+      megaSet(mg.dataset.open !== '1'); byHover = false;
+    });
+    [mb, mg].forEach(function(el){
+      el.addEventListener('mouseenter', function(){
+        clearTimeout(mgT);
+        if(mg.dataset.open !== '1') byHover = true;
+        megaSet(true);
+      });
+      el.addEventListener('mouseleave', function(){
+        mgT = setTimeout(function(){ megaSet(false); byHover = false; }, 180);
+      });
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape'){ megaSet(false); document.body.classList.remove('mopen'); }
+    });
+    document.addEventListener('click', function(e){
+      if(!mg.contains(e.target) && !mb.contains(e.target)) megaSet(false);
     });
   })();
 
-  document.getElementById('navToggle').addEventListener('click', function(){
-    var nav = document.getElementById('mainNav');
-    var isOpen = nav.classList.toggle('open');
-    this.classList.toggle('is-open', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-  });
-  // close mobile menu when a link is clicked (except the mega-trigger, which only toggles its submenu)
-  document.querySelectorAll('#mainNav a').forEach(function(a){
-    if(a.classList.contains('mega-trigger')) return;
-    a.addEventListener('click', function(){
-      document.getElementById('mainNav').classList.remove('open');
-      document.getElementById('navToggle').classList.remove('is-open');
-      document.body.style.overflow = '';
-    });
-  });
-
-  // header scroll state + scroll progress bar
-  var siteHeader = document.getElementById('siteHeader');
-  var scrollProgress = document.getElementById('scrollProgress');
-  window.addEventListener('scroll', function(){
-    siteHeader.classList.toggle('scrolled', window.scrollY > 10);
-    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    var pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
-    scrollProgress.style.width = pct + '%';
-  });
-
-  // magnetic nav highlight (desktop only, matches whichever top-level item is hovered)
+  // mobile full-screen sheet (hamburger)
   (function(){
-    var nav = document.getElementById('mainNav');
-    var highlight = document.getElementById('navHighlight');
-    if(!nav || !highlight) return;
-    var items = nav.querySelectorAll(':scope > a, :scope > .nav-item-wrap > a');
-    items.forEach(function(item){
-      item.addEventListener('mouseenter', function(){
-        if(window.innerWidth <= 900) return;
-        var navRect = nav.getBoundingClientRect();
-        var itemRect = item.getBoundingClientRect();
-        highlight.style.opacity = '1';
-        highlight.style.left = (itemRect.left - navRect.left) + 'px';
-        highlight.style.width = itemRect.width + 'px';
+    var bg = document.getElementById('burger');
+    if(!bg) return;
+    function mToggle(){
+      var open = !document.body.classList.contains('mopen');
+      document.body.classList.toggle('mopen', open);
+      bg.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    bg.addEventListener('click', mToggle);
+    document.querySelectorAll('#msheet a').forEach(function(a){
+      a.addEventListener('click', function(){
+        document.body.classList.remove('mopen');
+        bg.setAttribute('aria-expanded', 'false');
       });
     });
-    nav.addEventListener('mouseleave', function(){ highlight.style.opacity = '0'; });
+    var moreBtn = document.getElementById('mnavMore');
+    if(moreBtn) moreBtn.addEventListener('click', mToggle);
+  })();
+
+  // footer link columns: <details> accordion on mobile, always-open on desktop
+  // (matchMedia, not resize, so a column a reader opened on a phone stays open while they scroll)
+  (function(){
+    var mq = window.matchMedia('(min-width:721px)');
+    function syncCols(e){
+      document.querySelectorAll('footer .f-col').forEach(function(c){ c.open = e.matches; });
+    }
+    syncCols(mq);
+    if(mq.addEventListener) mq.addEventListener('change', syncCols);
+    else if(mq.addListener) mq.addListener(syncCols);
+    document.querySelectorAll('footer .f-col > summary').forEach(function(s){
+      s.addEventListener('click', function(e){ if(mq.matches) e.preventDefault(); });
+    });
+  })();
+
+  // desktop sticky contact FAB (footer)
+  (function(){
+    var btn = document.getElementById('cfabBtn'), panel = document.getElementById('cfabPanel'), scrim = document.getElementById('cfabScrim');
+    if(!btn || !panel) return;
+    function set(open){
+      btn.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'بستن منوی تماس' : 'باز کردن منوی تماس');
+      panel.classList.toggle('on', open);
+      if(scrim) scrim.classList.toggle('on', open);
+    }
+    btn.addEventListener('click', function(e){ e.stopPropagation(); set(!panel.classList.contains('on')); });
+    if(scrim) scrim.addEventListener('click', function(){ set(false); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') set(false); });
+    document.addEventListener('click', function(e){
+      if(!panel.contains(e.target) && !btn.contains(e.target)) set(false);
+    });
+    panel.querySelectorAll('a,button').forEach(function(el){
+      el.addEventListener('click', function(){ set(false); });
+    });
+  })();
+
+  // mobile bottom nav: raised button opens the contact sheet (phone / whatsapp / telegram / consult)
+  (function(){
+    var fab = document.getElementById('mnavFab'), sheet = document.getElementById('csheet'), scrim = document.getElementById('csheetScrim');
+    if(!fab || !sheet) return;
+    function set(open){
+      fab.classList.toggle('is-open', open);
+      fab.setAttribute('aria-expanded', open ? 'true' : 'false');
+      fab.setAttribute('aria-label', open ? 'بستن راه‌های ارتباطی' : 'باز کردن راه‌های ارتباطی');
+      sheet.classList.toggle('on', open);
+      if(scrim) scrim.classList.toggle('on', open);
+      document.body.classList.toggle('csheet-open', open);
+    }
+    fab.addEventListener('click', function(e){ e.stopPropagation(); set(!sheet.classList.contains('on')); });
+    if(scrim) scrim.addEventListener('click', function(){ set(false); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') set(false); });
+    sheet.querySelectorAll('a,button').forEach(function(el){
+      el.addEventListener('click', function(){ set(false); });
+    });
+    // swipe the sheet down to dismiss
+    var y0 = null;
+    sheet.addEventListener('touchstart', function(e){
+      if(sheet.scrollTop > 0) return;
+      y0 = e.touches[0].clientY;
+    }, {passive:true});
+    sheet.addEventListener('touchmove', function(e){
+      if(y0 === null) return;
+      var dy = e.touches[0].clientY - y0;
+      if(dy > 0) sheet.style.transform = 'translateY(' + dy + 'px)';
+    }, {passive:true});
+    sheet.addEventListener('touchend', function(e){
+      if(y0 === null) return;
+      var dy = e.changedTouches[0].clientY - y0;
+      sheet.style.transform = '';
+      if(dy > 70) set(false);
+      y0 = null;
+    }, {passive:true});
   })();
 
 
@@ -201,18 +316,11 @@
       });
     });
 
-    // FAB cluster "درخواست مشاوره" item also opens this modal
-    var fabConsult = document.getElementById('fabConsultBtn');
-    if(fabConsult) fabConsult.addEventListener('click', function(){
-      closeFabCluster();
-      openModal('درخواست مشاوره از تیم یوآیدی', 'مشخصات خود را ثبت کنید تا در اولین فرصت با شما تماس بگیریم.');
-    });
-
-    // mobile contact-sheet "درخواست مشاوره" row
-    var csConsult = document.getElementById('csConsult');
-    if(csConsult) csConsult.addEventListener('click', function(){
-      closeContactSheet();
-      openModal('درخواست مشاوره از تیم یوآیدی', 'مشخصات خود را ثبت کنید تا در اولین فرصت با شما تماس بگیریم.');
+    // every global "مشاوره رایگان" trigger (FAB, contact sheet, footer strip, mobile
+    // sheet) opens this same modal. Deliberately a different attribute than
+    // [data-open-modal], which is reserved for the per-page quick-request modal below.
+    document.querySelectorAll('[data-open-lead-modal]').forEach(function(b){
+      b.addEventListener('click', function(){ openModal(); });
     });
 
     // the modal's own form: validate + actually send the request to the server
@@ -243,79 +351,6 @@
           setTimeout(closeModal, 1800);
         });
       });
-    }
-  })();
-
-  // Live chat modal (placeholder UI for the existing Raychat widget)
-  var chatOverlay = document.getElementById('chatModalOverlay');
-  function openChatModal(){ chatOverlay.classList.add('open'); }
-  function closeChatModal(){ chatOverlay.classList.remove('open'); }
-  document.getElementById('chatModalClose').addEventListener('click', closeChatModal);
-  chatOverlay.addEventListener('click', function(e){ if(e.target === chatOverlay) closeChatModal(); });
-  var fabChat = document.getElementById('fabChatBtn');
-  if(fabChat) fabChat.addEventListener('click', function(){ closeFabCluster(); openChatModal(); });
-  var csChat = document.getElementById('csChat');
-  if(csChat) csChat.addEventListener('click', function(){ closeContactSheet(); openChatModal(); });
-
-  // Desktop floating action cluster (expand/collapse)
-  var fabToggleBtn = document.getElementById('leadFabBtn');
-  var fabCluster = document.getElementById('fabCluster');
-  function closeFabCluster(){
-    if(fabCluster) fabCluster.classList.remove('open');
-    if(fabToggleBtn){ fabToggleBtn.classList.remove('is-open'); fabToggleBtn.setAttribute('aria-expanded','false'); }
-  }
-  if(fabToggleBtn && fabCluster){
-    fabToggleBtn.addEventListener('click', function(){
-      var isOpen = fabCluster.classList.toggle('open');
-      fabToggleBtn.classList.toggle('is-open', isOpen);
-      fabToggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    });
-    document.addEventListener('click', function(e){
-      if(!fabCluster.contains(e.target) && e.target !== fabToggleBtn && !fabToggleBtn.contains(e.target)){
-        closeFabCluster();
-      }
-    });
-    window.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeFabCluster(); });
-  }
-
-  // Mobile bottom-nav "تماس" button opens the contact sheet (chat / consult / phone / telegram / whatsapp)
-  var contactSheetOverlay = document.getElementById('contactSheetOverlay');
-  function openContactSheet(){ if(contactSheetOverlay) contactSheetOverlay.classList.add('open'); }
-  function closeContactSheet(){ if(contactSheetOverlay) contactSheetOverlay.classList.remove('open'); }
-  var mnavLead = document.getElementById('mnavLead');
-  if(mnavLead) mnavLead.addEventListener('click', openContactSheet);
-  var csCancel = document.getElementById('csCancel');
-  if(csCancel) csCancel.addEventListener('click', closeContactSheet);
-  if(contactSheetOverlay) contactSheetOverlay.addEventListener('click', function(e){ if(e.target === contactSheetOverlay) closeContactSheet(); });
-
-  // Bottom mobile navbar: scroll-to-section + "more" opens full menu + scrollspy
-  (function(){
-    var items = document.querySelectorAll('.mnav-item[data-target]');
-    items.forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var el = document.querySelector(btn.getAttribute('data-target'));
-        if(el) el.scrollIntoView({behavior:'smooth'});
-      });
-    });
-    var moreBtn = document.getElementById('mnavMore');
-    if(moreBtn){
-      moreBtn.addEventListener('click', function(){
-        document.getElementById('mainNav').classList.add('open');
-        document.getElementById('navToggle').classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-      });
-    }
-    var sections = ['#hero','#services','#resources'].map(function(id){ return document.querySelector(id); }).filter(Boolean);
-    if('IntersectionObserver' in window && sections.length){
-      var io = new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-          if(entry.isIntersecting){
-            var id = '#' + entry.target.id;
-            items.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-target') === id); });
-          }
-        });
-      }, {rootMargin:'-45% 0px -45% 0px'});
-      sections.forEach(function(s){ io.observe(s); });
     }
   })();
 
