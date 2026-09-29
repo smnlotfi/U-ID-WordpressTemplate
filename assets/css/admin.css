@@ -1,0 +1,168 @@
+/* تنظیمات قالب یوآیدی — استایل صفحه اختصاصی پیشخوان */
+
+#uid-settings-page{
+	--navy-900:#15397C;
+	--navy-700:#1E4A94;
+	--navy-050:#EAF0FB;
+	--orange-500:#F89428;
+	--orange-050:#FFF1E0;
+	--neutral-950:#0B1220;
+	--neutral-600:#5A6478;
+	--neutral-300:#C7CDDA;
+	--neutral-200:#E4E7ED;
+	--neutral-050:#F7F8FA;
+	--white:#FFFFFF;
+	--radius-card:12px;
+	--shadow-sm:0 1px 2px rgba(21,57,124,0.04), 0 4px 12px rgba(21,57,124,0.08);
+	font-family:'Vazirmatn','IBM Plex Sans',Tahoma,sans-serif;
+	color:var(--neutral-950);
+	max-width:100%;
+}
+#uid-settings-page *{ box-sizing:border-box; }
+
+#uid-settings-page .uid-settings-head{
+	display:flex; align-items:center; gap:14px; margin:20px 0 24px;
+}
+#uid-settings-page .uid-settings-head .uid-settings-icon{
+	width:44px; height:44px; border-radius:10px; background:var(--navy-900);
+	display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+#uid-settings-page .uid-settings-icon .dashicons{ color:#fff; font-size:22px; width:22px; height:22px; }
+#uid-settings-page .uid-settings-head h1{
+	font-family:inherit; font-size:22px; font-weight:700; margin:0; color:var(--neutral-950);
+}
+#uid-settings-page .uid-settings-head p{
+	margin:2px 0 0; font-size:13px; color:var(--neutral-600);
+}
+
+#uid-settings-page .uid-settings-body{
+	display:flex; align-items:flex-start; gap:24px;
+}
+
+/* --- سایدبار --- */
+#uid-settings-page .uid-settings-sidebar{
+	width:230px; flex-shrink:0; background:var(--white); border:1px solid var(--neutral-200);
+	border-radius:var(--radius-card); padding:10px; box-shadow:var(--shadow-sm);
+	position:sticky; top:40px;
+}
+#uid-settings-page .uid-settings-nav-item{
+	display:flex; align-items:center; gap:10px; padding:11px 14px; border-radius:8px;
+	font-size:14px; font-weight:600; color:var(--neutral-600); text-decoration:none;
+	margin-bottom:4px; transition:background .15s ease, color .15s ease;
+}
+#uid-settings-page .uid-settings-nav-item .dashicons{ font-size:18px; width:18px; height:18px; color:var(--neutral-300); }
+#uid-settings-page .uid-settings-nav-item:hover{ background:var(--neutral-050); color:var(--neutral-950); }
+#uid-settings-page .uid-settings-nav-item.is-active{ background:var(--navy-050); color:var(--navy-900); }
+#uid-settings-page .uid-settings-nav-item.is-active .dashicons{ color:var(--navy-900); }
+
+/* --- محتوای تب --- */
+#uid-settings-page .uid-settings-content{
+	flex:1; min-width:0; background:var(--white); border:1px solid var(--neutral-200);
+	border-radius:var(--radius-card); padding:28px 30px; box-shadow:var(--shadow-sm);
+}
+#uid-settings-page .uid-settings-content h2{
+	font-family:inherit; font-size:15px; font-weight:700; color:var(--neutral-950);
+	margin:0 0 4px; padding-bottom:10px; border-bottom:1px solid var(--neutral-200);
+}
+#uid-settings-page .uid-settings-content h2:not(:first-child){ margin-top:32px; }
+
+#uid-settings-page table.form-table{ margin-top:6px; }
+#uid-settings-page table.form-table th{
+	font-family:inherit; font-weight:600; font-size:13.5px; color:var(--neutral-950);
+	width:230px; padding-right:0;
+}
+#uid-settings-page table.form-table td{ font-family:inherit; }
+#uid-settings-page .description{ font-family:inherit; color:var(--neutral-600); font-size:12.5px; }
+
+#uid-settings-page input[type="text"],
+#uid-settings-page textarea{
+	font-family:inherit; border:1.5px solid var(--neutral-200); border-radius:8px;
+	padding:9px 12px; background:var(--neutral-050); font-size:13.5px; max-width:680px; width:100%;
+}
+#uid-settings-page input[type="text"]:focus,
+#uid-settings-page textarea:focus{
+	outline:2px solid var(--navy-900); outline-offset:1px; background:var(--white); box-shadow:none;
+}
+
+#uid-settings-page .button{
+	font-family:inherit; border-radius:8px; font-weight:600; font-size:13px;
+}
+#uid-settings-page .button-primary{
+	background:var(--orange-500); border-color:var(--orange-500); text-shadow:none; box-shadow:none;
+}
+#uid-settings-page .button-primary:hover{ background:#e2851c; border-color:#e2851c; }
+
+#uid-settings-page .uid-logo-field img{ border-radius:8px; }
+
+/* --- لیست یکپارچه ترتیب/نمایش/ویرایش سکشن‌ها --- */
+#uid-settings-page .uid-layout-list{ list-style:none; margin:0; padding:0; max-width:100%; }
+#uid-settings-page .uid-layout-item{
+	background:var(--white); border:1.5px solid var(--neutral-200); border-radius:10px;
+	margin-bottom:8px; overflow:hidden;
+}
+#uid-settings-page .uid-layout-item.ui-sortable-helper{ box-shadow:var(--shadow-sm); }
+#uid-settings-page .uid-layout-row{
+	display:flex; align-items:center; gap:10px; padding:12px 14px; cursor:pointer;
+	font-size:14px; font-weight:600; color:var(--neutral-950); background:var(--neutral-050);
+}
+#uid-settings-page .uid-layout-item .uid-drag-handle{
+	cursor:grab; color:var(--neutral-300); font-size:18px; width:18px; height:18px; flex-shrink:0;
+}
+#uid-settings-page .uid-layout-row > .dashicons:nth-child(2){ color:var(--navy-900); font-size:18px; width:18px; height:18px; flex-shrink:0; }
+#uid-settings-page .uid-layout-label{ flex:1; }
+
+/* کلید روشن/خاموش هر سکشن */
+#uid-settings-page .uid-layout-toggle{ position:relative; display:flex; align-items:center; cursor:pointer; flex-shrink:0; }
+#uid-settings-page .uid-layout-toggle input{ position:absolute; opacity:0; width:1px; height:1px; }
+#uid-settings-page .uid-switch{
+	position:relative; display:inline-block; width:38px; height:22px; border-radius:999px;
+	background:var(--neutral-300); transition:background .15s ease; flex-shrink:0;
+}
+#uid-settings-page .uid-switch::before{
+	content:''; position:absolute; top:2px; right:2px; width:18px; height:18px; border-radius:50%;
+	background:var(--white); box-shadow:0 1px 2px rgba(0,0,0,.25); transition:transform .15s ease;
+}
+#uid-settings-page .uid-layout-toggle input:checked + .uid-switch{ background:var(--navy-900); }
+#uid-settings-page .uid-layout-toggle input:checked + .uid-switch::before{ transform:translateX(-16px); }
+#uid-settings-page .uid-layout-toggle input:focus-visible + .uid-switch{ outline:2px solid var(--navy-700); outline-offset:2px; }
+
+/* دکمه باز/بسته‌کردن تنظیمات هر سکشن */
+#uid-settings-page .uid-layout-expand{
+	background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; flex-shrink:0;
+}
+#uid-settings-page .uid-layout-expand .dashicons{ color:var(--neutral-300); font-size:18px; width:18px; height:18px; transition:transform .15s ease; }
+#uid-settings-page .uid-layout-expand[aria-expanded="true"] .dashicons{ transform:rotate(180deg); color:var(--navy-900); }
+#uid-settings-page .uid-layout-fields{ padding:14px 16px 16px; border-top:1.5px solid var(--neutral-200); }
+
+/* --- ردیف‌های ریپیتر عمومی (برندها، آمار، کارت‌های خدمات/مزیت) --- */
+#uid-settings-page .uid-repeater{ max-width:100%; }
+#uid-settings-page .uid-rep-row{
+	display:flex; align-items:flex-start; flex-wrap:wrap; gap:10px; background:var(--neutral-050);
+	border:1.5px solid var(--neutral-200); border-radius:10px; padding:12px; margin-bottom:8px;
+}
+#uid-settings-page .uid-rep-field{ display:flex; flex-direction:column; gap:4px; }
+#uid-settings-page .uid-rep-field label{ font-size:11.5px; font-weight:600; color:var(--neutral-600); }
+#uid-settings-page .uid-rep-field-text,
+#uid-settings-page .uid-rep-field-select{ flex:1 1 160px; min-width:120px; }
+#uid-settings-page .uid-rep-field-textarea{ flex:1 1 220px; min-width:180px; }
+#uid-settings-page .uid-repeater .uid-rep-input{
+	font-family:inherit; border:1.5px solid var(--neutral-200); border-radius:7px;
+	padding:7px 10px; background:var(--white); font-size:13px; width:100%; max-width:none;
+}
+#uid-settings-page .uid-rep-input:focus{ outline:2px solid var(--navy-900); outline-offset:1px; }
+#uid-settings-page textarea.uid-rep-input{ resize:vertical; }
+#uid-settings-page .uid-rep-field-image{ flex-direction:row; align-items:center; gap:8px; flex:0 0 auto; }
+#uid-settings-page .uid-rep-thumb{
+	width:36px; height:36px; border-radius:8px; overflow:hidden; flex-shrink:0; background:var(--white); border:1px solid var(--neutral-200);
+}
+#uid-settings-page .uid-rep-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+#uid-settings-page .uid-rep-remove{ color:#c0392b; flex-shrink:0; align-self:center; margin-inline-start:auto; }
+#uid-settings-page .uid-rep-remove:hover{ color:#a5281a; }
+#uid-settings-page .uid-repeater-add{ margin-top:2px; }
+
+@media (max-width:782px){
+	#uid-settings-page .uid-settings-body{ flex-direction:column; }
+	#uid-settings-page .uid-settings-sidebar{ width:100%; position:static; display:flex; overflow-x:auto; gap:4px; }
+	#uid-settings-page .uid-settings-nav-item{ white-space:nowrap; margin-bottom:0; }
+	#uid-settings-page table.form-table th{ width:auto; }
+}

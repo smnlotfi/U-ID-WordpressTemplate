@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>یوآیدی — نوار ناوبری پایین موبایل (Mobile Bottom Nav)</title>
+<meta name="theme-color" content="#15397C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════ TOKENS ═══════════════════════════════ */
+:root{
+  --navy:#15397C; --navy-7:#1E4A94; --navy-d:#0E2A5E; --navy-x:#081C42;
+  --teal:#29BCCE; --teal-d:#1A97A8; --teal-l:#E6F7FA;
+  --orange:#F89428; --orange-d:#DE7C13; --orange-l:#FFF3E4;
+  --ink:#0B1220; --n600:#5A6478; --n400:#8A93A6; --n200:#E4E7ED;
+  --n100:#EFF1F5; --n50:#F7F8FA; --white:#fff; --ok:#12A06A;
+  --r-s:4px; --r:8px; --r-l:14px; --r-pill:999px;
+  --sh-1:0 1px 2px rgba(21,57,124,.05), 0 2px 6px rgba(21,57,124,.05);
+  --sh-2:0 1px 2px rgba(21,57,124,.05), 0 8px 24px rgba(21,57,124,.09);
+  --sh-3:0 2px 4px rgba(21,57,124,.06), 0 18px 44px rgba(21,57,124,.14);
+  --fa:'Vazirmatn',system-ui,sans-serif;
+  --lat:'IBM Plex Sans','Vazirmatn',sans-serif;
+  --mono:'JetBrains Mono','IBM Plex Mono','Vazirmatn',monospace;
+  --pad:clamp(20px,5vw,40px);
+  --maxw:1240px;
+  /* one source of truth for the bar height so body padding can never drift */
+  --mbar:68px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--fa);font-size:16px;line-height:1.75;color:var(--ink);
+  background:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0;line-height:1.35;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:var(--r-s)}
+.mono{font-family:var(--mono);direction:ltr;unicode-bidi:isolate;font-variant-ligatures:none}
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+
+/* ╔═════════════════════════════════════════════════════════════════════════╗
+   ║  MOBILE BOTTOM NAV + CONTACT SHEET — copy from here …                   ║
+   ╚═════════════════════════════════════════════════════════════════════════╝
+   What changed:
+   ·  The raised centre button opened the lead modal directly. It now behaves
+      like the desktop sticky button: it opens a channel sheet — phone,
+      WhatsApp, Telegram, consultation form.
+   ·  The old bar carried a page-specific "جستجو" item. The shared component
+      now carries the services archive instead; swap that slot per page if a
+      page has its own in-page search.
+   ·  "تماس" stays a direct tel: link. Per GA4 the phone is the top converter
+      (5,722 users vs 3,050 on the form), so it must stay one tap, not two.
+   ·  Height is a token (--mbar) that also drives body padding, so the bar can
+      never overlap the last section again.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+.mobile-navbar{display:none}
+.csheet,.csheet-scrim{display:none}
+
+@media (max-width:760px){
+  body{padding-block-end:calc(var(--mbar) + env(safe-area-inset-bottom))}
+
+  .mobile-navbar{
+    display:flex;position:fixed;inset-block-end:0;inset-inline:0;
+    /* above the sheet (1256): the raised centre button carries the close
+       action, and at 1250 the sheet covered its top half. */
+    z-index:1260;
+    height:var(--mbar);
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(18px) saturate(170%);
+    -webkit-backdrop-filter:blur(18px) saturate(170%);
+    border-block-start:1px solid var(--n200);
+    box-shadow:0 -8px 30px rgba(21,57,124,.08);
+    align-items:center;justify-content:space-around;
+    padding:0 4px env(safe-area-inset-bottom);
+  }
+  .mnav-item{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    background:none;border:0;font-family:inherit;color:var(--n600);font-size:10.5px;
+    font-weight:500;line-height:1.3;padding:6px 4px;cursor:pointer;flex:1;min-width:0;
+    text-decoration:none;text-align:center;
+    transition:color .18s ease;
+  }
+  .mnav-item svg{width:21px;height:21px;flex:none;transition:transform .2s ease}
+  .mnav-item span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .mnav-item:active svg{transform:scale(.9)}
+  .mnav-item.active{color:var(--navy);font-weight:700}
+
+  /* ── the raised centre button ───────────────────────────────────────────
+     Same gradient, ring and icon-swap as the desktop sticky button, so the
+     two read as one control that changes shape between breakpoints. */
+  .mnav-fab{
+    position:relative;flex:0 0 60px;width:60px;height:60px;margin-block-start:-28px;
+    border:0;border-radius:50%;cursor:pointer;padding:0;
+    display:grid;place-items:center;
+    background:linear-gradient(135deg,#FCA53F,var(--orange) 46%,var(--orange-d));
+    color:#fff;
+    box-shadow:0 10px 26px rgba(248,148,40,.5),0 2px 6px rgba(21,57,124,.18);
+    /* a white collar separates it from the translucent bar behind it */
+    outline:4px solid #fff;outline-offset:0;
+    transition:background .24s ease,box-shadow .24s ease,transform .18s cubic-bezier(.2,.7,.3,1);
+  }
+  .mnav-fab:active{transform:scale(.94)}
+  .mnav-fab svg{width:25px;height:25px;grid-area:1/1;
+    transition:opacity .2s ease,transform .3s cubic-bezier(.2,.7,.3,1)}
+  .mnav-fab .ico-close{opacity:0;transform:rotate(-90deg) scale(.6)}
+  .mnav-fab.is-open .ico-open{opacity:0;transform:rotate(90deg) scale(.6)}
+  .mnav-fab.is-open .ico-close{opacity:1;transform:none}
+  .mnav-fab.is-open{
+    background:linear-gradient(135deg,var(--navy-7),var(--navy) 60%,var(--navy-d));
+    box-shadow:0 10px 26px rgba(21,57,124,.42)}
+  /* attention ring — three cycles then it rests */
+  .mnav-fab::before{content:'';position:absolute;inset:0;border-radius:50%;
+    border:2px solid var(--orange);
+    animation:mfabRing 2.6s cubic-bezier(.2,.7,.3,1) 1.4s 3 both;pointer-events:none}
+  .mnav-fab.is-open::before{animation:none;opacity:0}
+  @keyframes mfabRing{
+    0%{transform:scale(1);opacity:.7}
+    70%{transform:scale(1.7);opacity:0}
+    100%{transform:scale(1.7);opacity:0}
+  }
+
+  /* ── contact sheet ─────────────────────────────────────────────────────── */
+  .csheet-scrim{
+    display:block;position:fixed;inset:0;z-index:1255;background:rgba(8,28,66,.42);
+    backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+    opacity:0;visibility:hidden;transition:opacity .26s,visibility .26s;
+  }
+  .csheet-scrim.on{opacity:1;visibility:visible}
+
+  .csheet{
+    display:block;position:fixed;inset-inline:0;
+    inset-block-end:calc(var(--mbar) + env(safe-area-inset-bottom));
+    z-index:1256;background:#fff;
+    border-start-start-radius:22px;border-start-end-radius:22px;
+    box-shadow:0 -18px 50px rgba(8,28,66,.26);
+    padding:8px 14px 18px;
+    transform:translateY(110%);visibility:hidden;
+    transition:transform .32s cubic-bezier(.2,.8,.3,1),visibility .32s;
+    max-height:calc(100dvh - var(--mbar) - 90px);overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+  .csheet.on{transform:none;visibility:visible}
+  .csheet-grip{width:40px;height:4px;border-radius:99px;background:var(--n200);
+    margin:2px auto 12px}
+  .csheet-head{text-align:center;margin-bottom:14px}
+  .csheet-head b{display:block;font-size:16px;font-weight:600}
+  .csheet-head span{display:block;font-size:12.5px;color:var(--n400);margin-top:2px}
+
+  /* phone gets the full-width primary row — it is the measured top converter */
+  .csheet-call{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    min-height:54px;border-radius:14px;margin-bottom:10px;
+    background:linear-gradient(135deg,var(--navy-7),var(--navy) 60%,var(--navy-d));
+    color:#fff;font-weight:700;font-size:15.5px;
+    box-shadow:0 8px 22px rgba(21,57,124,.3);
+  }
+  .csheet-call svg{width:19px;height:19px;flex:none}
+  .csheet-call .num{font-family:var(--mono);font-size:15px;letter-spacing:.01em}
+
+  .csheet-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .csheet-tile{
+    display:flex;flex-direction:column;align-items:flex-start;gap:8px;
+    padding:13px 13px;border-radius:14px;border:1px solid var(--n200);
+    background:var(--n50);cursor:pointer;text-align:start;min-height:96px;
+    transition:transform .16s ease,border-color .18s ease,background .18s ease;
+  }
+  .csheet-tile:active{transform:scale(.97)}
+  .csheet-tile .ic{width:40px;height:40px;border-radius:12px;display:grid;
+    place-items:center;color:#fff;flex:none;box-shadow:var(--sh-1)}
+  .csheet-tile .ic svg{width:20px;height:20px}
+  .csheet-tile b{display:block;font-size:14px;font-weight:600;color:var(--ink);
+    line-height:1.4}
+  .csheet-tile .sub{display:block;font-size:11.5px;color:var(--n400);line-height:1.5;
+    margin-top:1px}
+  .ic-whats{background:linear-gradient(135deg,#3BE07C,#1FAF52)}
+  .ic-tg{background:linear-gradient(135deg,#43BDF0,#2094CF)}
+  .ic-form{background:linear-gradient(135deg,#FCA53F,var(--orange-d))}
+  .ic-doc{background:linear-gradient(135deg,#4FD3E2,var(--teal-d))}
+  .csheet-tile.wide{grid-column:1/-1;flex-direction:row;align-items:center;min-height:0}
+  .csheet-tile.wide .tx{min-width:0}
+
+  .csheet-foot{margin-top:12px;font-size:11.5px;color:var(--n400);text-align:center;
+    display:flex;align-items:center;justify-content:center;gap:7px}
+  .csheet-foot i{width:6px;height:6px;border-radius:50%;background:var(--ok);flex:none}
+
+  body.csheet-open{overflow:hidden}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .mnav-fab::before{animation:none;opacity:0}
+  .csheet,.csheet-scrim,.mnav-fab{transition-duration:.01ms}
+}
+
+/* ╔═════════════════════════════════════════════════════════════════════════╗
+   ║  … copy to here. Demo harness below.                                    ║
+   ╚═════════════════════════════════════════════════════════════════════════╝ */
+.demo{padding:64px 0 50px;background:
+  radial-gradient(800px 400px at 85% 0%,rgba(248,148,40,.1),transparent 62%),
+  radial-gradient(700px 380px at 5% 10%,rgba(41,188,206,.09),transparent 60%)}
+.demo h1{font-size:clamp(24px,3.6vw,38px);line-height:1.3;letter-spacing:-.02em;
+  margin-bottom:14px}
+.demo p.lede{font-size:clamp(15px,1.6vw,17.5px);line-height:1.9;color:var(--n600);
+  max-width:62ch}
+.spec{margin-top:36px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:14px}
+.spec-card{border:1px solid var(--n200);border-radius:var(--r-l);padding:18px;
+  background:#fff;box-shadow:var(--sh-1)}
+.spec-card h3{font-size:14.5px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.spec-card h3 i{width:7px;height:7px;border-radius:50%;flex:none}
+.spec-card p{font-size:13px;line-height:1.8;color:var(--n600)}
+.spec-card code{font-family:var(--mono);font-size:11.5px;direction:ltr;
+  unicode-bidi:isolate;background:var(--n100);border-radius:5px;padding:1px 5px}
+.hint{margin-top:22px;padding:14px 16px;border-radius:var(--r-l);background:var(--teal-l);
+  border:1px solid rgba(41,188,206,.3);font-size:13px;line-height:1.8;color:#0E5A66}
+.filler{height:120vh;background:linear-gradient(180deg,var(--n50),#fff)}
+</style>
+</head>
+<body>
+
+<main class="demo">
+  <div class="wrap">
+    <h1>نوار پایین موبایل</h1>
+    <p class="lede">دکمه مرکزی دیگر مستقیم فرم را باز نمی‌کند؛ مثل دکمه شناور دسکتاپ، شیت کانال‌های ارتباطی را بالا می‌آورد: تماس تلفنی، واتساپ، تلگرام و فرم مشاوره.</p>
+
+    <div class="spec">
+      <div class="spec-card">
+        <h3><i style="background:var(--orange)"></i>دکمه مرکزی</h3>
+        <p>همان گرادیان، همان حلقه و همان جابه‌جایی آیکون دکمه دسکتاپ را دارد، تا کاربر در هر دو اندازه یک کنترل واحد ببیند که فقط شکلش عوض می‌شود.</p>
+      </div>
+      <div class="spec-card">
+        <h3><i style="background:var(--navy)"></i>تماس یک‌ضربه‌ای می‌ماند</h3>
+        <p>چون دکمه مرکزی حالا یک منو است، ردیف «تماس» در نوار به‌صورت <code>tel:</code> مستقیم باقی مانده تا پرتبدیل‌ترین مسیر دو ضربه‌ای نشود.</p>
+      </div>
+      <div class="spec-card">
+        <h3><i style="background:var(--teal)"></i>ارتفاع به‌صورت توکن</h3>
+        <p>ارتفاع نوار در <code>--mbar</code> تعریف شده و همان متغیر <code>padding-block-end</code> بادی را می‌سازد، پس نوار هیچ‌وقت روی آخرین بخش صفحه نمی‌افتد.</p>
+      </div>
+      <div class="spec-card">
+        <h3><i style="background:var(--ok)"></i>جای خالی «جستجو»</h3>
+        <p>آن ردیف مخصوص صفحه واژه‌نامه بود. در نسخه مشترک، جایش را «وب‌سرویس‌ها» گرفته؛ در صفحاتی که جستجوی داخلی دارند همان اسلات جابه‌جا شود.</p>
+      </div>
+    </div>
+
+    <p class="hint">این کامپوننت زیر ۷۶۰ پیکسل فعال می‌شود. برای دیدنش پنجره را باریک کنید یا در حالت موبایل مرورگر باز کنید.</p>
+  </div>
+</main>
+<div class="filler"></div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     CONTACT SHEET + BOTTOM NAV
+     ══════════════════════════════════════════════════════════════════════════ -->
+<div class="csheet-scrim" id="csheetScrim"></div>
+
+<div class="csheet" id="csheet" role="dialog" aria-modal="true" aria-labelledby="csheetTitle">
+  <div class="csheet-grip" aria-hidden="true"></div>
+  <div class="csheet-head">
+    <b id="csheetTitle">از چه راهی در ارتباط باشیم؟</b>
+    <span>یکی از راه‌های زیر را انتخاب کنید</span>
+  </div>
+
+  <a class="csheet-call" href="tel:02166123290">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg>
+    تماس تلفنی <span class="num">02166123290</span>
+  </a>
+
+  <div class="csheet-grid">
+    <a class="csheet-tile" href="https://wa.me/982166123290" target="_blank" rel="noopener">
+      <span class="ic ic-whats"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1112 20zm4.5-5.8c-.2-.1-1.4-.7-1.7-.8s-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.6 6.6 0 01-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 00-.7.3A3 3 0 006 9.9c0 1.7 1.3 3.4 1.5 3.6a10 10 0 003.8 3.3c1.8.7 1.8.5 2.2.4a2.6 2.6 0 001.7-1.2 2.1 2.1 0 00.2-1.2z"/></svg></span>
+      <span class="tx"><b>واتساپ</b><span class="sub">گفتگوی متنی</span></span>
+    </a>
+    <a class="csheet-tile" href="https://t.me/uid_official" target="_blank" rel="noopener">
+      <span class="ic ic-tg"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg></span>
+      <span class="tx"><b>تلگرام</b><span class="sub">ارسال پیام</span></span>
+    </a>
+    <button class="csheet-tile wide" type="button" data-open-modal>
+      <span class="ic ic-form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg></span>
+      <span class="tx"><b>مشاوره رایگان و کلید آزمایشی</b><span class="sub">فرم کوتاه، کارشناس تماس می‌گیرد</span></span>
+    </button>
+  </div>
+
+  <!-- TODO ▸ ساعات دقیق پاسخگویی از کلاینت گرفته و جایگزین شود. -->
+  <div class="csheet-foot"><i></i>کارشناس یوآیدی در ساعات پاسخگویی تماس می‌گیرد</div>
+</div>
+
+<nav class="mobile-navbar" aria-label="ناوبری موبایل">
+  <a class="mnav-item" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 20z"/></svg><span>خانه</span></a>
+
+  <!-- swap this slot for a page-specific action (e.g. in-page search) where one exists -->
+  <a class="mnav-item" href="/api/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>وب‌سرویس‌ها</span></a>
+
+  <button class="mnav-fab" id="mnavFab" aria-expanded="false" aria-controls="csheet"
+          aria-label="باز کردن راه‌های ارتباطی">
+    <svg class="ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 01-9 8.4 8.9 8.9 0 01-4-.9L3 20.5l1.5-4.4A8.4 8.4 0 013 11.5a8.4 8.4 0 019-8.4 8.4 8.4 0 019 8.4z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg>
+    <svg class="ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+
+  <a class="mnav-item" href="tel:02166123290"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg><span>تماس</span></a>
+
+  <button class="mnav-item" id="burger2" aria-label="باز کردن منو"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>منو</span></button>
+</nav>
+
+<script>
+(function(){
+  var d=document;
+  var fab=d.getElementById('mnavFab'),
+      sheet=d.getElementById('csheet'),
+      scrim=d.getElementById('csheetScrim');
+  if(!fab||!sheet) return;
+
+  function set(open){
+    fab.classList.toggle('is-open',open);
+    fab.setAttribute('aria-expanded',open?'true':'false');
+    fab.setAttribute('aria-label',open?'بستن راه‌های ارتباطی':'باز کردن راه‌های ارتباطی');
+    sheet.classList.toggle('on',open);
+    if(scrim) scrim.classList.toggle('on',open);
+    d.body.classList.toggle('csheet-open',open);
+  }
+  set(false);
+
+  fab.addEventListener('click',function(e){
+    e.stopPropagation(); set(!sheet.classList.contains('on'));
+  });
+  if(scrim) scrim.addEventListener('click',function(){ set(false); });
+  d.addEventListener('keydown',function(e){ if(e.key==='Escape') set(false); });
+  sheet.querySelectorAll('a,button').forEach(function(el){
+    el.addEventListener('click',function(){ set(false); });
+  });
+
+  /* swipe the sheet down to dismiss */
+  var y0=null;
+  sheet.addEventListener('touchstart',function(e){
+    if(sheet.scrollTop>0) return;             /* let it scroll first */
+    y0=e.touches[0].clientY;
+  },{passive:true});
+  sheet.addEventListener('touchmove',function(e){
+    if(y0===null) return;
+    var dy=e.touches[0].clientY-y0;
+    if(dy>0) sheet.style.transform='translateY('+dy+'px)';
+  },{passive:true});
+  sheet.addEventListener('touchend',function(e){
+    if(y0===null) return;
+    var dy=(e.changedTouches[0].clientY-y0);
+    sheet.style.transform='';
+    if(dy>70) set(false);
+    y0=null;
+  },{passive:true});
+
+  /* demo stubs */
+  d.querySelectorAll('[data-open-modal]').forEach(function(b){
+    b.addEventListener('click',function(){
+      alert('در صفحات واقعی، فرم مشاوره باز می‌شود.'); });
+  });
+  var b2=d.getElementById('burger2');
+  if(b2) b2.addEventListener('click',function(){
+    alert('در صفحات واقعی، شیت منوی اصلی باز می‌شود.'); });
+})();
+</script>
+</body>
+</html>

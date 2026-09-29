@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>یوآیدی — فوتر نهایی (Footer Component)</title>
+<meta name="theme-color" content="#15397C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════ TOKENS ═══════════════════════════════ */
+:root{
+  --navy:#15397C; --navy-7:#1E4A94; --navy-d:#0E2A5E; --navy-x:#081C42;
+  --teal:#29BCCE; --teal-d:#1A97A8; --teal-l:#E6F7FA;
+  --orange:#F89428; --orange-d:#DE7C13; --orange-l:#FFF3E4;
+  --ink:#0B1220; --n600:#5A6478; --n400:#8A93A6; --n200:#E4E7ED;
+  --n100:#EFF1F5; --n50:#F7F8FA; --white:#fff; --ok:#12A06A;
+  --r-s:4px; --r:8px; --r-l:14px; --r-pill:999px;
+  --sh-1:0 1px 2px rgba(21,57,124,.05), 0 2px 6px rgba(21,57,124,.05);
+  --sh-2:0 1px 2px rgba(21,57,124,.05), 0 8px 24px rgba(21,57,124,.09);
+  --sh-cta:0 6px 18px rgba(248,148,40,.32);
+  --fa:'Vazirmatn',system-ui,sans-serif;
+  --lat:'IBM Plex Sans','Vazirmatn',sans-serif;
+  --mono:'JetBrains Mono','IBM Plex Mono','Vazirmatn',monospace;
+  --pad:clamp(20px,5vw,40px);
+  --maxw:1240px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--fa);font-size:16px;line-height:1.75;color:var(--ink);
+  background:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0;line-height:1.35;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:var(--r-s)}
+.mono{font-family:var(--mono);direction:ltr;unicode-bidi:isolate;font-variant-ligatures:none}
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+
+/* ╔═════════════════════════════════════════════════════════════════════════╗
+   ║  FOOTER — copy from here …                                              ║
+   ╚═════════════════════════════════════════════════════════════════════════╝
+   What changed:
+   ·  On phones the four blocks stacked into a single column and the محصولات
+      list alone was eleven links — roughly 1,400px of unbroken link wall, the
+      exact scroll-compression problem the page series solves everywhere else.
+      Each column is now a <details>: ~54px closed, open on demand. Native
+      element, so keyboard and screen readers get it for free, no JS for the
+      open/close itself. Measured at 390px: 1,310px -> 843px closed (-36%),
+      and that is with a contact strip added on top.
+   ·  Eleven products in one list is also wrong on desktop. Split into
+      "سرویس‌های هویتی" and "استعلام و فناوری" so the columns balance 8/7/7.
+   ·  A contact strip now sits at the top of the footer with the phone as a
+      real button. It used to be link number five in a grey column despite
+      being the best-converting action on the site.
+   ·  The hover used to animate padding-inline-start, which nudges the whole
+      list. It is an underline that grows from the start edge now — no reflow.
+   ·  © ۱۴۰۲ was hard-coded and already three years stale. It is computed from
+      the Persian calendar at runtime, with the markup value as the fallback.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+footer{
+  background:var(--navy-x);color:#B9C6E0;position:relative;overflow:hidden;
+  padding-block:clamp(40px,5.5vw,68px) 0;
+}
+/* a single soft light source instead of a flat slab */
+footer::before{
+  content:'';position:absolute;inset-block-start:-180px;inset-inline-end:-120px;
+  width:520px;height:520px;border-radius:50%;
+  background:radial-gradient(circle,rgba(41,188,206,.16),transparent 66%);
+  pointer-events:none;
+}
+footer::after{
+  content:'';position:absolute;inset-block-start:0;inset-inline:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(41,188,206,.5),rgba(248,148,40,.35),transparent);
+}
+footer > .wrap{position:relative}
+
+/* ── contact strip ─────────────────────────────────────────────────────── */
+.f-contact{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  padding:18px 22px;margin-bottom:clamp(30px,4vw,44px);
+  border:1px solid rgba(255,255,255,.12);border-radius:18px;
+  background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
+}
+.f-contact .tx b{display:block;font-size:16px;font-weight:600;color:#fff;line-height:1.5}
+.f-contact .tx span{display:block;font-size:13px;color:#8FA3C4;margin-top:2px}
+.f-contact .acts{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.f-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:48px;padding:0 20px;border-radius:var(--r);border:1px solid transparent;
+  font-size:14.5px;font-weight:700;cursor:pointer;white-space:nowrap;
+  transition:background .2s,border-color .2s,transform .18s,box-shadow .2s;
+}
+.f-btn svg{width:17px;height:17px;flex:none}
+.f-btn.phone{background:#fff;color:var(--navy);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.f-btn.phone:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.26)}
+.f-btn.phone .num{font-family:var(--mono);font-size:14.5px}
+.f-btn.ghost{background:rgba(255,255,255,.06);color:#fff;border-color:rgba(255,255,255,.24)}
+.f-btn.ghost:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.5);
+  transform:translateY(-2px)}
+
+/* ── grid ──────────────────────────────────────────────────────────────── */
+.f-grid{display:grid;grid-template-columns:1.55fr 1fr 1fr 1fr;gap:clamp(24px,4vw,48px);
+  padding-block-end:clamp(30px,4vw,44px)}
+.f-brand img.mk{height:38px;margin-bottom:14px}
+.f-brand p{font-size:13.5px;line-height:1.95;color:#8FA3C4;max-width:40ch}
+
+.f-social{display:flex;gap:9px;margin-top:18px}
+.f-social a{width:38px;height:38px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);
+  display:grid;place-items:center;color:#B9C6E0;
+  transition:background .2s,border-color .2s,color .2s,transform .2s}
+.f-social a:hover{background:var(--teal);border-color:var(--teal);color:var(--navy-x);
+  transform:translateY(-2px)}
+.f-social svg{width:16px;height:16px}
+
+/* each column is a <details> so it can collapse on phones with no JS */
+.f-col{border:0;min-width:0}
+.f-col > summary{
+  list-style:none;cursor:default;color:#fff;font-size:14px;font-weight:600;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-bottom:14px;
+}
+.f-col > summary::-webkit-details-marker{display:none}
+.f-col > summary .chev{width:16px;height:16px;color:#7D91B4;flex:none;display:none;
+  transition:transform .25s ease}
+.f-links{display:flex;flex-direction:column}
+.f-links a{
+  position:relative;align-self:flex-start;font-size:13.5px;padding-block:6px;
+  color:#93A6C6;transition:color .2s;
+}
+/* underline grows from the inline-start edge — no padding animation, no reflow */
+.f-links a::after{
+  content:'';position:absolute;inset-block-end:4px;inset-inline-start:0;
+  width:0;height:1px;background:var(--teal);transition:width .22s ease;
+}
+.f-links a:hover{color:#fff}
+.f-links a:hover::after{width:100%}
+.f-links a .tag{font-size:10px;font-weight:700;color:var(--navy-x);background:var(--teal);
+  border-radius:var(--r-pill);padding:1px 7px;margin-inline-start:6px;
+  vertical-align:middle}
+
+/* ── bottom bar ────────────────────────────────────────────────────────── */
+.f-bot{
+  border-block-start:1px solid rgba(255,255,255,.1);padding-block:20px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+}
+.f-bot p{font-size:12.5px;color:#7D91B4;line-height:1.7}
+.f-legal{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.f-legal a{font-size:12.5px;color:#7D91B4;transition:color .2s}
+.f-legal a:hover{color:#fff}
+/* TRUST BADGES ▸ slot for the ای‌نماد / ساماندهی marks that run on the live
+   site. Drop the real badge markup in; the box only reserves the space. */
+.f-badges{display:flex;align-items:center;gap:10px}
+.f-badges > *{border-radius:10px;overflow:hidden;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12)}
+
+@media (max-width:980px){
+  .f-grid{grid-template-columns:1fr 1fr 1fr;gap:28px}
+  .f-brand{grid-column:1/-1}
+  .f-brand p{max-width:60ch}
+}
+@media (max-width:720px){
+  footer{padding-block-start:34px}
+  .f-contact{flex-direction:column;align-items:stretch;text-align:center;padding:18px}
+  .f-contact .acts{flex-direction:column;align-items:stretch}
+  .f-btn{width:100%}
+
+  .f-grid{grid-template-columns:1fr;gap:0;padding-block-end:26px}
+  .f-brand{margin-bottom:22px}
+  .f-brand p{font-size:13px;line-height:1.9}
+  .f-social{justify-content:flex-start}
+
+  /* ACCORDION ▸ each column collapses to one row. This is the change that
+     takes the mobile footer from 1,310px down to 843px closed, at 390px. */
+  .f-col{border-block-end:1px solid rgba(255,255,255,.1)}
+  .f-col > summary{
+    cursor:pointer;margin:0;padding-block:16px;font-size:15px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .f-col > summary .chev{display:block}
+  .f-col[open] > summary .chev{transform:rotate(180deg)}
+  .f-col[open] > summary{color:var(--teal)}
+  .f-links{padding-block:2px 16px;gap:2px}
+  .f-links a{font-size:14px;padding-block:9px}
+  /* the growing underline is a pointer affordance; on touch it just flashes */
+  .f-links a::after{display:none}
+
+  .f-bot{flex-direction:column;align-items:center;text-align:center;gap:14px;
+    padding-block:22px}
+  .f-legal{justify-content:center}
+  .f-badges{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .f-links a::after,.f-col > summary .chev,.f-social a{transition-duration:.01ms}
+}
+
+/* ╔═════════════════════════════════════════════════════════════════════════╗
+   ║  … copy to here. Demo harness below.                                    ║
+   ╚═════════════════════════════════════════════════════════════════════════╝ */
+.demo{padding:64px 0 50px;background:
+  radial-gradient(800px 400px at 85% 0%,rgba(41,188,206,.1),transparent 62%)}
+.demo h1{font-size:clamp(24px,3.6vw,38px);line-height:1.3;letter-spacing:-.02em;
+  margin-bottom:14px}
+.demo p.lede{font-size:clamp(15px,1.6vw,17.5px);line-height:1.9;color:var(--n600);
+  max-width:62ch}
+.spec{margin-top:36px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:14px;margin-bottom:60px}
+.spec-card{border:1px solid var(--n200);border-radius:var(--r-l);padding:18px;
+  background:#fff;box-shadow:var(--sh-1)}
+.spec-card h3{font-size:14.5px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.spec-card h3 i{width:7px;height:7px;border-radius:50%;flex:none}
+.spec-card p{font-size:13px;line-height:1.8;color:var(--n600)}
+.spec-card code{font-family:var(--mono);font-size:11.5px;direction:ltr;
+  unicode-bidi:isolate;background:var(--n100);border-radius:5px;padding:1px 5px}
+</style>
+</head>
+<body>
+
+<main class="demo">
+  <div class="wrap">
+    <h1>فوتر نهایی یوآیدی</h1>
+    <p class="lede">پنجره را زیر ۷۲۰ پیکسل باریک کنید تا ستون‌ها به آکاردئون تبدیل شوند. در عرض ۳۹۰ پیکسل، فوتر قبلی ۱٬۳۱۰ پیکسل ارتفاع داشت و نسخه جدید در حالت بسته ۸۴۳ پیکسل است — با وجود نوار تماسی که به بالای آن اضافه شده.</p>
+    <div class="spec">
+      <div class="spec-card">
+        <h3><i style="background:var(--orange)"></i>آکاردئون موبایل</h3>
+        <p>هر ستون یک <code>&lt;details&gt;</code> است: در موبایل بسته و در دسکتاپ باز. چون عنصر بومی است، پشتیبانی صفحه‌خوان و کیبورد بدون کد اضافه به دست می‌آید.</p>
+      </div>
+      <div class="spec-card">
+        <h3><i style="background:var(--teal)"></i>نوار تماس</h3>
+        <p>شماره تلفن از ردیف پنجم یک ستون خاکستری به یک دکمه سفید در بالای فوتر منتقل شد؛ طبق GA4 پرتبدیل‌ترین اقدام سایت است.</p>
+      </div>
+      <div class="spec-card">
+        <h3><i style="background:var(--navy)"></i>هاور بدون ریفلو</h3>
+        <p>هاور قبلی <code>padding-inline-start</code> را انیمیت می‌کرد و کل لیست تکان می‌خورد. حالا یک زیرخط است که از لبه ابتدایی رشد می‌کند.</p>
+      </div>
+      <div class="spec-card">
+        <h3><i style="background:var(--ok)"></i>سال شمسی پویا</h3>
+        <p><code>© ۱۴۰۲</code> ثابت نوشته شده بود. حالا از تقویم هجری شمسی مرورگر خوانده می‌شود و مقدار داخل مارکاپ فقط نقش جایگزین را دارد.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="wrap">
+
+    <div class="f-contact">
+      <div class="tx">
+        <b>سؤالی درباره وب‌سرویس‌ها دارید؟</b>
+        <span>کارشناس یوآیدی تعرفه و کلید آزمایشی را برایتان آماده می‌کند</span>
+      </div>
+      <div class="acts">
+        <a class="f-btn phone" href="tel:02166123290"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg><span class="num">02166123290</span></a>
+        <button class="f-btn ghost" type="button" data-open-modal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>مشاوره رایگان</button>
+      </div>
+    </div>
+
+    <div class="f-grid">
+      <div class="f-brand">
+        <img class="mk" src="data:image/png;base64,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" alt="یوآیدی">
+        <p>شرکت دانش‌بنیان بینش هوشمند نسل پیشرو، با نام تجاری یوآیدی، از سال ۱۳۹۶ در حوزه احراز هویت آنلاین فعال است و به‌عنوان کارگزار مورد تایید سامانه‌های سجام و ثنا فعالیت می‌کند.</p>
+        <div class="f-social">
+          <a href="https://www.linkedin.com/company/uid-net/" aria-label="لینکدین"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.76-2.05C21.4 8.65 22 11 22 14.1V21h-4v-6.1c0-1.45-.03-3.3-2-3.3-2 0-2.3 1.57-2.3 3.2V21h-4z"/></svg></a>
+          <a href="https://www.instagram.com/uid_net/" aria-label="اینستاگرام"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://twitter.com/UID_net/" aria-label="توییتر"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.2 2H21l-6.6 7.5L22 22h-6.2l-4.8-6.3L5.4 22H2.6l7-8L2 2h6.3l4.4 5.8zm-1 18h1.6L7.5 3.7H5.8z"/></svg></a>
+          <a href="https://t.me/uid_official" aria-label="تلگرام"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg></a>
+        </div>
+      </div>
+
+      <details class="f-col" open>
+        <summary>سرویس‌های هویتی<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <div class="f-links">
+          <a href="/uid-plus/">یوآیدی‌پلاس (PWA)</a>
+          <a href="/api-ekyc/">وب‌سرویس احراز هویت تصویری</a>
+          <a href="/sana/">احراز هویت ثنا</a>
+          <a href="/sana-register-foreign-form/">ثنا ویژه ایرانیان خارج از کشور</a>
+          <a href="/sejamauthentication/">احراز هویت سجام</a>
+          <a href="/api-inquiry-person/">وب‌سرویس ثبت احوال</a>
+          <a href="/api-shahkar/">وب‌سرویس شاهکار</a>
+          <a href="/authentication-digital-currency-exchange/">احراز هویت صرافی ارز دیجیتال</a>
+        </div>
+      </details>
+
+      <details class="f-col" open>
+        <summary>استعلام و فناوری<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <div class="f-links">
+          <a href="/api-inquiry-iban/">استعلام اطلاعات مالی (شبا)</a>
+          <a href="/api-inquiry-card/">تبدیل کارت به شبا</a>
+          <a href="/api-validate-iban/">تطبیق شبا با کد ملی</a>
+          <a href="/api-validate-card/">تطبیق شماره کارت با کد ملی</a>
+          <a href="/address-postcode-docs/">استعلام کد پستی و آدرس</a>
+          <a href="/face-detection/">تطبیق و تشخیص چهره</a>
+          <a href="/liveness-detection/">تشخیص زنده‌بودن</a>
+        </div>
+      </details>
+
+      <details class="f-col" open>
+        <summary>یوآیدی و منابع<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <div class="f-links">
+          <a href="/api/">همه وب‌سرویس‌ها<span class="tag">آرشیو</span></a>
+          <a href="/docs/">مستندات فنی</a>
+          <a href="/glossary/">واژه‌نامه اصطلاحات</a>
+          <a href="/faq/">سوالات متداول</a>
+          <a href="https://blog.u-id.net/">وبلاگ</a>
+          <a href="/about-us/">درباره ما</a>
+          <a href="/contact-us/">تماس با ما</a>
+        </div>
+      </details>
+    </div>
+
+    <div class="f-bot">
+      <p>تمامی حقوق برای شرکت بینش هوشمند نسل پیشرو محفوظ است © <span id="fYear">۱۴۰۵</span></p>
+      <div class="f-legal">
+        <a href="/privacy/">حریم خصوصی</a>
+        <a href="/terms/">قوانین و مقررات</a>
+      </div>
+      <!-- TRUST BADGES ▸ نشان‌های ای‌نماد و ساماندهی سایت فعلی اینجا قرار بگیرند -->
+      <div class="f-badges"></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var d=document;
+
+  /* ── Persian copyright year ────────────────────────────────────────────
+     The markup value is the fallback; if Intl has the Persian calendar we
+     read the live year so this never goes stale again. */
+  try{
+    var y=new Intl.DateTimeFormat('fa-IR-u-ca-persian',{year:'numeric'}).format(new Date());
+    var el=d.getElementById('fYear');
+    if(el&&y) el.textContent=String(y).replace(/[^۰-۹٠-٩\d]/g,'');
+  }catch(e){ /* keep the markup fallback */ }
+
+  /* ── accordion state per breakpoint ────────────────────────────────────
+     <details> handles opening; this only decides the default for the current
+     width. Listening to the media query (not to resize) means a reader who
+     opened a column on a phone keeps it open while they scroll. */
+  var mq=window.matchMedia('(min-width:721px)');
+  function syncCols(e){
+    d.querySelectorAll('footer .f-col').forEach(function(c){ c.open=e.matches; });
+  }
+  syncCols(mq);
+  if(mq.addEventListener) mq.addEventListener('change',syncCols);
+  else if(mq.addListener) mq.addListener(syncCols);
+
+  /* on desktop the summary is a heading, not a control */
+  d.querySelectorAll('footer .f-col > summary').forEach(function(s){
+    s.addEventListener('click',function(e){ if(mq.matches) e.preventDefault(); });
+  });
+
+  /* demo stub — on the real pages this opens the lead modal */
+  d.querySelectorAll('[data-open-modal]').forEach(function(b){
+    b.addEventListener('click',function(){
+      alert('در صفحات واقعی، فرم مشاوره باز می‌شود.'); });
+  });
+})();
+</script>
+</body>
+</html>

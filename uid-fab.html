@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>یوآیدی — دکمه شناور تماس (Sticky Contact FAB)</title>
+<meta name="theme-color" content="#15397C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════ TOKENS ═══════════════════════════════ */
+:root{
+  --navy:#15397C; --navy-7:#1E4A94; --navy-d:#0E2A5E; --navy-x:#081C42;
+  --teal:#29BCCE; --teal-d:#1A97A8; --teal-l:#E6F7FA;
+  --orange:#F89428; --orange-d:#DE7C13; --orange-l:#FFF3E4;
+  --ink:#0B1220; --n600:#5A6478; --n400:#8A93A6; --n200:#E4E7ED;
+  --n100:#EFF1F5; --n50:#F7F8FA; --white:#fff; --ok:#12A06A;
+  --r-s:4px; --r:8px; --r-l:14px; --r-pill:999px;
+  --sh-1:0 1px 2px rgba(21,57,124,.05), 0 2px 6px rgba(21,57,124,.05);
+  --sh-2:0 1px 2px rgba(21,57,124,.05), 0 8px 24px rgba(21,57,124,.09);
+  --sh-3:0 2px 4px rgba(21,57,124,.06), 0 18px 44px rgba(21,57,124,.14);
+  --fa:'Vazirmatn',system-ui,sans-serif;
+  --lat:'IBM Plex Sans','Vazirmatn',sans-serif;
+  --mono:'JetBrains Mono','IBM Plex Mono','Vazirmatn',monospace;
+  --pad:clamp(20px,5vw,40px);
+  --maxw:1240px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--fa);font-size:16px;line-height:1.75;color:var(--ink);
+  background:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0;line-height:1.35;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:var(--r-s)}
+.mono{font-family:var(--mono);direction:ltr;unicode-bidi:isolate;font-variant-ligatures:none}
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+
+/* ╔═════════════════════════════════════════════════════════════════════════╗
+   ║  STICKY CONTACT FAB — copy from here …                                  ║
+   ╚═════════════════════════════════════════════════════════════════════════╝
+   What changed from the old version:
+   ·  It was a pill ("در ارتباط باشید") with a box-shadow keyframe pulse that
+      repainted a 30px blur every frame. Now a real 58px circle with a scaling
+      ring pseudo-element — compositor-only, and it stops after three cycles so
+      it attracts attention once instead of nagging forever.
+   ·  The label is no longer permanent furniture; it slides out on hover, so the
+      resting footprint is a circle, as asked.
+   ·  The fan of bare circles with floating black tooltips became one panel with
+      readable rows. Per GA4, phone beats the form 5,722 → 3,050 users, so the
+      phone row is first and carries the number itself.
+   ·  A scrim now sits behind the open panel: the old fan opened over live page
+      content with nothing separating them.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+.cfab-scrim{
+  position:fixed;inset:0;z-index:1200;background:rgba(8,28,66,.32);
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+  opacity:0;visibility:hidden;transition:opacity .26s,visibility .26s;
+}
+.cfab-scrim.on{opacity:1;visibility:visible}
+
+/* ── the button ───────────────────────────────────────────────────────────── */
+.cfab{
+  position:fixed;bottom:28px;
+  /* physical `right`, deliberately: inset-inline-end resolves to LEFT in this
+     RTL document and threw the whole cluster to the wrong corner. The button
+     is specified as bottom-right of the screen, not bottom-start of the text. */
+  right:28px;
+  z-index:1220;display:flex;align-items:center;gap:0;
+  height:58px;padding:0;border:0;border-radius:var(--r-pill);cursor:pointer;
+  background:linear-gradient(135deg,#FCA53F,var(--orange) 46%,var(--orange-d));
+  color:#fff;box-shadow:0 10px 28px rgba(248,148,40,.42),0 2px 6px rgba(21,57,124,.18);
+  transition:box-shadow .24s ease,background .24s ease,transform .18s cubic-bezier(.2,.7,.3,1);
+}
+.cfab:hover{transform:translateY(-2px);
+  box-shadow:0 16px 38px rgba(248,148,40,.5),0 3px 8px rgba(21,57,124,.2)}
+.cfab:active{transform:translateY(0)}
+
+/* the icon well is always a perfect circle — it defines the resting shape */
+.cfab-ico{width:58px;height:58px;display:grid;place-items:center;flex:none;position:relative}
+.cfab-ico svg{width:23px;height:23px;grid-area:1/1;
+  transition:opacity .2s ease,transform .3s cubic-bezier(.2,.7,.3,1)}
+.cfab .ico-close{opacity:0;transform:rotate(-90deg) scale(.6)}
+.cfab.is-open .ico-open{opacity:0;transform:rotate(90deg) scale(.6)}
+.cfab.is-open .ico-close{opacity:1;transform:none}
+
+/* label expands on hover only — resting state stays a circle */
+.cfab-label{
+  max-width:0;overflow:hidden;white-space:nowrap;font-size:14.5px;font-weight:700;
+  opacity:0;transition:max-width .34s cubic-bezier(.2,.8,.3,1),opacity .2s ease,
+    padding-inline-end .34s cubic-bezier(.2,.8,.3,1);
+  padding-inline-end:0;
+}
+.cfab:hover .cfab-label,.cfab:focus-visible .cfab-label{max-width:170px;opacity:1;
+  padding-inline-end:22px}
+.cfab.is-open .cfab-label{max-width:0!important;opacity:0!important;
+  padding-inline-end:0!important}
+
+/* attention ring — three cycles, then it rests. Transform/opacity only. */
+.cfab-ico::before{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  border:2px solid var(--orange);
+  animation:cfabRing 2.6s cubic-bezier(.2,.7,.3,1) 1.2s 3 both;
+}
+@keyframes cfabRing{
+  0%{transform:scale(1);opacity:.7}
+  70%{transform:scale(1.75);opacity:0}
+  100%{transform:scale(1.75);opacity:0}
+}
+.cfab.is-open{background:linear-gradient(135deg,var(--navy-7),var(--navy) 60%,var(--navy-d));
+  box-shadow:0 12px 32px rgba(21,57,124,.4)}
+.cfab.is-open .cfab-ico::before{animation:none;opacity:0}
+
+/* ── the panel ────────────────────────────────────────────────────────────── */
+.cfab-panel{
+  position:fixed;bottom:98px;right:28px;z-index:1221;   /* physical, see above */
+  width:min(320px,calc(100vw - 40px));
+  background:#fff;border:1px solid var(--n200);border-radius:18px;
+  box-shadow:0 24px 60px rgba(8,28,66,.26),0 4px 12px rgba(8,28,66,.1);
+  overflow:hidden;
+  opacity:0;visibility:hidden;transform:translateY(14px) scale(.96);
+  transform-origin:bottom right;  /* grows out of the button in the corner */
+  transition:opacity .24s cubic-bezier(.2,.8,.3,1),
+    transform .28s cubic-bezier(.2,.8,.3,1),visibility .28s;
+}
+.cfab-panel.on{opacity:1;visibility:visible;transform:none}
+
+.cfab-head{padding:16px 18px 14px;
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-d) 100%);color:#fff;
+  position:relative;overflow:hidden}
+.cfab-head::after{content:'';position:absolute;width:150px;height:150px;border-radius:50%;
+  background:var(--teal);opacity:.16;inset-block-start:-78px;inset-inline-start:-46px}
+.cfab-head b{display:block;font-size:15px;font-weight:600;position:relative}
+.cfab-head span{display:block;font-size:12px;color:#A9BCDD;margin-top:2px;position:relative}
+
+.cfab-rows{padding:8px}
+.cfab-row{
+  display:flex;align-items:center;gap:12px;width:100%;padding:10px 10px;
+  border:0;background:none;border-radius:12px;cursor:pointer;text-align:start;
+  transition:background .18s ease;
+}
+.cfab-row:hover{background:var(--n50)}
+.cfab-row .ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+  color:#fff;flex:none;box-shadow:var(--sh-1)}
+.cfab-row .ic svg{width:19px;height:19px}
+.cfab-row .tx{min-width:0;flex:1}
+.cfab-row b{display:block;font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.5}
+.cfab-row .sub{display:block;font-size:11.5px;color:var(--n400);line-height:1.5}
+.cfab-row .go{width:15px;height:15px;color:var(--n200);flex:none;
+  transition:transform .2s ease,color .2s ease}
+.cfab-row:hover .go{color:var(--navy);transform:translateX(-3px)}
+
+.ic-phone{background:linear-gradient(135deg,var(--navy-7),var(--navy))}
+.ic-whats{background:linear-gradient(135deg,#3BE07C,#1FAF52)}
+.ic-tg{background:linear-gradient(135deg,#43BDF0,#2094CF)}
+.ic-form{background:linear-gradient(135deg,#FCA53F,var(--orange-d))}
+
+.cfab-foot{padding:11px 18px;border-block-start:1px solid var(--n100);
+  background:var(--n50);font-size:11.5px;color:var(--n400);
+  display:flex;align-items:center;gap:7px}
+.cfab-foot i{width:6px;height:6px;border-radius:50%;background:var(--ok);flex:none}
+
+/* the whole cluster is desktop-only — phones get the bottom navbar instead */
+@media (max-width:760px){ .cfab,.cfab-panel,.cfab-scrim{display:none} }
+@media (prefers-reduced-motion:reduce){
+  .cfab-ico::before{animation:none;opacity:0}
+  .cfab,.cfab-panel,.cfab-label,.cfab-scrim{transition-duration:.01ms}
+}
+
+/* ╔═════════════════════════════════════════════════════════════════════════╗
+   ║  … copy to here. Demo harness below.                                    ║
+   ╚═════════════════════════════════════════════════════════════════════════╝ */
+.demo{padding:80px 0 60px;background:
+  radial-gradient(900px 420px at 85% 0%,rgba(248,148,40,.1),transparent 62%),
+  radial-gradient(700px 380px at 5% 10%,rgba(41,188,206,.09),transparent 60%)}
+.demo h1{font-size:clamp(26px,3.6vw,40px);line-height:1.3;letter-spacing:-.02em;
+  margin-bottom:14px}
+.demo p.lede{font-size:clamp(15px,1.6vw,17.5px);line-height:1.9;color:var(--n600);
+  max-width:62ch}
+.spec{margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:14px}
+.spec-card{border:1px solid var(--n200);border-radius:var(--r-l);padding:18px;
+  background:#fff;box-shadow:var(--sh-1)}
+.spec-card h3{font-size:14.5px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.spec-card h3 i{width:7px;height:7px;border-radius:50%;flex:none}
+.spec-card p{font-size:13px;line-height:1.8;color:var(--n600)}
+.spec-card code{font-family:var(--mono);font-size:11.5px;direction:ltr;
+  unicode-bidi:isolate;background:var(--n100);border-radius:5px;padding:1px 5px}
+.note{margin-top:22px;padding:14px 16px;border-radius:var(--r-l);
+  background:var(--orange-l);border:1px solid rgba(248,148,40,.3);font-size:13px;
+  line-height:1.8;color:#7A4A0E}
+.filler{height:130vh;background:linear-gradient(180deg,var(--n50),#fff)}
+</style>
+</head>
+<body>
+
+<main class="demo">
+  <div class="wrap">
+    <h1>دکمه شناور تماس — نسخه دسکتاپ</h1>
+    <p class="lede">در حالت عادی یک دایره است؛ با هاور به قرص برچسب‌دار باز می‌شود و با کلیک، پنل کانال‌های ارتباطی بالای آن ظاهر می‌شود. پنجره را زیر ۷۶۰ پیکسل باریک کنید تا ببینید کل مجموعه در موبایل کنار می‌رود و جای آن را نوار پایین می‌گیرد.</p>
+
+    <div class="spec">
+      <div class="spec-card">
+        <h3><i style="background:var(--orange)"></i>دایره در حالت استراحت</h3>
+        <p>برچسب با <code>max-width</code> صفر شروع می‌شود و فقط روی هاور یا فوکوس باز می‌شود، پس ردپای دکمه در حالت عادی دقیقاً یک دایره ۵۸ پیکسلی است.</p>
+      </div>
+      <div class="spec-card">
+        <h3><i style="background:var(--teal)"></i>پالس سبک‌تر</h3>
+        <p>پالس قبلی روی <code>box-shadow</code> بود و هر فریم یک بلور ۳۰ پیکسلی را دوباره رسم می‌کرد. حالا یک حلقه شبه‌عنصر با <code>transform</code> است و بعد از سه دور متوقف می‌شود.</p>
+      </div>
+      <div class="spec-card">
+        <h3><i style="background:var(--navy)"></i>پنل به‌جای فن</h3>
+        <p>دایره‌های شناور با تولتیپ مشکی جای خود را به یک پنل با ردیف‌های خوانا دادند. شماره تلفن داخل ردیف اول دیده می‌شود، نه پشت یک آیکون.</p>
+      </div>
+      <div class="spec-card">
+        <h3><i style="background:var(--ok)"></i>ترتیب بر اساس داده</h3>
+        <p>طبق GA4، تماس تلفنی ۵٬۷۲۲ کاربر و فرم ۳٬۰۵۰ کاربر داشته است؛ بنابراین ردیف تماس تلفنی اول است و فرم پایین‌تر.</p>
+      </div>
+    </div>
+
+    <p class="note"><b>برای پیاده‌سازی:</b> لینک واتساپ و تلگرام در این فایل همان مقادیر صفحات فعلی است (<span class="mono">wa.me/982166123290</span> و <span class="mono">t.me/uid_official</span>). اگر حساب پشتیبانی جداگانه‌ای دارید، پیش از انتشار جایگزین شود.</p>
+  </div>
+</main>
+<div class="filler"></div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     STICKY CONTACT FAB
+     ══════════════════════════════════════════════════════════════════════════ -->
+<div class="cfab-scrim" id="cfabScrim"></div>
+
+<div class="cfab-panel" id="cfabPanel" role="dialog" aria-modal="false"
+     aria-labelledby="cfabTitle">
+  <div class="cfab-head">
+    <b id="cfabTitle">از چه راهی در ارتباط باشیم؟</b>
+    <span>کارشناس یوآیدی در ساعات پاسخگویی همراه شماست</span>
+  </div>
+  <div class="cfab-rows">
+    <a class="cfab-row" href="tel:02166123290">
+      <span class="ic ic-phone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg></span>
+      <span class="tx"><b>تماس تلفنی</b><span class="sub"><span class="mono">02166123290</span></span></span>
+      <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </a>
+    <a class="cfab-row" href="https://wa.me/982166123290" target="_blank" rel="noopener">
+      <span class="ic ic-whats"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1112 20zm4.5-5.8c-.2-.1-1.4-.7-1.7-.8s-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.6 6.6 0 01-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 00-.7.3A3 3 0 006 9.9c0 1.7 1.3 3.4 1.5 3.6a10 10 0 003.8 3.3c1.8.7 1.8.5 2.2.4a2.6 2.6 0 001.7-1.2 2.1 2.1 0 00.2-1.2z"/></svg></span>
+      <span class="tx"><b>واتساپ</b><span class="sub">گفتگوی متنی با پشتیبانی</span></span>
+      <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </a>
+    <a class="cfab-row" href="https://t.me/uid_official" target="_blank" rel="noopener">
+      <span class="ic ic-tg"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg></span>
+      <span class="tx"><b>تلگرام</b><span class="sub">ارسال پیام به کانال پشتیبانی</span></span>
+      <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </a>
+    <button class="cfab-row" type="button" data-open-modal>
+      <span class="ic ic-form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg></span>
+      <span class="tx"><b>مشاوره رایگان</b><span class="sub">کلید آزمایشی و تعرفه اختصاصی</span></span>
+      <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+  </div>
+  <!-- TODO ▸ ساعات دقیق پاسخگویی از کلاینت گرفته و جایگزین شود. تا آن زمان همان
+       عبارتی به کار می‌رود که در صفحات فعلی استفاده شده است. -->
+  <div class="cfab-foot"><i></i>کارشناس یوآیدی در ساعات پاسخگویی تماس می‌گیرد</div>
+</div>
+
+<button class="cfab" id="cfabBtn" aria-expanded="false" aria-controls="cfabPanel">
+  <span class="cfab-ico">
+    <svg class="ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 01-9 8.4 8.9 8.9 0 01-4-.9L3 20.5l1.5-4.4A8.4 8.4 0 013 11.5a8.4 8.4 0 019-8.4 8.4 8.4 0 019 8.4z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg>
+    <svg class="ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </span>
+  <span class="cfab-label">در ارتباط باشید</span>
+</button>
+
+<script>
+(function(){
+  var d=document;
+  var btn=d.getElementById('cfabBtn'),
+      panel=d.getElementById('cfabPanel'),
+      scrim=d.getElementById('cfabScrim');
+  if(!btn||!panel) return;
+
+  function set(open){
+    btn.classList.toggle('is-open',open);
+    btn.setAttribute('aria-expanded',open?'true':'false');
+    btn.setAttribute('aria-label',open?'بستن منوی تماس':'باز کردن منوی تماس');
+    panel.classList.toggle('on',open);
+    if(scrim) scrim.classList.toggle('on',open);
+  }
+  set(false);
+
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    set(!panel.classList.contains('on'));
+  });
+  if(scrim) scrim.addEventListener('click',function(){ set(false); });
+  d.addEventListener('keydown',function(e){ if(e.key==='Escape') set(false); });
+  /* a click anywhere outside the pair closes it — the panel itself must not */
+  d.addEventListener('click',function(e){
+    if(!panel.contains(e.target)&&!btn.contains(e.target)) set(false);
+  });
+  panel.querySelectorAll('a,button').forEach(function(el){
+    el.addEventListener('click',function(){ set(false); });
+  });
+
+  /* demo stub — on the real pages this opens the lead modal */
+  d.querySelectorAll('[data-open-modal]').forEach(function(b){
+    b.addEventListener('click',function(){
+      alert('در صفحات واقعی، فرم مشاوره باز می‌شود.'); });
+  });
+})();
+</script>
+</body>
+</html>

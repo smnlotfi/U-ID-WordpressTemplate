@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>تماس با ما | یوآیدی — پشتیبانی، فروش و راه‌اندازی وب‌سرویس</title>
+<meta name="description" content="سریع‌ترین راه تماس با یوآیدی: تلفن ۰۲۱۶۶۱۲۳۲۹۰، تلگرام Uid_poshtiban و ایمیل info@uid.ir. شنبه تا چهارشنبه، ۹ صبح تا ۶ عصر پاسخگوی شما هستیم. آدرس: فرصت شیرازی.">
+<meta name="theme-color" content="#15397C">
+<meta property="og:type" content="website">
+<meta property="og:title" content="تماس با ما — یوآیدی">
+<meta property="og:description" content="تلفن ۰۲۱۶۶۱۲۳۲۹۰، تلگرام Uid_poshtiban، ایمیل info@uid.ir. شنبه تا چهارشنبه ۹ تا ۱۸.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════ TOKENS ═══════════════════════════════
+   Values carried verbatim from the fifteen built pages. NOTE: the brandbook
+   specifies #214180 / #3199B6 / #FF9829 — see handover note 1.
+   ════════════════════════════════════════════════════════════════════════ */
+:root{
+  --navy:#15397C; --navy-7:#1E4A94; --navy-d:#0E2A5E; --navy-x:#081C42;
+  --teal:#29BCCE; --teal-d:#1A97A8; --teal-l:#E6F7FA;
+  --orange:#F89428; --orange-d:#DE7C13; --orange-l:#FFF3E4;
+  --ink:#0B1220; --n600:#5A6478; --n400:#8A93A6; --n200:#E4E7ED;
+  --n100:#EFF1F5; --n50:#F7F8FA; --white:#fff;
+  --leak:#D64550; --leak-l:#FDEEEF; --ok:#12A06A; --ok-l:#E6F6F0;
+
+  --r-s:4px; --r:8px; --r-l:14px; --r-pill:999px;
+  --sh-1:0 1px 2px rgba(21,57,124,.05), 0 2px 6px rgba(21,57,124,.05);
+  --sh-2:0 1px 2px rgba(21,57,124,.05), 0 8px 24px rgba(21,57,124,.09);
+  --sh-3:0 2px 4px rgba(21,57,124,.06), 0 18px 44px rgba(21,57,124,.14);
+  --sh-cta:0 6px 18px rgba(248,148,40,.32);
+
+  --fa:'Vazirmatn',system-ui,sans-serif;
+  --lat:'IBM Plex Sans','Vazirmatn',sans-serif;
+  --mono:'JetBrains Mono','IBM Plex Mono','Vazirmatn',monospace;
+
+  --pad:clamp(20px,5vw,40px);
+  --sec:clamp(56px,7vw,104px);
+  --maxw:1240px;
+  --hex:polygon(50% 0%, 96.6% 25%, 96.6% 75%, 50% 100%, 3.4% 75%, 3.4% 25%);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--fa);font-size:16px;line-height:1.75;
+  color:var(--ink);background:var(--white);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0;line-height:1.35;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:var(--r-s)}
+.lat{font-family:var(--lat);direction:ltr;unicode-bidi:isolate}
+.mono{font-family:var(--mono);direction:ltr;unicode-bidi:isolate;font-variant-ligatures:none}
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+.sec{padding-block:var(--sec)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* the honeypot input must not lay out at full width inside the clipped box */
+.sr input{width:1px;height:1px;min-height:0;padding:0;border:0}
+
+/* INHERITED DEFECT 3 — a bidi-neutral slash flips "۱ / ۵" to "۵ / ۱" inside an
+   RTL block. Every counter-like run is isolated LTR. */
+.ctr{direction:ltr;unicode-bidi:isolate;font-family:var(--mono)}
+
+/* ═══════════════════════════════ TYPE SCALE ═══════════════════════════════ */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;
+  letter-spacing:.02em;padding:6px 13px;border-radius:var(--r-pill);
+  background:var(--teal-l);color:var(--teal-d);border:1px solid rgba(41,188,206,.28);
+}
+.eyebrow.on-dark{background:rgba(41,188,206,.13);color:#7FE0EC;border-color:rgba(41,188,206,.32)}
+.eyebrow i{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+
+.h-hero{font-size:clamp(29px,4.4vw,52px);font-weight:600;line-height:1.28;letter-spacing:-.02em}
+.h-sec{font-size:clamp(24px,3.1vw,37px);font-weight:600;line-height:1.32;letter-spacing:-.015em}
+.h-sub{font-size:clamp(19px,2.1vw,25px);font-weight:600;line-height:1.4}
+.h-card{font-size:18px;font-weight:600;line-height:1.45}
+.lede{font-size:clamp(15.5px,1.6vw,18.5px);line-height:1.85;color:var(--n600);font-weight:400}
+.lede.on-dark{color:#B9C6E0}
+.small{font-size:13.5px;line-height:1.7;color:var(--n600)}
+.tiny{font-size:12px;line-height:1.65;color:var(--n400)}
+
+.sec-head{max-width:760px;margin-bottom:clamp(30px,4.4vw,52px)}
+.sec-head .h-sec{margin-block:16px 14px}
+.sec-head.mid{margin-inline:auto;text-align:center}
+
+/* ═══════════════════════════════ BUTTONS ══════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:0 22px;min-height:50px;border-radius:var(--r);border:1px solid transparent;
+  font-size:15px;font-weight:600;cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .18s cubic-bezier(.2,.7,.3,1),box-shadow .22s,background .18s,border-color .18s,color .18s;
+  white-space:nowrap;text-align:center;
+}
+.btn svg{flex:none;width:17px;height:17px}
+.btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(100deg,transparent 38%,rgba(255,255,255,.3) 50%,transparent 62%);
+  transform:translateX(-130%);transition:transform .62s ease;
+}
+.btn:hover::after{transform:translateX(130%)}
+.btn:active{transform:translateY(1px)}
+.btn-cta{background:var(--orange);color:#fff;box-shadow:var(--sh-cta)}
+.btn-cta:hover{background:var(--orange-d);box-shadow:0 10px 26px rgba(248,148,40,.4);transform:translateY(-2px)}
+.btn-navy{background:var(--navy);color:#fff;box-shadow:0 5px 16px rgba(21,57,124,.24)}
+.btn-navy:hover{background:var(--navy-7);transform:translateY(-2px);box-shadow:0 10px 26px rgba(21,57,124,.3)}
+.btn-ghost{background:transparent;color:var(--navy);border-color:var(--n200)}
+.btn-ghost:hover{border-color:var(--navy);background:var(--n50);transform:translateY(-2px)}
+.btn-ghost-d{background:rgba(255,255,255,.05);color:#fff;border-color:rgba(255,255,255,.24)}
+.btn-ghost-d:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.5);transform:translateY(-2px)}
+.btn-white{background:#fff;color:var(--navy);box-shadow:0 6px 20px rgba(0,0,0,.16)}
+.btn-white:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.22)}
+.btn-sm{min-height:42px;padding:0 16px;font-size:14px}
+.btn-block{width:100%}
+.btn-row{display:flex;flex-wrap:wrap;gap:12px}
+
+/* INHERITED DEFECT 1 — .btn-ghost sets color:var(--navy); on a navy surface it
+   renders as an empty outlined box and no overflow test catches it. This page
+   uses .btn-ghost-d on dark deliberately; the rule below is a safety net so a
+   future edit cannot reintroduce the bug. */
+.dark .btn-ghost{color:#fff;border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.05)}
+.dark .btn-ghost:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.12)}
+
+/* INHERITED DEFECT 2 — .btn is nowrap + overflow:hidden, so a long Persian
+   label is silently truncated rather than visibly overflowing. Full-width
+   buttons may wrap below 440px; every button may wrap below 365px. */
+@media (max-width:440px){
+  .btn-block{white-space:normal;height:auto;padding-block:12px;line-height:1.55;padding-inline:14px}
+}
+@media (max-width:365px){
+  .btn{white-space:normal;height:auto;min-height:50px;padding-block:12px;line-height:1.55;padding-inline:14px}
+}
+
+.tlink{
+  display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:14.5px;
+  color:var(--navy);transition:gap .2s,color .2s;
+}
+.tlink:hover{gap:12px;color:var(--teal-d)}
+.tlink svg{width:15px;height:15px;transition:transform .2s;flex:none}
+
+/* ══════════════════════════ SCROLL PROGRESS ═══════════════════════════════ */
+#prog{
+  position:fixed;inset-block-start:0;inset-inline:0;height:3px;z-index:1200;
+  background:linear-gradient(to left,var(--teal),var(--orange));
+  transform:scaleX(0);transform-origin:right center;transition:transform .1s linear;
+}
+
+/* ═══════════════════════════════ NAVBAR ═══════════════════════════════════ */
+.navwrap{position:fixed;inset-block-start:14px;inset-inline:0;z-index:1100;padding-inline:var(--pad);pointer-events:none}
+.nav{
+  pointer-events:auto;max-width:var(--maxw);margin-inline:auto;
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.82);backdrop-filter:blur(18px) saturate(170%);
+  -webkit-backdrop-filter:blur(18px) saturate(170%);
+  border:1px solid rgba(21,57,124,.09);border-radius:var(--r-pill);
+  padding:8px;box-shadow:var(--sh-2);
+  transition:box-shadow .3s,background .3s,border-color .3s;
+}
+body.scrolled .nav{background:rgba(255,255,255,.95);box-shadow:var(--sh-3);border-color:rgba(21,57,124,.14)}
+.brand{display:flex;align-items:center;gap:9px;padding-inline-start:10px;flex:none}
+.brand img.mk{height:34px;width:auto}
+.brand img.wd{height:24px;width:auto}
+.navlinks{display:flex;align-items:center;gap:2px;margin-inline:auto;position:relative}
+.navlink{
+  position:relative;padding:9px 14px;border-radius:var(--r-pill);font-size:14.5px;
+  font-weight:500;color:#324268;transition:color .2s;white-space:nowrap;z-index:1;
+  display:inline-flex;align-items:center;gap:5px;background:none;border:0;cursor:pointer;
+}
+.navlink:hover,.navlink[aria-expanded="true"]{color:var(--navy)}
+.navlink.active{color:var(--navy);font-weight:600}
+.navlink .chev{width:11px;height:11px;transition:transform .25s;opacity:.6;flex:none}
+.navlink[aria-expanded="true"] .chev{transform:rotate(180deg)}
+#navblob{
+  position:absolute;inset-block-start:0;height:100%;border-radius:var(--r-pill);
+  background:var(--n100);opacity:0;transition:all .3s cubic-bezier(.2,.8,.3,1);z-index:0;
+}
+.navcta{display:flex;align-items:center;gap:8px;flex:none}
+.navphone{
+  display:inline-flex;align-items:center;gap:8px;padding:0 16px;min-height:44px;
+  border-radius:var(--r-pill);background:var(--navy);color:#fff;font-weight:600;
+  font-size:14.5px;transition:background .2s,transform .2s,box-shadow .2s;
+}
+.navphone:hover{background:var(--navy-7);transform:translateY(-1px);box-shadow:0 6px 18px rgba(21,57,124,.28)}
+.navphone svg{width:18px;height:18px;flex:none}
+.navphone .num{font-family:var(--mono);font-size:13.5px;letter-spacing:.01em;direction:ltr;unicode-bidi:isolate}
+.burger{display:none;width:44px;height:44px;border-radius:var(--r-pill);border:1px solid var(--n200);
+  background:#fff;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.burger span{display:block;width:17px;height:1.8px;background:var(--navy);border-radius:2px;
+  position:relative;transition:.28s}
+.burger span::before,.burger span::after{content:'';position:absolute;inset-inline-start:0;width:17px;
+  height:1.8px;background:var(--navy);border-radius:2px;transition:.28s}
+.burger span::before{inset-block-start:-6px}.burger span::after{inset-block-start:6px}
+body.mopen .burger span{background:transparent}
+body.mopen .burger span::before{inset-block-start:0;transform:rotate(45deg)}
+body.mopen .burger span::after{inset-block-start:0;transform:rotate(-45deg)}
+
+/* mega menu — physical `left` is deliberate: inset-inline-start:50% resolves to
+   right:50% in RTL and throws the panel off-centre. */
+.mega{
+  position:absolute;inset-block-start:calc(100% + 12px);left:50%;
+  transform:translateX(-50%) translateY(-8px);width:min(880px,calc(100vw - 32px));
+  background:#fff;border:1px solid var(--n200);border-radius:var(--r-l);
+  box-shadow:var(--sh-3);padding:26px;opacity:0;visibility:hidden;
+  transition:opacity .22s,transform .22s,visibility .22s;z-index:20;
+}
+.mega[data-open="1"]{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.mega-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.mega-col h4{font-size:12px;font-weight:700;color:var(--n400);letter-spacing:.04em;margin-bottom:12px}
+.mega-link{display:flex;gap:11px;padding:9px 10px;border-radius:var(--r);transition:background .18s}
+.mega-link:hover{background:var(--n50)}
+.mega-link .ic{width:32px;height:32px;border-radius:var(--r);background:var(--teal-l);color:var(--teal-d);
+  display:grid;place-items:center;flex:none}
+.mega-link .ic svg{width:16px;height:16px}
+.mega-link.hot .ic{background:var(--orange-l);color:var(--orange-d)}
+.mega-link b{display:block;font-size:14px;font-weight:600;color:var(--ink);line-height:1.5}
+.mega-link span span{display:block;font-size:12px;color:var(--n400);line-height:1.5}
+.mega-foot{margin-block-start:20px;padding-block-start:18px;border-block-start:1px solid var(--n200);
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+
+/* mobile menu */
+.msheet{
+  position:fixed;inset:0;z-index:1090;background:#fff;padding:96px var(--pad) 40px;
+  overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(-12px);
+  transition:opacity .3s,transform .3s,visibility .3s;
+}
+body.mopen .msheet{opacity:1;visibility:visible;transform:none}
+.msheet a.mrow{display:flex;align-items:center;justify-content:space-between;padding:16px 0;
+  border-block-end:1px solid var(--n100);font-size:17px;font-weight:500}
+.msheet a.mrow svg{width:15px;height:15px;color:var(--n400);flex:none}
+
+/* The desktop link row and the mega menu collapse into the burger sheet.
+   Without this block the links stay in the DOM at full width, run off the
+   start edge and are hidden only by body{overflow-x:hidden} — content that is
+   present, unreachable and invisible to a document-level overflow check. */
+@media (max-width:1080px){
+  .navlinks{display:none}
+  .burger{display:flex}
+  .nav{padding:7px;gap:8px}
+  .brand{padding-inline-start:8px}
+  .brand img.mk{height:30px}
+  .brand img.wd{height:21px}
+  .navphone .num{display:none}
+  .navphone{width:44px;height:44px;min-height:44px;padding:0;border-radius:50%;
+    justify-content:center;flex:none}
+}
+
+/* ═══════════════════════════ BREADCRUMB ═════════════════════════════════ */
+.crumb{padding-block:14px;font-size:12.5px;color:var(--n400);display:flex;align-items:center;
+  gap:8px;flex-wrap:wrap}
+.crumb a:hover{color:#fff}
+.crumb .sep{opacity:.45}
+.crumb b{color:#B9C6E0;font-weight:500}
+
+/* ══════════════════════════ DARK SURFACE ════════════════════════════════ */
+.dark{background:var(--navy-x);color:#fff;position:relative;overflow:hidden}
+.dark::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.09) 1px,transparent 0);
+  background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 70% at 70% 20%,#000 5%,transparent 72%);
+  mask-image:radial-gradient(ellipse 80% 70% at 70% 20%,#000 5%,transparent 72%);
+}
+.dark .h-sec,.dark .h-hero,.dark .h-sub,.dark .h-card{color:#fff}
+.dark .small{color:#9FB0CF}
+.dark .wrap{position:relative;z-index:2}
+
+/* ═══════════════════════════ CARD SYSTEM ════════════════════════════════ */
+.card{
+  background:#fff;border:1px solid var(--n200);border-radius:var(--r-l);padding:26px;
+  transition:transform .26s cubic-bezier(.2,.8,.3,1),box-shadow .26s,border-color .26s;
+  position:relative;height:100%;
+}
+.card:hover{transform:translateY(-4px);box-shadow:var(--sh-2);border-color:rgba(21,57,124,.2)}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.grid > *{min-width:0}
+
+/* ═══════════════════════════════ FAQ ════════════════════════════════════
+   The plus/minus marker is drawn in CSS rather than an SVG on purpose:
+   INHERITED DEFECT 8 — an unsized chevron <svg> falls back to the browser's
+   default replaced-element size (~300×150) and inflates every row. */
+.faq{border-block-start:1px solid var(--n200)}
+.faq-i{border-block-end:1px solid var(--n200)}
+.faq-q{width:100%;background:none;border:0;text-align:start;padding:21px 0;display:flex;
+  align-items:center;justify-content:space-between;gap:18px;cursor:pointer;font-size:16px;
+  font-weight:600;color:var(--ink);transition:color .2s;line-height:1.6;font-family:inherit}
+.faq-q:hover{color:var(--navy)}
+.faq-q .fq-tx{flex:1;min-width:0}
+.faq-q .pm{width:26px;height:26px;border-radius:50%;border:1px solid var(--n200);flex:none;
+  display:grid;place-items:center;transition:.28s;position:relative}
+.faq-q .pm::before,.faq-q .pm::after{content:'';position:absolute;background:var(--navy);
+  border-radius:2px;transition:.28s}
+.faq-q .pm::before{width:11px;height:1.8px}
+.faq-q .pm::after{width:1.8px;height:11px}
+.faq-i.open .faq-q .pm{background:var(--navy);border-color:var(--navy);transform:rotate(180deg)}
+.faq-i.open .faq-q .pm::before{background:#fff}
+.faq-i.open .faq-q .pm::after{opacity:0}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.3,.8,.3,1)}
+.faq-a p{padding-block-end:22px;font-size:14.5px;color:var(--n600);line-height:1.9;max-width:78ch}
+@media (max-width:720px){
+  .faq-q{padding:16px 0;font-size:14.5px;gap:12px;line-height:1.55}
+  .faq-q .pm{width:24px;height:24px}
+  .faq-a p{padding-block-end:16px;font-size:13.5px;line-height:1.85}
+}
+
+/* ═══════════════════════════════ FOOTER ═════════════════════════════════ */
+footer{background:var(--navy-x);color:#B9C6E0;padding-block:clamp(48px,6vw,76px) 0;position:relative}
+.f-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:clamp(24px,4vw,48px);
+  padding-block-end:40px}
+.f-grid > *{min-width:0}
+.f-brand img.mk{height:38px;margin-bottom:14px}
+.f-brand p{font-size:13.5px;line-height:1.9;color:#8FA3C4;max-width:38ch}
+.f-col h4{color:#fff;font-size:14px;font-weight:600;margin-bottom:16px}
+.f-col a{display:block;font-size:13.5px;padding-block:6px;color:#93A6C6;transition:color .2s,padding-inline-start .2s}
+.f-col a:hover{color:#fff;padding-inline-start:4px}
+.f-bot{border-block-start:1px solid rgba(255,255,255,.1);padding-block:22px;display:flex;
+  align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.f-bot p{font-size:12.5px;color:#7D91B4}
+.f-social{display:flex;gap:9px;flex-wrap:wrap}
+.f-social a{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.14);
+  display:grid;place-items:center;transition:.22s;color:#B9C6E0}
+.f-social a:hover{background:var(--teal);border-color:var(--teal);color:var(--navy-x);transform:translateY(-2px)}
+.f-social svg{width:16px;height:16px}
+@media (max-width:880px){
+  .f-grid{grid-template-columns:1fr 1fr}
+  .f-brand{grid-column:1/-1}
+}
+@media (max-width:380px){ .f-grid{grid-template-columns:1fr;gap:24px} }
+
+/* ══════════════════════════ MODAL ═══════════════════════════════════════ */
+.modal{position:fixed;inset:0;z-index:1300;display:grid;place-items:center;padding:20px;
+  opacity:0;visibility:hidden;transition:opacity .26s,visibility .26s}
+.modal[data-open="1"]{opacity:1;visibility:visible}
+.modal-bg{position:absolute;inset:0;background:rgba(8,28,66,.62);backdrop-filter:blur(5px)}
+.modal-box{position:relative;width:min(520px,100%);max-height:88vh;overflow-y:auto;
+  background:var(--navy);border:1px solid rgba(255,255,255,.13);border-radius:var(--r-l);
+  padding:30px;transform:translateY(16px) scale(.98);transition:transform .3s cubic-bezier(.2,.8,.3,1)}
+.modal[data-open="1"] .modal-box{transform:none}
+.modal-x{position:absolute;inset-block-start:16px;inset-inline-start:16px;width:34px;height:34px;
+  border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);
+  color:#fff;display:grid;place-items:center;cursor:pointer;transition:.2s}
+.modal-x:hover{background:rgba(255,255,255,.16);transform:rotate(90deg)}
+.modal-x svg{width:15px;height:15px}
+.modal-box h3{color:#fff;font-size:19px;margin-bottom:6px}
+.modal-box > p{font-size:13.5px;color:#A9BBD8;margin-bottom:20px;line-height:1.8}
+
+/* ══════════════════════ EXPANDING CONTACT FAB (desktop) ═════════════════ */
+.lead-fab{
+  position:fixed;bottom:28px;right:28px;z-index:1220;display:flex;align-items:center;gap:9px;
+  background:var(--orange);color:#fff;border:0;border-radius:var(--r-pill);padding:15px 22px;
+  font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;
+  box-shadow:0 10px 30px rgba(248,148,40,.45);animation:leadPulse 2.4s ease-in-out infinite;
+  transition:background .2s ease;
+}
+.lead-fab:hover{background:var(--orange-d)}
+.lead-fab svg{width:18px;height:18px;flex:none}
+.lead-fab .fab-icon-close{display:none}
+.lead-fab.is-open .fab-icon-open{display:none}
+.lead-fab.is-open .fab-icon-close{display:block}
+.lead-fab.is-open{background:var(--navy);animation:none;box-shadow:0 10px 30px rgba(21,57,124,.35)}
+@keyframes leadPulse{0%,100%{box-shadow:0 10px 30px rgba(248,148,40,.45)}
+  50%{box-shadow:0 10px 34px rgba(248,148,40,.7)}}
+.fab-cluster{position:fixed;bottom:96px;right:28px;z-index:1210;display:flex;
+  flex-direction:column;gap:12px;align-items:flex-end}
+.fab-item{display:flex;align-items:center;gap:10px;opacity:0;
+  transform:translateY(14px) scale(.9);pointer-events:none;
+  transition:opacity .22s ease,transform .22s ease;transition-delay:0s}
+.fab-cluster.open .fab-item{opacity:1;transform:none;pointer-events:auto;
+  transition-delay:calc(var(--d) * .045s)}
+.fab-label{background:var(--ink);color:#fff;font-size:12.5px;font-weight:600;padding:7px 13px;
+  border-radius:var(--r);white-space:nowrap;box-shadow:var(--sh-1)}
+.fab-circle{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;color:#fff;border:0;cursor:pointer;box-shadow:var(--sh-2);flex:none;
+  transition:transform .18s ease}
+.fab-circle:hover{transform:translateY(-2px) scale(1.05)}
+.fab-circle svg{width:21px;height:21px}
+.fab-telegram{background:#29A9E0}
+.fab-phone{background:var(--navy)}.fab-mail{background:var(--teal-d)}
+@media (max-width:760px){.lead-fab,.fab-cluster{display:none}}
+@media (prefers-reduced-motion:reduce){.lead-fab{animation:none}}
+
+/* ═════════════════ BOTTOM MOBILE NAVBAR ═══════════════════════════════ */
+.mobile-navbar{display:none}
+@media (max-width:760px){
+  .mobile-navbar{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:1250;height:68px;
+    background:rgba(255,255,255,.93);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    border-block-start:1px solid var(--n200);box-shadow:0 -8px 30px rgba(21,57,124,.08);
+    align-items:center;justify-content:space-around;
+    padding:0 6px calc(0px + env(safe-area-inset-bottom));
+  }
+  .mnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;
+    border:0;font-family:inherit;color:var(--n600);font-size:10.5px;padding:6px 4px;
+    cursor:pointer;flex:1;min-width:0;text-decoration:none}
+  .mnav-item svg{width:21px;height:21px;flex:none}
+  .mnav-item span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .mnav-item.active{color:var(--navy);font-weight:700}
+  .mnav-item.raised{position:relative;margin-top:-30px;background:var(--orange);color:#fff;
+    border-radius:50%;width:56px;height:56px;justify-content:center;
+    box-shadow:0 8px 22px rgba(248,148,40,.5);flex:0 0 56px}
+  .mnav-item.raised svg{width:24px;height:24px}
+  .mnav-item.raised span{display:none}
+  body{padding-block-end:68px}
+}
+
+/* ═════════════════ BACK TO TOP ════════════════════════════════════════════ */
+.back-to-top{position:fixed;bottom:28px;left:28px;z-index:1200;width:44px;height:44px;
+  border-radius:50%;border:1px solid var(--n200);background:rgba(255,255,255,.92);
+  backdrop-filter:blur(10px);color:var(--navy);display:grid;place-items:center;cursor:pointer;
+  opacity:0;visibility:hidden;transform:translateY(10px);
+  transition:opacity .25s,transform .25s,visibility .25s;box-shadow:var(--sh-2)}
+.back-to-top.show{opacity:1;visibility:visible;transform:none}
+.back-to-top svg{width:19px;height:19px}
+@media (max-width:760px){.back-to-top{bottom:84px;left:16px}}
+
+/* ═══════════════════════ REVEAL / MOTION ════════════════════════════════
+   INHERITED DEFECT 4 — .rv starts at translateY(20px), so a revealed element
+   in a section with no bottom padding hangs past the section edge and the next
+   dark section paints over it. Every section on this page carries an explicit
+   padding-block-end in its own rule — checked at build time, not left to a
+   blanket element selector that would fight the .sec rhythm. */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.7,.3,1),transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.is-in{opacity:1;transform:none}
+.rv-d1{transition-delay:.08s}.rv-d2{transition-delay:.16s}.rv-d3{transition-delay:.24s}
+.rv-d4{transition-delay:.32s}.rv-d5{transition-delay:.4s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .rv{opacity:1;transform:none}
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   تماس با ما — PAGE LAYER
+   ──────────────────────────────────────────────────────────────────────────
+   This page sells nothing. Every visitor already wants to reach U-ID, so the
+   only job is removing friction: the phone first (it is the strongest path on
+   this site), the channels side by side with an honest availability state, and
+   a form cut to three fields behind a question that routes the visitor before
+   it asks them for anything.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ───────────── HERO ───────────── */
+.chero{padding-block:clamp(26px,4.4vw,48px) clamp(44px,6vw,80px)}
+.chero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(26px,4vw,54px);align-items:center}
+.chero-grid > *{min-width:0}
+.chero h1{margin-block:18px 14px}
+.chero h1 mark{background:none;color:#FFC178;font-weight:700}
+.chero .lede{max-width:52ch}
+
+/* the phone, as the hero element it already is in the analytics.
+   Navy-on-white: 11.6:1. See handover note on the orange CTA contrast. */
+.telcard{
+  display:flex;align-items:center;gap:16px;margin-block:26px 14px;
+  background:#fff;border-radius:var(--r-l);padding:18px 20px;
+  box-shadow:0 18px 44px rgba(0,0,0,.28);
+  transition:transform .22s cubic-bezier(.2,.8,.3,1),box-shadow .22s;
+  border:1px solid rgba(255,255,255,.5);
+}
+.telcard:hover{transform:translateY(-3px);box-shadow:0 24px 56px rgba(0,0,0,.34)}
+.telcard .tic{width:52px;height:56px;clip-path:var(--hex);flex:none;display:grid;place-items:center;
+  background:linear-gradient(150deg,var(--navy),#1E4A94);color:#fff}
+.telcard .tic svg{width:23px;height:23px}
+.telcard .ttx{min-width:0;flex:1}
+.telcard .tlb{display:block;font-size:12px;color:var(--n600);line-height:1.5;margin-block-end:3px}
+.telcard .tnum{display:block;font-family:var(--mono);font-weight:700;color:var(--navy);
+  font-size:clamp(23px,4.6vw,33px);letter-spacing:.01em;line-height:1.15;
+  direction:ltr;unicode-bidi:isolate}
+.telcard .tgo{width:34px;height:34px;border-radius:50%;background:var(--n100);color:var(--navy);
+  display:grid;place-items:center;flex:none;transition:.2s}
+.telcard:hover .tgo{background:var(--navy);color:#fff}
+.telcard .tgo svg{width:16px;height:16px}
+
+.chero-sub{display:flex;align-items:center;gap:9px;font-size:13px;color:#B9C6E0;line-height:1.7}
+.chero-sub svg{width:15px;height:15px;color:#7FE0EC;flex:none}
+
+/* ───────────── AVAILABILITY CONSOLE (live Tehran clock) ─────────────
+   Reads the visitor's own clock, converts to Asia/Tehran and tests it against
+   the published شنبه–چهارشنبه ۹:۰۰–۱۸:۰۰ window. Nothing here is a countdown
+   device: the remaining time is simply the distance to the next real boundary. */
+.avail{
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.15);
+  border-radius:var(--r-l);padding:clamp(18px,2.4vw,24px);backdrop-filter:blur(10px);
+  box-shadow:0 24px 60px rgba(0,0,0,.3);min-width:0;
+}
+/* INHERITED DEFECT 6 — `margin-inline-start:auto` in a WRAPPING flex row
+   strands the last child alone on the next line against the opposite edge and
+   leaves a dead band. Both header strips on this page are explicit grids. */
+.avail-hd{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;
+  padding-block-end:14px;border-block-end:1px solid rgba(255,255,255,.12);margin-block-end:16px}
+.avail-hd > *{min-width:0}
+.avail-hd .dot{width:9px;height:9px;border-radius:50%;flex:none;background:#5FD6A4;
+  box-shadow:0 0 0 0 rgba(95,214,164,.7);animation:lv 2.2s infinite}
+@keyframes lv{70%{box-shadow:0 0 0 9px rgba(95,214,164,0)}100%{box-shadow:0 0 0 0 rgba(95,214,164,0)}}
+.avail.shut .avail-hd .dot{background:#FFC178;animation:none;box-shadow:none}
+.avail-hd b{color:#fff;font-size:14.5px;font-weight:600}
+.avail-hd b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.avail-clock{font-family:var(--mono);font-size:13px;color:#7FE0EC;font-weight:700;
+  direction:ltr;unicode-bidi:isolate;justify-self:end;white-space:nowrap;
+  background:rgba(41,188,206,.13);border-radius:var(--r-pill);padding:4px 11px}
+
+.avail-state{display:flex;gap:13px;align-items:flex-start;border-radius:var(--r);
+  padding:14px 15px;background:rgba(95,214,164,.1);border:1px solid rgba(95,214,164,.32)}
+.avail.shut .avail-state{background:rgba(248,148,40,.1);border-color:rgba(248,148,40,.3)}
+.avail-state .sic{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;
+  background:rgba(95,214,164,.2);color:#5FD6A4}
+.avail.shut .avail-state .sic{background:rgba(248,148,40,.18);color:#FFC178}
+.avail-state .sic svg{width:17px;height:17px}
+.avail-state .stx{min-width:0}
+.avail-state .stx b{display:block;font-size:14.5px;font-weight:700;color:#9FE9C8;line-height:1.5}
+.avail.shut .avail-state .stx b{color:#FFC178}
+.avail-state .stx span{display:block;font-size:12.5px;color:#B9C6E0;line-height:1.75;margin-block-start:3px}
+.avail-hours{display:flex;align-items:center;gap:8px;margin-block-start:12px;font-size:11.5px;
+  color:#8FA3C4;line-height:1.7}
+.avail-hours svg{width:14px;height:14px;flex:none;color:#7FE0EC}
+
+/* ───────────── CHANNEL CHOOSER ─────────────
+   Four channels side by side. The phone is de-emphasised outside working hours
+   and the asynchronous ones are promoted — stated plainly, not hidden. */
+.chans{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-block-start:16px}
+.chans > *{min-width:0}
+.chan{
+  display:flex;flex-direction:column;gap:6px;text-align:start;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);
+  border-radius:var(--r);padding:14px 14px;transition:.22s;min-width:0;
+  font-family:inherit;cursor:pointer;color:inherit;
+}
+.chan:hover{background:rgba(255,255,255,.1);border-color:rgba(41,188,206,.45);transform:translateY(-2px)}
+.chan .ctop{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:9px}
+.chan .ctop > *{min-width:0}
+.chan .cic{width:30px;height:30px;border-radius:var(--r-s);flex:none;display:grid;place-items:center;
+  background:rgba(41,188,206,.15);color:#7FE0EC}
+.chan .cic svg{width:15px;height:15px}
+.chan b{font-size:13.5px;font-weight:700;color:#fff;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chan .cval{font-family:var(--mono);font-size:12px;color:#B9C6E0;direction:ltr;
+  unicode-bidi:isolate;overflow-wrap:anywhere;line-height:1.6}
+.chan .cval.fa{font-family:var(--fa);direction:rtl;unicode-bidi:plaintext}
+.chan .cnote{font-size:11.5px;color:#A3B3CC;line-height:1.65}
+.chan.is-now{background:rgba(41,188,206,.13);border-color:rgba(41,188,206,.5)}
+.chan.is-off{opacity:.55}
+/* outside working hours the asynchronous channels come first — the page says
+   so plainly rather than leaving a phone number nobody will answer on top */
+.chans.async-first #chanPhone{order:9}
+.chan.is-off .cic{background:rgba(255,255,255,.08);color:#8FA3C4}
+.chan .cbadge{font-size:10px;font-weight:700;border-radius:var(--r-pill);padding:2px 8px;
+  background:rgba(95,214,164,.18);color:#9FE9C8;justify-self:end;white-space:nowrap}
+.chan.is-off .cbadge{background:rgba(255,255,255,.1);color:#8FA3C4}
+
+/* ───────────── INTENT ROUTER ─────────────
+   One question before anything is asked of the visitor. An individual with a
+   ثنا problem is sent to the page that answers it and to support, instead of
+   landing in the B2B sales queue; everyone else gets a form shaped to them. */
+.router{border:1px solid var(--n200);border-radius:var(--r-l);background:#fff;
+  overflow:hidden;box-shadow:var(--sh-2)}
+.router-hd{padding:clamp(20px,2.8vw,28px) clamp(18px,2.8vw,28px) 0}
+.router-hd .q{font-size:clamp(17px,2.1vw,22px);font-weight:600;line-height:1.5;margin-block-end:6px}
+.router-hd .qs{font-size:13px;color:var(--n600);line-height:1.75}
+.rchips{display:flex;gap:8px;flex-wrap:wrap;padding:16px clamp(18px,2.8vw,28px) clamp(18px,2.4vw,24px)}
+.rchip{flex:none;background:var(--n50);border:1px solid var(--n200);color:#324268;
+  font-family:inherit;font-size:13px;font-weight:600;padding:9px 15px;border-radius:var(--r-pill);
+  cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:7px;max-width:100%}
+.rchip > span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rchip .rdot{width:7px;height:8px;clip-path:var(--hex);background:var(--teal);flex:none}
+.rchip:hover{border-color:var(--navy);background:#fff}
+.rchip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.rchip.on .rdot{background:var(--orange)}
+
+/* The copy panel swaps per intent; the form itself never moves in the DOM —
+   it is one <form> that reshapes, so a half-typed message survives a change of
+   mind about which route the visitor is on. */
+.rbody{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(20px,3vw,40px);
+  align-items:start;border-block-start:1px solid var(--n200);background:var(--n50);
+  padding:clamp(20px,2.8vw,28px)}
+.rbody > *{min-width:0}
+.router.no-form .rform-slot{display:none}
+.router.no-form .rbody{grid-template-columns:1fr}
+.rpanel{display:none}
+.rpanel.on{display:block;animation:rin .32s cubic-bezier(.22,.85,.28,1)}
+@keyframes rin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rp-copy .tag{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;
+  color:var(--teal-d);background:var(--teal-l);border-radius:var(--r-s);padding:5px 10px;
+  margin-block-end:11px}
+.rp-copy h3{font-size:clamp(17px,2vw,21px);margin-block-end:9px}
+.rp-copy p{font-size:13.5px;color:var(--n600);line-height:1.9}
+.rp-routes{display:flex;flex-direction:column;gap:9px;margin-block-start:16px}
+.rp-route{display:flex;align-items:center;gap:12px;padding:13px 14px;background:#fff;
+  border:1px solid var(--n200);border-radius:var(--r);transition:.2s}
+.rp-route:hover{border-color:var(--navy);transform:translateX(-4px)}
+.rp-route .hx{width:32px;height:35px;clip-path:var(--hex);flex:none;display:grid;place-items:center;
+  background:rgba(21,57,124,.08);color:var(--navy)}
+.rp-route.teal .hx{background:var(--teal-l);color:var(--teal-d)}
+.rp-route .hx svg{width:16px;height:16px}
+.rp-route .tx{flex:1;min-width:0}
+.rp-route b{display:block;font-size:14px;font-weight:600;line-height:1.5}
+.rp-route span{display:block;font-size:12px;color:var(--n600);line-height:1.6;margin-block-start:2px}
+.rp-route .ch{width:14px;height:14px;color:var(--n400);flex:none}
+
+/* ───────────── THE THREE-FIELD FORM ─────────────
+   Name, one contact method, message. The company field appears only for the
+   routes that genuinely need it, and never for an individual. */
+.cform{background:#fff;border:1px solid var(--n200);border-radius:var(--r-l);
+  padding:clamp(20px,2.6vw,26px);box-shadow:var(--sh-1)}
+.cform h4{font-size:16px;margin-block-end:5px}
+.cform > .hint{font-size:12.5px;color:var(--n400);line-height:1.7;margin-block-end:16px}
+.fld{margin-block-end:12px}
+.fld label{display:block;font-size:12.5px;color:#324268;margin-block-end:6px;font-weight:600}
+.fld label .opt{color:var(--n400);font-weight:400}
+.fld input,.fld textarea,.fld select{
+  width:100%;min-height:48px;padding:11px 14px;border-radius:var(--r);
+  border:1.5px solid var(--n200);background:var(--n50);color:var(--ink);
+  font-size:14.5px;font-family:inherit;transition:border-color .18s,background .18s}
+.fld textarea{min-height:96px;resize:vertical;line-height:1.8}
+.fld input::placeholder,.fld textarea::placeholder{color:var(--n400)}
+.fld input:focus,.fld textarea:focus,.fld select:focus{outline:none;border-color:var(--navy);background:#fff}
+.fld.bad input,.fld.bad textarea{border-color:var(--leak);background:var(--leak-l)}
+.fld.good input{border-color:rgba(18,160,106,.55)}
+.fld .err{display:none;font-size:11.5px;color:var(--leak);margin-block-start:5px;line-height:1.6}
+.fld.bad .err{display:flex;gap:6px;align-items:flex-start}
+.fld .err svg{width:13px;height:13px;flex:none;margin-block-start:3px}
+.fld .tipline{font-size:11.5px;color:var(--n600);margin-block-start:5px;line-height:1.6}
+.fld-extra{display:none}
+.fld-extra.on{display:block;animation:rin .3s cubic-bezier(.22,.85,.28,1)}
+.cform-foot{display:grid;gap:10px;margin-block-start:4px}
+.cform .privacy{display:flex;gap:9px;font-size:11.5px;color:var(--n600);line-height:1.7}
+.cform .privacy svg{width:14px;height:14px;color:var(--ok);flex:none;margin-block-start:3px}
+.form-ok{display:none;text-align:center;padding:26px 10px}
+.form-ok svg{width:44px;height:44px;color:var(--ok);margin-inline:auto;margin-bottom:12px}
+.form-ok b{display:block;font-size:16px;margin-bottom:6px}
+.form-ok span{font-size:13.5px;color:var(--n600);line-height:1.8}
+.cform.is-sent .cform-body{display:none}
+.cform.is-sent .form-ok{display:block}
+
+/* ───────────── LOCATION + TRUST ─────────────
+   Drawn from the brand hexagon rather than an embedded third-party map: an
+   iframe would break the self-contained file and ship a tracker with it. */
+.loc{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(20px,3.2vw,44px);align-items:stretch}
+.loc > *{min-width:0}
+.loc-card{border:1px solid var(--n200);border-radius:var(--r-l);background:#fff;
+  padding:clamp(22px,3vw,30px);box-shadow:var(--sh-1);display:flex;flex-direction:column}
+.loc-row{display:flex;gap:14px;padding-block:15px;border-block-end:1px solid var(--n100)}
+.loc-row:last-of-type{border-block-end:0}
+.loc-row .hx{width:36px;height:40px;clip-path:var(--hex);flex:none;display:grid;place-items:center;
+  background:var(--teal-l);color:var(--teal-d)}
+.loc-row .hx svg{width:17px;height:17px}
+.loc-row .tx{min-width:0;flex:1}
+.loc-row .k{display:block;font-size:11.5px;color:var(--n600);line-height:1.5;margin-block-end:3px}
+.loc-row .v{display:block;font-size:15px;font-weight:600;line-height:1.7;overflow-wrap:anywhere}
+.loc-row .v.mono{font-size:15.5px}
+.copybtn{flex:none;align-self:center;background:var(--n50);border:1px solid var(--n200);
+  color:var(--navy);border-radius:var(--r-pill);padding:7px 13px;font-size:11.5px;font-weight:600;
+  font-family:inherit;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px;
+  white-space:nowrap}
+.copybtn:hover{background:var(--navy);border-color:var(--navy);color:#fff}
+.copybtn.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.copybtn svg{width:13px;height:13px;flex:none}
+
+/* the location figure: concentric brand hexagons with the mark at the centre */
+.loc-fig{border-radius:var(--r-l);background:linear-gradient(160deg,#12336E,#081C42);
+  position:relative;overflow:hidden;display:grid;place-items:center;
+  padding:clamp(24px,3.4vw,40px);min-height:260px}
+.loc-fig svg.rings{position:absolute;inset:0;width:100%;height:100%}
+.loc-fig .pin{position:relative;z-index:2;text-align:center}
+.loc-fig .pin .hx{width:74px;height:82px;clip-path:var(--hex);margin-inline:auto;
+  background:linear-gradient(150deg,var(--teal),var(--teal-d));display:grid;place-items:center;
+  box-shadow:0 18px 40px rgba(41,188,206,.32)}
+.loc-fig .pin .hx svg{width:34px;height:34px;color:#fff}
+.loc-fig .pin b{display:block;color:#fff;font-size:17px;font-weight:600;margin-block-start:16px}
+.loc-fig .pin span{display:block;color:#93A6C6;font-size:12.5px;line-height:1.75;margin-block-start:6px}
+
+/* eNAMAD — in this market the seal is a primary trust signal, so it gets a
+   real slot at body scale rather than a footer ornament. */
+.namad{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;
+  border:1px solid rgba(41,188,206,.32);background:var(--teal-l);border-radius:var(--r-l);
+  padding:18px 20px;margin-block-start:18px}
+.namad > *{min-width:0}
+.namad-seal{width:96px;height:104px;clip-path:var(--hex);background:#fff;display:grid;
+  place-items:center;flex:none;box-shadow:var(--sh-1);text-align:center;padding:10px}
+.namad-seal .e{font-family:var(--lat);font-size:30px;font-weight:600;color:var(--navy);line-height:1}
+.namad-seal small{display:block;font-family:var(--lat);font-size:9px;color:var(--n600);
+  margin-block-start:4px;letter-spacing:.02em}
+.namad-tx b{display:block;font-size:15px;color:var(--navy);font-weight:600;line-height:1.55}
+.namad-tx p{font-size:12.5px;color:#0E5C68;line-height:1.8;margin-block-start:5px}
+
+/* ───────────── COPY TOAST ───────────── */
+.toast{position:fixed;inset-block-end:96px;inset-inline:0;z-index:1400;display:flex;
+  justify-content:center;pointer-events:none;padding-inline:16px}
+.toast span{background:var(--ink);color:#fff;font-size:13px;font-weight:600;border-radius:var(--r-pill);
+  padding:10px 18px;box-shadow:var(--sh-3);opacity:0;transform:translateY(10px);
+  transition:opacity .25s,transform .25s}
+.toast.show span{opacity:1;transform:none}
+
+/* ───────────── RESPONSIVE ───────────── */
+@media (max-width:980px){
+  .chero-grid,.rbody,.loc{grid-template-columns:1fr}
+  .loc-fig{min-height:170px;order:-1}
+  /* the location figure is decorative (aria-hidden) and costs ~190px of
+     scroll on a page whose whole argument is brevity — the address card with
+     its copy affordance is the part that does work on a phone */
+  .loc-fig{display:none}
+}
+@media (max-width:720px){
+  .chero{padding-block:20px 32px}
+  .sec-head{margin-bottom:22px}
+  .rchips{padding:14px 16px 18px;gap:7px}
+  .rchip{font-size:12.5px;padding:8px 13px;max-width:100%}
+  .rchips{flex-wrap:wrap}
+  .router-hd{padding:18px 16px 0}
+  .rbody{padding:18px 16px;gap:18px}
+  .telcard{padding:15px 16px;gap:13px;margin-block:22px 12px}
+  .telcard .tic{width:46px;height:50px}
+  .avail-hd .avail-clock{margin-inline-start:0}
+  .chans{grid-template-columns:repeat(2,1fr);gap:8px}
+  .chan{padding:12px 12px;gap:5px}
+  /* two cards per row leaves no space for icon + title + badge on one
+     line: the badge drops to its own row rather than ellipsising the
+     channel name, which is the part the visitor scans for */
+  .chan .ctop{grid-template-columns:auto 1fr;row-gap:5px}
+  .chan .cbadge{grid-column:1/-1;justify-self:start}
+  .chan .cnote{font-size:11px;line-height:1.6}
+  .chan .cval{font-size:11.5px}
+  .namad{grid-template-columns:1fr;justify-items:center;text-align:center;gap:14px}
+  .loc-card{padding:20px 18px}
+  .loc-row{gap:12px;padding-block:13px}
+  .copybtn{align-self:flex-start;margin-block-start:4px}
+}
+@media (max-width:374px){
+  .chans{grid-template-columns:1fr}
+  /* same principle as the .btn wrap rule: at 320 a long Persian control
+     label wraps to two lines rather than losing its last word to an
+     ellipsis — the router chips are the page's main navigation */
+  .rchip{align-items:flex-start;line-height:1.55}
+  .rchip > span{white-space:normal;overflow:visible;text-overflow:clip}
+  .rchip .rdot{margin-block-start:7px}
+}
+@media (max-width:420px){
+  /* the number stays on one line at 320px: it is the single most important
+     string on the page and must never wrap or clip */
+  .telcard .tnum{font-size:clamp(20px,5.6vw,26px)}
+  .telcard .tgo{display:none}
+}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://u-id.net/#org",
+      "name": "یوآیدی",
+      "alternateName": ["UID", "یوآیدی", "U-ID"],
+      "legalName": "شرکت بینش هوشمند نسل پیشرو",
+      "url": "https://u-id.net/",
+      "foundingDate": "2017",
+      "telephone": "+982166123290",
+      "email": "info@uid.ir",
+      "areaServed": "IR",
+      "knowsLanguage": ["fa", "en"],
+      "description": "شرکت بینش هوشمند نسل پیشرو ارائه‌دهنده خدمات وب‌سرویس‌های احراز هویت به کسب‌وکارها است.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "فرصت شیرازی",
+        "addressCountry": "IR"
+      },
+      "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Saturday","Sunday","Monday","Tuesday","Wednesday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      }],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+982166123290",
+          "email": "info@uid.ir",
+          "contactType": "customer support",
+          "areaServed": "IR",
+          "availableLanguage": ["fa"],
+          "hoursAvailable": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Saturday","Sunday","Monday","Tuesday","Wednesday"],
+            "opens": "09:00",
+            "closes": "18:00"
+          }
+        },
+        {
+          "@type": "ContactPoint",
+          "telephone": "+982166123290",
+          "contactType": "sales",
+          "areaServed": "IR",
+          "availableLanguage": ["fa"]
+        }
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/company/uid-net/",
+        "https://www.instagram.com/uid_net/",
+        "https://twitter.com/UID_net/",
+        "https://t.me/uid_official",
+        "https://blog.u-id.net/"
+      ]
+    },
+    {
+      "@type": "ContactPage",
+      "@id": "https://u-id.net/contact-us/#page",
+      "url": "https://u-id.net/contact-us/",
+      "name": "تماس با ما — یوآیدی",
+      "inLanguage": "fa-IR",
+      "description": "راه‌های تماس با یوآیدی: تلفن ۰۲۱۶۶۱۲۳۲۹۰، تلگرام Uid_poshtiban، ایمیل info@uid.ir. شنبه تا چهارشنبه، ۹ صبح تا ۶ عصر.",
+      "about": { "@id": "https://u-id.net/#org" },
+      "mainEntity": { "@id": "https://u-id.net/#org" },
+      "isPartOf": { "@type": "WebSite", "url": "https://u-id.net/", "name": "یوآیدی" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type":"ListItem","position":1,"name":"خانه","item":"https://u-id.net/"},
+        {"@type":"ListItem","position":2,"name":"تماس با ما"}
+      ]
+    }
+  ]
+}
+</script>
+
+</head>
+
+<body>
+<div id="prog"></div>
+
+<div class="navwrap">
+  <nav class="nav" aria-label="ناوبری اصلی">
+    <a class="brand" href="/" aria-label="یوآیدی — صفحه اصلی">
+      <img class="mk" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEMAAABUCAYAAADZGYpQAAAkaElEQVR42s2ceZRdV3Xmf/ucc+8b6r2aVbIka7LkCQ/YGNvAQsYYEyDBJoYFDiFgpjAlwCLQEJJ0Ypw0CUk6LEg3JNBJiBmawTQmMWEwMSSOMbIBY+RJHmWNpaFU4xvucM7uP+6tqldSyUgMIbWWpKeqW+/du88evv3t7xxRVeVn8qWAHPW/gBJUMQoSADGoAdHimgAEAasgKKqChlBcL4JayAFEMAK2fE8AGxRVEGt+Jk8gP5kxQvm4pnxkRfGgBsGAQE7AouQh0DJCJRgsOYohUsGLxxOwIqBSvJtAV6GLIRKhpoEIQ1APgBFXWFEMKITS4iKFIcGUBgeVYklEpXeNfh7GWN4xFC1feBBBEXyWEzQQicOIgcgseJB6RWz5Wsvvhp73NEpXQEIOqhgMxkhhfjF4wKAYVQyKF4ctDTT/UPLz84zyUi28AZn/KE+uQgAiKZ7Mq+KMLW7HK4l6diVd9s62mOnk7Ag5+/AEnyLBY3AEA0aEla7GSTZiVTVmY3+NUWpUHGQOLAENoCJYQEqvClJ41tJAnQ/W4zOJ+wkia9EogA8BlQwnVQCykCEozseMZyl3Tk5zz+HDPDw3xd5M2J8kzKAEL+XHK7EqAUNeJA4qwWLI6JPA+qjKaC3mlKE+zhse5imNfkbiqAjWkJCjYCyqgvGu8M7SKGpOzDtOOEy8Box4RJUk8VSqNQB27DqAWmHd6hFUu+xuB667+3H+Y7ZLyzqMzYito4IQGY9VQRScL5KjGggaiIOFYOi4jJbNyb0gmSf2SjMoqxpNzh2rc8lJwzxjYJC+oPiQ0BXBSJWAEiE4DRhjOIGUcTzGCGWiLHKCegFSAhnORuw9lPA3H/0W139vK9Wkzfuu/iVe/JoX8Kndu/nQvQ+S1kYZSC2p87RthCQx1nsyOmhIwUBQoaIWb5VUwZkIYyzqFGsCFR/wLqPjUnyiRGlgFMO5K4d5/tqTeEH/IJEXZkzOnPHUiBhMhTxWnKFI6j+9MYq4UzVFghMIvoOxBpEKN3z1dv7n397Ew4/kuOFhbCdj2O7hH//+ncysHOOtW+9gpjFIPbOkYY7+3FJ1MQP1iBU1x5AT+lyEiJAbS4anlaRM5zmHuilTScp0rqQaYSNDzRoiH2GzmGA9dFtEsefCkRqvX7eO84eGyLRLCjip4AAjioj5aXOGLtQoDWA04EPAxspsO+dP/upG/u+N20htlcrqLqPTXVqVfnaYmGS6w5Yz+/mNzSfz7b1T1CoVTh8d48J6ndPqfayoV+mLI+rWli48n4cCqkLLB6Zyz+5ul3vbc9w/2eW+iVn2dVJmfILpq1MXj3WGqdDg5vGE2yfv5TUnj/LajZvpizxZ3sHaepHsRY8rczyBZ/SEh6ZkWU4c19ixa5rf+cNP8O3vP0jfyEoCNYIN1OYOk7RbvPiaS/irt7+EiJxZV2Gmk9IQQ381WridjBxCVoAqVUIAIwaDIlKUUIwFX1QjlcBEknDXTJubJsf55uEJplNDU+sM+QgVZbySk2Y5z+53vOvUTZzX108gQFmhllQV7a2EP9YYihLAGxBPFjJiV+PeR/fyprd/ggd2tqitjEjzNhWJmdsfsX5DxO+94XKufOFFOG0TVBEMYiGIgLcEY5FgCihhFPEeDYq1DlVBRMnJEWswCuSQk5K6Ng0sVgbwCI9Ntblp1z4+e3CcxyLHgGtwygHHRJ9j0k2xoT3DNRedwytGRzFZRmYDBotBUAVjzIkZI5Aj3hF8go2r3P3wbt7w9o+x60BGNNggl4C2LaE7zlXPfTLvedvL2LCqSe5zbA4+tqhkGA9eIqxKYeDgC0geFGcFCQHyQFqz+JAT5YoVS6Yg1hFZQbVL6sFLjEpOn4kgGH40N8vf7Rjn5vEJTGyoe0ekMYeMp+bneOfGtbxk01oqvotiQAqEbMXMw9bjNEbICepxNubRXYd59ds+yoO75nBDgNbQVgWXp7zjt5/N2655JoaUPM0IzoI6MA6PYoNBRcEolWDBBAg53UQYt55UlbyTYKoV1lQrNLtdciu4qEY3TZiYajE22k9kivQ2RYbJA7WgRFEEmeXre/fy3gMPMd2OGQkjtCxEOkvo7OdlZ5/O767ZhEu7zFQhUkdNyvA7IpMcwxgB71MEYard5pq3/CN33tOlMjJHyGNUYwz7+IvffRVXv+ACcj+HhCLMMxEQgwsW8Q4RAQfTPueuVouHZrpsn22xf3qWfZowXQn4TKmGwNtXr+PqlavRqmPrjx7nzz50Pftn5hgbWcslT9nMZU87hfNPPw0q0NUW3jtiMiLn+H47548eeJhH9ucMVz0PV2HUN9BsnLdvOo3XrVuLph3SyFEjKrKhLO0vlxqjTCyq4LOAiQ3v+JO/5jNfeJTa0Cay+CAyW2XI5bz//c/jRVvOw+dtDAOoCKlV4lCEQuoEh+G+NOG2ffu5f8ch7slyptoR01EVZwVnc5xmWHEcjCI2puP83dMuYqWNeclr/5w77pmmMjxM2mkzXZ2i0Uh43vozefOVz+c5z30SOOgm06QR9IcB9uaB99+/na8f2E0tGqGZ9ZG4LoftJH96xhlcPTRG16XEJsaoLC00Ir2lteg8BYuqx8WOz3/tu3zuSzuojpxEkElCHlFnive/+0petOUi8qSDjep4owTNAY94QaIKj6RdvvHYbr6x/yDb87KjrFZoOGGlgmigbZRm16Gmyu56xkwwiBiSTpd9s4epD4xSt01sM7BCV9CZUW793gG+c9f1POPO9fzlb76YDWMr0ZCSaofVVrj2vDPItsEtBw4S+gzOx1jT5P/cdz+nXFDnwoEmuQ+oNdgF7ygpgWuvvfbawiE8SMB7jzURD++a4J1/+EmmgiExULGWbPow//3Nz+E3rr6MA5mnYiJcEFLjSSWjLwl4V+dThw7xv3+4na8cniTL69SlgqtGgGHWwqRPyPKEdtSmG6cIOatDizds2syzBodp9sVUcNx2xw/odFrMdiw1GvQbh4kiQr3KD+9/iJu/tY3TNp7CaetHSLVFapXBvMLTxwYZn5tma5KAGDbMVngsFn6QHOKK2kpqYmmZfL4xLvKHKqJBVclBFPUBj+JslXf98Ze4/ou3EK9ogq+Tz7V43jNX8Yk//21yyekYR58KTjNyBGMC3Vz44MMP8pFDk9SzBoMasEQYhXFpE6tnNRVOHezngr4q6weqRI0KlUzZ5CJOqtfwPiWvGGKN+cE9O/m3H2xn69YdbL1vB1OdhP56AxsMkUZM5Dl9lWn+/gOv4fKLzyLLZkAaiPPMdeENd93L1iRjTaeP6bpjVg/wnoGVvOWcU5kzXeoaEYzBqhY0iYagQRUjgdynOFdj67aHuea3P86sN5hKP5p4xuop13/8LZy+fiWSeVwANZaO81TFcaCT8wcP3c83Ds5ysh8mtUo7TujkgSjknN1f5YVrRrlkeIiNUbUgdQygHhUhISH1HiOGmIgQDFXnClQacn54zw6u//y/c9Mt9zEdalTq/UTeEzpzjA4qH/nwG7nojLWEPCMYixPDtqk53rRtG4/aAdZ3anTNLLPNOT5x2rls6e/HB0gtVFRRCRhFEaQAPcaTIXzy87cxOeex0SAhRKTtQ7zhN57F2etXEdI22Ig0UpSEWCL2ZDnX/ehuvjiVMGJXMtiB2QgOa8rTrfJH56znI085i9eOrWGzq9Em5XBI6WaBLBF8Kri0SkSDyFSJAsSak6Yt8izBC5x/7kY++Cev5wPXvZKxFYa0NYv3gbg2yt4DVd77p5/hwFyGmgSPJ00zzhms8rYNp9DsdjlUyan4iHYS8fePPU7iywSKQBAy1ZInM4FAhjUxP3pwD1+/9UFsfQCRiKw1x1PPXs3Lr3oG3neo+IhcYc54jBE6eeDDP7yf70622JRXEN/igdE2HZ3gjQP9fPTC83jF2ApWSpsOLWYlABF9zlCNIKoKLja4WKhZqGDIrSPHEVEBV8NLTJYGfNLlxZefzz/8+evZOKq0NWXKdqgM17n7+xN85ou3YU0fEoSOM8xozovHVnNpI6LNNMEKw/kg94y3uf3AfowR4hAQERwRrjCPB8mBBjd97U7Gp3OaQxFoQuxneNXVz2egWSNJUnxUwZlA01u6NubvHt7BjYdb2L4BhlNlb8Vg/BzvW7uOV5yygdjDbPDYUKGmijghzz2PHJzl7m6Hna0OUyFQQRmpVNnYV+f0vj5WN+sEFOtTjPGoc4h3ZN0OF565nvf/96t53Xs/RZuITKep1oe44YatvOx5F7B6ZZOgHu8rREZ5yelrueuOHzJdjajpAKnUuP7gLs5btYLBPCOPIowYnGLRkGKNcGimy7e/s5241ocaIW21OGvTCM/dci6qXZyt0DUBF7pUiPj3wy0+s3M/1Vof9U6Hiaoh7ijvPXUzL98wgukqHeOpOXCmwgH1fGPPON/YP8s9h7v4TJiVjE41R7xlMJvGiac+6LikOcivr1zFecMNgs6RqEdchHGGLJ3jsqedy8tf8HQ+/uk7sGOOUBUe3TvDV/79Pn7zZU/H5nNUfR8zrs3FgwNc2VzBh/NZRrpNOmK4tdvlwcMtLhqsk0pGrFFZWdQDEXc/uJeH98xQdwWf2OmkXH7pOYz09xGCgMtBhBjDtHo+ed9DzPgI8GS2ik87vGrTKl61fg0h5GQuRVyCM44HJ1u87/ZtXLv9UbZOTiAmQZtdBpqek6KcsapSaViiqEZnpsKXdx7gN7fdyfsfvZ+DWqWuNZzmQAVrI4ImvO5ll7JuRYV2FqhGoJLzzX+7izwozjo0UsTAAIZnnraOETUQuuSx0ukY7jw4AdaWYwopu1sEiPjeXfcz1+lirIUsY7Df8oyLz5mfUgCC0RwxVb61bz/fbU9RNTGBiJ3ieepwnTdvWIWdzaj4KrlLqBrhln2TvPEH93BjFuPcRqpxlck+YR9NWi2LnxHSWWEqgYnIUTM1hqIhxqMGf7NzF9fdfS97ghKJIfZFW55rzqYNQzx7y2bSuUBmAlpp8MDD+3ls9wRi6gQxVEyM+MBZA/08pdGgJQneCdZU2DZ+kENpRqQO9QGjXhERfAjc+8BORBxRZEnaXTatHeTsM09CCAgRokIsMJMFbth5gMPNPowVTBo4N0S8a9PpjEiLTi1nzlpqWueBvcJ12x7ijsEU25xlrDPBjAidNOHpJudZK4Z4ycnruGLVGJf397NaUx6JJjhY8axpNzklWcXXDnf5w+33M5MHvCioQUNBJj/zwjOpSUzX50ilyr4DczywfRcgeAXUollghTU8Z3CA3GR4lApV7k063NdqYYwFFKcErIk4NDnHg4/uw8U1QlBsrpx+6iqG6lU0T4AaimJFuHVmhu8nMOJi1GbMpSmvHhvlqf1NEp2iHWXUtcJUF/5o+6M8EsecM5vTjhIm7RRP7Qzyqs2nsWVVjUa1hiNHURJ17Jxq89l9O/n0wQkOVAcZTiNWap27H5/ic24vrzxzHS73iESAsGnDKvqrOR0EEwmzWcqBgwfLdjNgNSI4xUqHiwYGqMguNAjVLGavi9g2M8klQ4OIBVM0so7x/RMcnJxFXEwICl44c/MGhFD2HQv0OLfOHWYiarBuGhJa1KvClvUjhJDjfR/9OVQ054ZHD3FnaFGLEtoySKc7yumNk/i9p5/DFRtHaMR9kAW6WSDJAqo5m4cavPdJ5/DudZsYCdPs6GvTdnOEyhCf3DPFjpkpnC06qUyVTaeMcdmzTqc1eYCD43s5c/PJXLblfNA2gkcUEqt0whzrmnVWDQxiuoGaj5iJIh5uzZFrQTm6okdR9ox3yNIVmFqGeEutajl9wwBgUWpgE4zCXO54YHKKRtZiqq9J0mrwjFVw7mATr0pwSpT0ca/k/PPkfppe6GqDGfWcF7e49rwLObtqyLKUTDPq1uJsDcgJPiXNBEfONRvXEoUuf/HIBHO1Ok1gd1f58t4JTj1jEKttcoS6q/GB3305z75gHRPTXV5w2UVsXDtMnrSITMScS4kQ4qwfGzvOsJ7t4qnFM6zpWLa3lQOas1oDLnjACdMzLdLU4PogpIFGX5Wx0UEgIGJRSRGJ2NNNGJ9NiIxlziq1JOKpY0NUxeAJGDxEEY9OTrInmSF2DbpYBpIZrjxnFZurjpBnGOOo2oi5XLn3R4+y+qQR1o4NEil4yTEh4ZdP2cy3JnK+O9fFCkhkuHdyhukkZzhWUpSg0KgLV151KRaIQ0I36xBioaIGK4E4KFYLbmVDfxOdOIw3OdUcptOcdu7BQkk2Cu1WC5+nZTL1VOMqzf4G4HtGioadSYsZ7wiuCcHTJOXMSq0gkENJIVvYOTtZok1LyDts6Kty6ehqKqp4CVgjHDyQ8tp3f4KXvv3DXPW6D/LVm+/BOlCKSfyoCpeePEIt7xRJzim7W3McandAHILBiGK9YloJke8CxTiimhaMfl2LGW8oW6GT+vuIBAKCjyxpntFNEjAWU9ZWsizHa1FZ0KI+u/lR/wJ5KuzKUtIswmIJeUY9cmyIK5TCAeY58H3dDglCFBxZ8JzUiFkfRagvR4Ji+ad/vp1/+up95NVhHtiZ8aGP/QvTM7PENiJ4IFFOH6hRdeBzxRhl2hrmggIxopaOUQ7bolTeOt7iz7Y/xNcOThJsvWgC8aBCMMWzDBaBQB5yghHaIdBN04KdW+D/juBHVZeMVBe+DvgucVY4VG4K1mjERAWBHCLmWXlvDBUfEYcYb1PiyGIFWhQPouTsn+0wEo8Bh2nUVzCdO6a7c/T3NwnWgBFMN0UwaB7hog4tAzOUugOBEAIda/jSoT18+N7HmTURJz2+j/Enn8qrV51MHjxihEQVh1ATxeDJxZAbyERLbsf2zN1Ulzy7oD3W0YUZiviI3KQ4CZg8JjVp0QdgyAQIWpRJU6C6ig9kkjMblTIFkTJ7GySOyEKbWlDQgDeKKYlfLxZsocHIrGDVogh2Yf7hsUDkc4a6ObdMHGSq0uAkN8SMbXDboUnwGRaDqixoHYyXciJUhH1QCjxCwBQk4FGiA0SUBfPoojGaWY12LQP1xH4AX0mxFmxu6YoSgqIa6Ap0HRjNsZqQ2kJjUVGLGi3nn4FOLSXOmmQ2w2uHSG15m4XoRYwht4KoL8BSECJdDNvgImIRrK0RByVnlhRLH0MFYVXeeVyGuojDi2DUYHGYIHgBNPROZAuqWJYReUiPmVQKSVIx+g8FH1Diem9DISDJLA1fIcqqdE2NSlplKLOFUdUvvKOUN4Vq0RfokRM9SsMs9d7eywyFKEY1ENQTBML8QopdfKIjh0bKUXnAHbckY8mbSEEIlU6TGFALFQp3xoLJFCMx++qOjkaEzBDEYNQtPNxiYC4KKZabXGj5iYuJTZf+TOavUYKBPCiKLdVDetSUVVhep3DCyrBeLYyU2TJGEB+oe0EiR+pgrCpIfohpc4C4e5CNcYyWc894cVBRTicMwQesNYszjGMOimUZfy2uNlqOMqVcqtKT5IhsuPzrJ/AMPcbNyBInXrxSy78yEfAZL1+7Dj/dYdvMJGeMDvPyU9ZCyFBxRBp6HiGAFp7We8+KLFvNBD2WuKoI31JiZTQcoTTSI4UWxy9JMMcY4ivgWUxMIgUsE2PJNBDwxJqySmL+2wXnMgs0AfIEH7KCCdBF8QulUm/e3dETEFiqIBLACtYroqFAmsVUt0B/okjQhdBQKQ0moOKLdk6KBXHHXn5d/sZUUS0TlJYRKQqkGIQYj7GGXBw33HgLt951Pxc/+SxeccUWjMtQEkTqix9l6HmP+dB7YjmF9qg6lnix9AaYLtHgLa/+m0//hXHcT5IzKEf7usSlHRIMBEUiw2e+9B3ec+1nyNwQX7jhIbrTyhte82w0dApUWMwJilX6Gclyl/Me7Xm1/LrLQtJePoGqlLG3/C/LPGItXdz0lEMpJ1W333U/vrqS5opTyGtD3HrXA2UomCPua3nhyE+yROZImeOChx9buaM9pjM/vqQegUxLbYMsuKpgCcVo0mR40wKg2qiQa5fczJCaCSqD+eLtiO1p/o5Uwv7ivsyxbb0cABOQDCFF1CDBkBkt+VEQHEKl+P0guABRiHDBIZnt+ci8tEUhXQpPsBg676Xiy7WXo4wnnKBnyZGy7+Kb5lg5QZAFpK497xBChNeY1Fk6VhjqRCQBMrJCthQKcWzsDUENqMGEKpI3etzSl8YQjAbCsgK0xYQqYoqqUaLVI8urPmFWWN4a8yUYdCFpnyDoKkpnMwv0pxPk0TQDeUJFQ9Hz6WIV90SojQlurhCaEZdz0wAhOsbd61EvC2PIzzwkZJlXbnkxdNkDLHMPLemQ2ZTIVGkby55Sv20UvEq5jyIQJCJgCCYrUmxwPT2COepGtEcasFwr8QvNGUevXAGzzhocwuUZB7oNzJSwudKPq1hS8rJJKIwR+d7EaMsqIyWnqkdhl6L7119oAnXH61AF2k/55ZEqetEZ3L3HsrpqedH6BlFIkbKt0BL4ZKZAhCYYJMzniXkIGBbQIRRhIFYIPvRApl4UUwIolCNhifRmEOGIFlDh+PSwT+wZcsSejbLlJ7KGNYeF9k23svtf7uDgnkmcixDyHnpMECl0F0goeQVTYopCKjUvj0UNokJAC1XgEV5j5hOmOkRCaRpzBKQqjBTmH0kX64vKT7vFQo5u04IqzkQ8vneCN/zOx3n0kTY5Kd++7X6+8NHfYsVwTAiFsPW4c3tpcV0mSSxWsgL+S087LseiJcoKIXJ0GB5PEjr+aqLF5Xv2H+TQgZShFSsZXD3I43sP8vCOcUSqPTF/nFptIyUzBj95vlwswcFosSfuKDAux7U45kRrkXMxdVfDZzl52qEWWWq1aqH0W7KyckQBk6Pzsi7esBzxO9LbfIk+4Y0tLnqJSXpasBPZoOVOdAWCUby2EbFYqkiuix7Rw0JpD42ounyJUlXEmLJ1X75LFl1K5+hy7zQfUmGZcCjz2PGg1BNmuiweIwW/mNMBCRjfC23n0Zxi1OKJi6SpJWTXRaZENOBNKK+WZXFN7/f0SCcpy5coBSchRzb3i++hP001OWaJDRbVcj5i5vdM9oaEKf6IBw0ELcS2Zp6AE49Kmfe1mHRJWQeWGmMpGpVluxAh6OIeWT0GpD/ejWonmEABLbZDBEkRraK4Ug9GqQ0rPjnXBJGsfBKFsrUXfM/1rlAklzrUn/mX0oNtjjSKLJMztDfzmh9bFec7j0A58aKCc3ER/yVuUCKsKbzAYovQmDcAWoKu3nX+6bG39jDr0lO69QiKZ5HEO5o3N0eTpHqsPUvlvxlickQdQTLm2gmduYBITJZnC5hgbi5gQzEmsepQ3+35SLt0k08JlH66hmsxlJYnBWSJs/SuuvbMYBa8omCobQ8HrUeVpmazQqMRk/sMS0buPR//5D9zcHKaamUQa+t8+V+/zy23/pBGvY88D4Dn5FUryoxvFhCkSoAQFsqNPNFiLJMHBCXIUtyimrIIZLVQookcMR3UJUVHFsOk/E2jiCSg9QJaiys/SIuMbYSgOaesXcWZm9fy+H88wkA9hv4+vrJ1O3ve+hFe/MtbeHjPXr5w051keR+mHqEhohrP8axLTu+p5rLIbod5mB5QDSeQvhQhoBqVjV6xu8lQeK2qK/sht8C3LiRjXR6iu3L8QpYliOQY68iiCB9aRd0mLjGdokGJbcbrfu0ybr99NyGHDMU0VnLXY7Ns/YvPgnNUqqOYahUq0Np1kFf8yvk87YLT8KGFMZWFUw4W6SxzAlljnnIsqlMcCsGKDUpx9EAFb/KiZKs5avPifC5dbm5i5mVMJ69dA3lKazLh8OE2a8YMQ80+fBDEaHFcg1i891z+zFP5g3c+Fz83TbfdJmCxfYNUx8aoDY8izpL5jP37H+OZFwzy++94Ma40ejGr6KHQTPFgQY8PC2h5/ATljFUIxe7JPCWjTdfkSNamnwTKIfbSeZQcM/AcJiXxKZc9+2ze81uX87Vv/5CB4TW8+81X0N+o4jOPc3nJmBvQBj5Pef2vX8LIyAAf/NsbeWzHDrqhhrdNbJZSMbM0m55ffdGTed9br+akkSY+A7FVRNLSTefxg5wQaSdHTJrUKNZ4XnLKRnbOfZ/x5BAn16pcvnEl3hbyR2dYqGDzVUb06BbKGXEEnxGbhHe96Vd40ysvJ645rIE862KMQ8kKPMEi1sh9wlXPO5ctF23iO7fdy53bHmM6dUTes35VjUsvfTJnnbkeqx6fZxBFRZyXCXqhsmjvaPkYc1BZOhwM82yZgpiAydtc3hzinC3P5ntTkzx5eJjVXkl8wMk8uS1LxwM9dOJCAhWJiSOLao7PAo1qBZWU4D3xwiC4UmbrgCnDBjF432J0qMKVL7yYK1948VGmDiHH4zFOykbOojhMeTiIYrGSI1JugJFlpmYhxnpLxybkUnbj8/VRIAOgTj7e4TOf/TI3je/lirOexJtf9lziCgTv0cgswTTH6mFd0VUU2MA4IYSAKFjjeloju3QcWMJpa6plZeyWpM3iQwoOMW4ByC10kZKXowILmiFk5CYQzDxjvTSmvQheDNXM0XWKaLdQCeMJ6smxmCjiuhs+zV996mbcwBhbv/kgB1td3vdbV2BNQQoVuP2JsbkJZf8QyhmqsZRSWVPOLOxiv4GgMp8/LEEtiMOYGDRGqSFSx0gVkYilldIcRcuYYJCsTpAcJaNibOm6vtwzp1hNEJPQiQOiipWM3PiFOUfde6ptz+5HDjHsVnF6WMFYtJbbv/MI7fYMxphC5Ltkir98fnLWLJ6bg5ieZtAsQw6VkF3cQpaef1BrzUKYaMnWGFmGJdAS2hAY6R/EhSYJ04X+sxvTTfJy1N+FqEYlsTQ6sKfuaGSWSlLIpAmGjgrWKtINTE10UKO0o4RWt8umlRuoRjVyDYiGhdZeVJEFWZYuB8fliJ7tyLrfa0171Cxl8U8hOxbRnv3ES7takXkSyLL25CpRpUOuljiqsXv/HD/avhvEkgFBc1YMNDm1EhFNHcS3ZxgzlrFaHfJAJVMqEnH3nnEe29kirvbTtYJIi7POXEMcV8Fnxd73heMv5MeQO8dNBpkn6BCO79QfJZQyBOWMJ53MSSuVx2c8tlIhwfPZL9/K5ZeeS2Rr+CxhNM5443lnsPmRHbSwbFm/mrVVh8+7OANGYj53423MdgJSi5G0SzN2nHPB+oUR5iI/UCAwPQYfapbQ30/YDsmPl7UcBxEtGoFxaFDWrRziaU9diW8XN9vXqHPLfzzKP3zqq1SNw4olJB2eXK/wtvPO4vfPO4NL+/upJS1yWpi4zqe/diefu/G76ECExJDMzXHek9Zw8VknF5uVy5BeFAjKMdfrZ3Pa1wm2mYKgXrFkvOxXn0ZN6tjUg5kiaozxl//rdj52/TfITYWoMoCxnkjncCHBBCWu9lOJVvDZf9rKdX/8RUQGimOr1BC6CS+94iIa1ahInHL8JzK5/3RjaLF9SkTIk8CW88/ndb82zkeuv5nG2Chtq9TqI/zxX/8rX7/jPn79pZdz4RnrGB2qosYw3WqzffsePv//buWrt9yHmpUYB5Ht0jq0l5f8ykVc9YKLCaGDsVUCYMNyfKL+FzBGeV/GSgHmgvKut1zOY3se5ys376a2YpgQTWObdb69dT+3fedTbF41yJo1g+TOsGvfIXbtm6KT59QHBwlBicRzeGofW84+mT9691U4Ux6hV45E9ed3TtfPgIoTS0AQ69EQaNYcH7zuGsT+LV/5+h7qfSuQutAYrCFZh8cOT/PQxARBDFYqVKt9VKoZyhyhO0syPcOl55/Jh/7Hq1k1GpPnAWuLbtuoKTcH9PSGBStRSCHmZeLyC/KMxXmqQazifcJoM+bjH3gbHzvnFv76E9/kwFSKq9SIq02kVicyCTZKIDh8IuTTMVlbGKjlvOYVz+Edb/lVhuqUBw9FxSFmUrKaQRZpg1DQz04LXGX8og7lP98YC7PYRZrO2ojghYqFt17zSzznknO48avf5eZbt7Fz7yRzU4bgQaWDcZbhWpPVK5pccskFvPD553PB2asL5YhPcDZakD1oD9UnJYmlVslcIA4RRh25LZvFoL8IY/RKFXoIG2NQzVE/x5M2ruBJb7mKN77y+Wy773Eee/QA7VaCak5fo8mGk4c4+8w1rBgdBFK8b5eeIIgWtOJ8nyqhkNjI/OQ/QD2J0IpHpYNSHMSIml+EMebLXOjpIue74wgkIs9y1GYMNWMuvfgMLr34jJLC6+1vlNwnoIIxjgJk2qPQgsr8rtwCORtnSVxKME3iEFPtdIhNDIZflGf0Dgt7OA0BbHFUlZQ7BXzIyx/rkomZEYOTeEGmrD3aLOnhwudl3N4IJuScMdzgpSv6uXnnON1Q5YpVq9g01CDQ/RmeB/rTgw9Yos8oxGzFyvY0kMvOzswT5ifVeWrYg0IrM9wzMU4r81ywZjVN6/Ga/Vcxxs87XS/+xxcnZBQRCaA5wStiDf8feSwqMGszcp4AAAAASUVORK5CYII=" alt="">
+      <img class="wd" src="data:image/png;base64,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" alt="یوآیدی">
+    </a>
+    <div class="navlinks" id="navlinks">
+      <span id="navblob" aria-hidden="true"></span>
+      <a class="navlink" href="/">خانه</a>
+      <button class="navlink" id="megaBtn" aria-expanded="false" aria-controls="mega">خدمات<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+      <a class="navlink" href="/features/">فناوری‌ها</a>
+      <a class="navlink" href="/docs/">مستندات</a>
+      <a class="navlink" href="https://blog.u-id.net/">وبلاگ</a>
+      <a class="navlink" href="/about-us/">درباره ما</a>
+      <a class="navlink active" href="/contact-us/" aria-current="page">تماس با ما</a>
+
+<div class="mega" id="mega" data-open="0" role="region" aria-label="خدمات یوآیدی">
+  <div class="mega-grid">
+    <div class="mega-col">
+      <h4>راهکار یکپارچه</h4>
+      <a class="mega-link hot" href="/uid-plus/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span><span><b>یوآیدی‌پلاس (PWA)</b><span>برون‌سپاری کامل احراز هویت</span></span></a>
+      <a class="mega-link hot" href="/api/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></span><span><b>وب‌سرویس احراز هویت تصویری</b><span>Passive Liveness و تطبیق چهره</span></span></a>
+      <a class="mega-link" href="/authentication-digital-currency-exchange/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span><span><b>احراز هویت صرافی ارز دیجیتال</b><span>مخصوص پلتفرم‌های رمزارز</span></span></a>
+    </div>
+    <div class="mega-col">
+      <h4>سرویس‌های هویتی</h4>
+      <a class="mega-link hot" href="/sana/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg></span><span><b>احراز هویت ثنا</b><span>سامانه ابلاغ الکترونیک قضایی</span></span></a>
+      <a class="mega-link" href="/sejamauthentication/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.2 14.3L7 22l5-3 5 3-1.2-7.7"/></svg></span><span><b>احراز هویت سجام</b><span>بازار سرمایه</span></span></a>
+      <a class="mega-link" href="/api-inquiry-person/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg></span><span><b>وب سرویس ثبت احوال</b><span>استعلام هویت با کد ملی و تاریخ تولد</span></span></a>
+      <a class="mega-link" href="/address-postcode-docs/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1116 0z"/><circle cx="12" cy="10" r="3"/></svg></span><span><b>استعلام کد پستی و آدرس</b><span>نشانی کامل با یک کد پستی</span></span></a>
+      <a class="mega-link" href="/api-inquiry-card/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></span><span><b>تبدیل کارت به شبا</b><span>شماره کارت را بفرستید، شبا بگیرید</span></span></a>
+      <a class="mega-link" href="/api-inquiry-iban/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></span><span><b>استعلام اطلاعات مالی (شبا)</b><span>مشخصات صاحب حساب با شماره شبا</span></span></a>
+      <a class="mega-link" href="/api-validate-iban/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></span><span><b>تطبیق شبا با کد ملی</b><span>مالکیت حساب را پیش از واریز تایید کنید</span></span></a>
+      <a class="mega-link hot" href="/api-validate-card/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M14.5 15.5l2 2 4-4.5"/></svg></span><span><b>تطبیق شماره کارت با کد ملی</b><span>مالکیت کارت را پیش از تراکنش تایید کنید</span></span></a>
+      <a class="mega-link" href="/sana-register-foreign-form/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-1.5a4 4 0 00-4-4H6a4 4 0 00-4 4V20"/><circle cx="9" cy="7" r="3.5"/><path d="M22 20v-1.5a4 4 0 00-3-3.9M16.5 3.6a4 4 0 010 7"/></svg></span><span><b>ثنا ویژه ایرانیان خارج از کشور</b><span>ثبت سفارش آنلاین</span></span></a>
+    </div>
+    <div class="mega-col">
+      <h4>فناوری‌ها</h4>
+      <a class="mega-link" href="/face-detection/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V5a2 2 0 012-2h3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M21 16v3a2 2 0 01-2 2h-3"/><circle cx="12" cy="11" r="1"/><path d="M9 9v1M15 9v1M9.5 14.5a4 4 0 005 0"/></svg></span><span><b>تطبیق و تشخیص چهره</b><span>دقت ۹۹٪ در تطابق با تصویر مرجع</span></span></a>
+      <a class="mega-link" href="/liveness-detection/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 018 8c0 2-.3 4-1 6"/><path d="M4 10a8 8 0 014-6.9"/><path d="M12 6a4 4 0 014 4c0 3-.5 6-1.5 8.5"/><path d="M8 10a4 4 0 011-2.6"/><path d="M12 10v3c0 2.5-.4 5-1.2 7"/><path d="M7 20c1-2 1.5-4.5 1.5-7v-2"/></svg></span><span><b>تشخیص زنده‌بودن</b><span>جلوگیری از جعل با ویدئوی سلفی</span></span></a>
+      <a class="mega-link" href="/docs/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A2.5 2.5 0 016.5 2H20v18H6.5A2.5 2.5 0 004 22.5z"/><path d="M4 17.5A2.5 2.5 0 016.5 15H20"/></svg></span><span><b>مستندات فنی</b><span>راهنمای PWA و تمام APIها</span></span></a>
+    </div>
+  </div>
+  <div class="mega-foot">
+    <span class="small">نمی‌دانید کدام راهکار مناسب کسب‌وکار شماست؟</span>
+    <a class="tlink" href="tel:02166123290">همین حالا با پشتیبانی تماس بگیرید <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+  </div>
+</div>
+    </div>
+    <div class="navcta">
+      <a class="navphone" href="tel:02166123290" data-track="call_click"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg><span class="num">02166123290</span></a>
+      <button class="burger" id="burger" aria-label="باز کردن منو" aria-expanded="false"><span></span></button>
+    </div>
+  </nav>
+</div>
+
+<div class="msheet" id="msheet">
+  <a class="mrow" href="/">خانه <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+  <a class="mrow" href="/uid-plus/">یوآیدی‌پلاس (PWA) <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+  <a class="mrow" href="/api/">وب‌سرویس احراز هویت تصویری <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+  <a class="mrow" href="/sana/">احراز هویت ثنا <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+  <a class="mrow" href="/sejamauthentication/">احراز هویت سجام <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+  <a class="mrow" href="/features/">فناوری‌ها <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+  <a class="mrow" href="/docs/">مستندات <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+  <a class="mrow" href="https://blog.u-id.net/">وبلاگ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+  <a class="mrow" href="/about-us/">درباره ما <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+  <a class="mrow" href="/contact-us/">تماس با ما <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+  <div style="margin-top:26px;display:flex;flex-direction:column;gap:12px">
+    <a class="btn btn-cta btn-block" href="tel:02166123290" data-track="call_click"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg> تماس تلفنی</a>
+    <a class="btn btn-ghost btn-block" href="https://t.me/Uid_poshtiban" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg> پشتیبانی تلگرام</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     HERO — the ways to reach U-ID, side by side.
+     The phone leads because it is the fastest, but the console next to it
+     shows every channel at once with a live open/closed state read from the
+     visitor's own clock converted to Tehran time.
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section class="dark chero" id="top">
+  <div class="wrap">
+    <div style="padding-block-start:80px">
+      <div class="crumb"><a href="/">خانه</a><span class="sep">/</span><b>تماس با ما</b></div>
+    </div>
+    <div class="chero-grid">
+      <div class="rv">
+        <span class="eyebrow on-dark"><i></i>تماس با ما</span>
+        <h1 class="h-hero">راه‌های تماس با یوآیدی<br><mark>سریع‌ترین راه، یک تماس تلفنی است</mark></h1>
+        <p class="lede on-dark">تلفن، تلگرام، ایمیل یا فرم — هر کدام که برای شما راحت‌تر است.
+          پیش از اینکه چیزی بنویسید، ببینید همین حالا چه کسی پاسخ می‌دهد.</p>
+
+        <a class="telcard" href="tel:02166123290" data-track="call_click" aria-label="تماس با شماره ۰۲۱۶۶۱۲۳۲۹۰">
+          <span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg></span>
+          <span class="ttx">
+            <span class="tlb">تماس مستقیم با دفتر یوآیدی</span>
+            <span class="tnum">۰۲۱۶۶۱۲۳۲۹۰</span>
+          </span>
+          <span class="tgo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></span>
+        </a>
+
+        <p class="chero-sub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></svg>
+          شنبه تا چهارشنبه، ۹ صبح تا ۶ عصر پاسخگوی شما هستیم</p>
+
+        <div class="btn-row" style="margin-block-start:22px">
+          <a class="btn btn-ghost-d" href="https://t.me/Uid_poshtiban" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg> پشتیبانی تلگرام</a>
+          <a class="btn btn-ghost-d" href="#router"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h9"/></svg> ارسال پیام</a>
+        </div>
+      </div>
+
+      <!-- ── live availability console ── -->
+      <div class="rv rv-d2">
+        <div class="avail" id="avail">
+          <div class="avail-hd">
+            <span class="dot" aria-hidden="true"></span>
+            <b>وضعیت پاسخگویی</b>
+            <span class="avail-clock" id="clock" aria-label="ساعت تهران">--:--:--</span>
+          </div>
+
+          <div class="avail-state">
+            <span class="sic" id="stateIcon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </span>
+            <span class="stx">
+              <b id="stateTitle">در حال بررسی ساعت تهران…</b>
+              <span id="stateNote">ساعت دفتر بر اساس وقت تهران نمایش داده می‌شود.</span>
+            </span>
+          </div>
+
+          <p class="avail-hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></svg>
+            ساعات کاری: شنبه تا چهارشنبه، ۹:۰۰ تا ۱۸:۰۰ به وقت تهران</p>
+
+          <div class="chans">
+            <a class="chan" id="chanPhone" href="tel:02166123290" data-track="call_click">
+              <span class="ctop">
+                <span class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg></span>
+                <b>تلفن</b>
+                <span class="cbadge" id="phoneBadge">—</span>
+              </span>
+              <span class="cval">02166123290</span>
+              <span class="cnote" id="phoneNote">سریع‌ترین راه، در ساعات کاری</span>
+            </a>
+
+            <a class="chan" href="https://t.me/Uid_poshtiban" target="_blank" rel="noopener">
+              <span class="ctop">
+                <span class="cic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg></span>
+                <b>تلگرام</b>
+                <span class="cbadge">هر ساعت</span>
+              </span>
+              <span class="cval">Uid_poshtiban</span>
+              <span class="cnote">پشتیبان آنلاین یوآیدی</span>
+            </a>
+
+            <a class="chan" href="mailto:info@uid.ir">
+              <span class="ctop">
+                <span class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg></span>
+                <b>ایمیل</b>
+                <span class="cbadge">هر ساعت</span>
+              </span>
+              <span class="cval">info@uid.ir</span>
+              <span class="cnote">مکاتبات رسمی و ارسال مدارک</span>
+            </a>
+
+            <a class="chan" href="#router">
+              <span class="ctop">
+                <span class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg></span>
+                <b>فرم تماس</b>
+                <span class="cbadge">هر ساعت</span>
+              </span>
+              <span class="cval fa">پایین همین صفحه</span>
+              <span class="cnote">پیام کتبی، با پاسخ به موبایل یا ایمیل شما</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     WHICH TEAM — routing, not selling.
+     Every route points at a way of reaching the people who answer that kind of
+     question. No service pages, no product tiles: a visitor who is already on
+     the contact page has decided to get in touch, not to be sold to.
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section class="sec" id="router" style="padding-block:clamp(48px,6vw,88px)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow"><i></i>بخش‌ها</span>
+      <h2 class="h-sec">با کدام بخش کار دارید؟</h2>
+      <p class="lede">انتخاب کنید تا راه تماس همان بخشی که پاسخ می‌دهد را ببینید.</p>
+    </div>
+
+    <div class="router rv" id="routerBox">
+      <div class="router-hd">
+        <p class="q">کدام گزینه به شما نزدیک‌تر است؟</p>
+        <p class="qs">اگر مطمئن نیستید، تماس تلفنی یا فرم پایین همیشه به ما می‌رسد.</p>
+      </div>
+
+      <div class="rchips" id="rchips" role="tablist" aria-label="بخش مورد نظر">
+        <button class="rchip" type="button" role="tab" aria-selected="false" aria-controls="p-sana" data-r="sana"><span class="rdot"></span><span>کاربر شخصی — ثنا و سجام</span></button>
+        <button class="rchip" type="button" role="tab" aria-selected="false" aria-controls="p-biz" data-r="biz"><span class="rdot"></span><span>کسب‌وکارها</span></button>
+        <button class="rchip" type="button" role="tab" aria-selected="false" aria-controls="p-dev" data-r="dev"><span class="rdot"></span><span>پشتیبانی فنی</span></button>
+        <button class="rchip" type="button" role="tab" aria-selected="false" aria-controls="p-support" data-r="support"><span class="rdot"></span><span>مشتریان فعلی</span></button>
+        <button class="rchip" type="button" role="tab" aria-selected="false" aria-controls="p-press" data-r="press"><span class="rdot"></span><span>رسانه و همکاری</span></button>
+      </div>
+
+      <div class="rbody">
+        <div class="rcopy-slot">
+
+          <div class="rpanel" id="p-sana" role="tabpanel" data-p="sana">
+            <div class="rp-copy">
+              <span class="tag">کاربر شخصی</span>
+              <h3>پرسش‌های ثنا و سجام را پشتیبانی پاسخ می‌دهد</h3>
+              <p>اگر برای خودتان ثنا یا سجام را دنبال می‌کنید، پاسخ از تیم پشتیبانی می‌آید و نه از
+                تیم فروش. سریع‌ترین راه، پیام در تلگرام پشتیبانی است؛ در ساعات کاری می‌توانید
+                تلفنی هم تماس بگیرید.</p>
+              <div class="rp-routes">
+                <a class="rp-route teal" href="https://t.me/Uid_poshtiban" target="_blank" rel="noopener">
+                  <span class="hx"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg></span>
+                  <span class="tx"><b>پشتیبان آنلاین یوآیدی</b><span>Uid_poshtiban — پیام در تلگرام</span></span>
+                  <svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
+                <a class="rp-route" href="tel:02166123290" data-track="call_click">
+                  <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg></span>
+                  <span class="tx"><b>۰۲۱۶۶۱۲۳۲۹۰</b><span>شنبه تا چهارشنبه، ۹ تا ۱۸</span></span>
+                  <svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="rpanel" id="p-biz" role="tabpanel" data-p="biz">
+            <div class="rp-copy">
+              <span class="tag">کسب‌وکارها</span>
+              <h3>گفت‌وگو درباره همکاری و قرارداد</h3>
+              <p>برای صحبت درباره شرایط همکاری و قرارداد، تلفن سریع‌ترین راه است. اگر ترجیح
+                می‌دهید کتبی بنویسید، فرم را پر کنید تا کارشناس در ساعات کاری با شما تماس بگیرد.</p>
+              <div class="rp-routes">
+                <a class="rp-route teal" href="tel:02166123290" data-track="call_click">
+                  <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg></span>
+                  <span class="tx"><b>۰۲۱۶۶۱۲۳۲۹۰</b><span>گفت‌وگوی مستقیم با کارشناس</span></span>
+                  <svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
+                <a class="rp-route" href="mailto:info@uid.ir">
+                  <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg></span>
+                  <span class="tx"><b>info@uid.ir</b><span>برای مکاتبات رسمی و ارسال مدارک</span></span>
+                  <svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="rpanel" id="p-dev" role="tabpanel" data-p="dev">
+            <div class="rp-copy">
+              <span class="tag">پشتیبانی فنی</span>
+              <h3>مشکل فنی یا پرسش درباره اتصال</h3>
+              <p>متن دقیق خطا و زمان رخ دادن آن را در فرم بنویسید یا برای ما ایمیل کنید تا
+                سریع‌تر بررسی شود. برای موارد فوری، تماس تلفنی کوتاه‌ترین راه است.</p>
+              <div class="rp-routes">
+                <a class="rp-route teal" href="mailto:info@uid.ir">
+                  <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg></span>
+                  <span class="tx"><b>info@uid.ir</b><span>برای ارسال فایل و تصویر خطا</span></span>
+                  <svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
+                <a class="rp-route" href="tel:02166123290" data-track="call_click">
+                  <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg></span>
+                  <span class="tx"><b>۰۲۱۶۶۱۲۳۲۹۰</b><span>برای موارد فوری، در ساعات کاری</span></span>
+                  <svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="rpanel" id="p-support" role="tabpanel" data-p="support">
+            <div class="rp-copy">
+              <span class="tag">مشتریان فعلی</span>
+              <h3>پیگیری سرویس فعال</h3>
+              <p>برای پیگیری یک مورد باز، تلفن و تلگرام سریع‌ترین راه‌ها هستند. اگر می‌خواهید
+                درخواست‌تان کتبی ثبت شود، از فرم استفاده کنید.</p>
+              <div class="rp-routes">
+                <a class="rp-route teal" href="tel:02166123290" data-track="call_click">
+                  <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg></span>
+                  <span class="tx"><b>۰۲۱۶۶۱۲۳۲۹۰</b><span>در ساعات کاری</span></span>
+                  <svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
+                <a class="rp-route" href="https://t.me/Uid_poshtiban" target="_blank" rel="noopener">
+                  <span class="hx"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg></span>
+                  <span class="tx"><b>پشتیبان آنلاین یوآیدی</b><span>Uid_poshtiban — ارسال تصویر و پیگیری</span></span>
+                  <svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="rpanel" id="p-press" role="tabpanel" data-p="press">
+            <div class="rp-copy">
+              <span class="tag">رسانه و همکاری</span>
+              <h3>رسانه، همکاری و پیشنهاد کاری</h3>
+              <p>درخواست مصاحبه، پوشش خبری، همکاری یا ارسال رزومه را برای ما ایمیل کنید.
+                برای پیام کوتاه‌تر، فرم هم در دسترس است.</p>
+              <div class="rp-routes">
+                <a class="rp-route teal" href="mailto:info@uid.ir">
+                  <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg></span>
+                  <span class="tx"><b>info@uid.ir</b><span>مکاتبات رسمی و ارسال پیوست</span></span>
+                  <svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="rpanel on" id="p-none" role="tabpanel" data-p="none">
+            <div class="rp-copy">
+              <span class="tag">هنوز انتخابی نکرده‌اید</span>
+              <h3>یکی از بخش‌های بالا را انتخاب کنید</h3>
+              <p>راه تماس همان بخش اینجا نمایش داده می‌شود. اگر مطمئن نیستید به کدام بخش کار
+                دارید، تماس تلفنی یا فرم پایین همیشه به ما می‌رسد.</p>
+              <div class="rp-routes">
+                <a class="rp-route" href="tel:02166123290" data-track="call_click">
+                  <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg></span>
+                  <span class="tx"><b>۰۲۱۶۶۱۲۳۲۹۰</b><span>شنبه تا چهارشنبه، ۹ تا ۱۸</span></span>
+                  <svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="rform-slot">
+          <form class="cform" id="cform" novalidate>
+            <div class="cform-body">
+              <h4 id="formTitle">ارسال پیام</h4>
+              <p class="hint" id="formHint">نام، یک راه ارتباطی و توضیح کوتاه — همین برای تماس گرفتن با شما کافی است.</p>
+
+              <div class="fld" id="f-name">
+                <label for="i-name">نام و نام خانوادگی</label>
+                <input id="i-name" name="name" type="text" autocomplete="name" placeholder="مثلاً مریم رضایی" required>
+                <span class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7.5v5M12 16v.1"/></svg><span>نام خود را وارد کنید.</span></span>
+              </div>
+
+              <div class="fld" id="f-contact">
+                <label for="i-contact">شماره موبایل یا ایمیل</label>
+                <input id="i-contact" name="contact" type="text" inputmode="email" autocomplete="tel" placeholder="۰۹۱۲۳۴۵۶۷۸۹ یا name@company.com" required>
+                <span class="tipline">پاسخ را از همین راه برای شما می‌فرستیم.</span>
+                <span class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7.5v5M12 16v.1"/></svg><span class="errtx">یک شماره موبایل یا ایمیل معتبر وارد کنید.</span></span>
+              </div>
+
+              <div class="fld fld-extra" id="f-org">
+                <label for="i-org">نام کسب‌وکار <span class="opt" id="orgOpt">(اختیاری)</span></label>
+                <input id="i-org" name="org" type="text" autocomplete="organization" placeholder="نام شرکت یا پلتفرم">
+                <span class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7.5v5M12 16v.1"/></svg><span>نام کسب‌وکار را وارد کنید.</span></span>
+              </div>
+
+              <div class="fld" id="f-msg">
+                <label for="i-msg">پیغام</label>
+                <textarea id="i-msg" name="message" placeholder="در یک یا دو جمله بنویسید به چه چیزی نیاز دارید." required></textarea>
+                <span class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7.5v5M12 16v.1"/></svg><span>پیغام خود را بنویسید.</span></span>
+              </div>
+
+              <input type="hidden" name="intent" id="i-intent" value="">
+              <!-- honeypot: a bot fills this, a person never sees it -->
+              <div class="sr" aria-hidden="true"><label for="i-hp">این فیلد را خالی بگذارید</label><input id="i-hp" name="company_url" type="text" tabindex="-1" autocomplete="off"></div>
+
+              <div class="cform-foot">
+                <button class="btn btn-cta btn-block" type="submit" data-track="form_submit">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>
+                  ارسال پیام
+                </button>
+                <p class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+                  <span>اطلاعات شما فقط برای پاسخ به همین درخواست استفاده می‌شود.</span></p>
+              </div>
+            </div>
+
+            <div class="form-ok" role="status">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.6 2.6L16 9.5"/></svg>
+              <b>پیام شما ثبت شد</b>
+              <span id="okNote">در ساعات کاری با شما تماس می‌گیریم. اگر عجله دارید، ۰۲۱۶۶۱۲۳۲۹۰ سریع‌تر است.</span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     ADDRESS, HOURS AND THE TRUST SEAL
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section class="sec" id="loc" style="padding-block:0 clamp(48px,6vw,88px)">
+  <div class="wrap">
+    <div class="loc rv">
+      <div class="loc-card">
+        <span class="eyebrow" style="align-self:flex-start;margin-block-end:16px"><i></i>دفتر یوآیدی</span>
+
+        <div class="loc-row">
+          <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1116 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+          <span class="tx"><span class="k">آدرس</span><span class="v" id="addrText">فرصت شیرازی</span></span>
+          <button class="copybtn" type="button" data-copy="فرصت شیرازی" data-label="آدرس">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>
+            <span>کپی</span>
+          </button>
+        </div>
+
+        <div class="loc-row">
+          <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg></span>
+          <span class="tx"><span class="k">تلفن</span><a class="v mono" href="tel:02166123290" data-track="call_click">02166123290</a></span>
+          <button class="copybtn" type="button" data-copy="02166123290" data-label="شماره تلفن">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>
+            <span>کپی</span>
+          </button>
+        </div>
+
+        <div class="loc-row">
+          <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg></span>
+          <span class="tx"><span class="k">ایمیل</span><a class="v mono" href="mailto:info@uid.ir">info@uid.ir</a></span>
+          <button class="copybtn" type="button" data-copy="info@uid.ir" data-label="ایمیل">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>
+            <span>کپی</span>
+          </button>
+        </div>
+
+        <div class="loc-row">
+          <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></svg></span>
+          <span class="tx"><span class="k">ساعات کاری</span><span class="v">شنبه تا چهارشنبه، ۹ صبح تا ۶ عصر پاسخگوی شما هستیم</span></span>
+        </div>
+
+        <!-- SAMAN: replace the block below with the official eNAMAD anchor and
+             <img> issued for u-id.net — the seal is domain-bound and must be
+             served from eNAMAD's own asset, so it cannot be recreated here. -->
+        <div class="namad">
+          <div class="namad-seal" role="img" aria-label="نماد اعتماد الکترونیکی">
+            <div>
+              <span class="e">e</span>
+              <small>eNAMAD.ir</small>
+            </div>
+          </div>
+          <div class="namad-tx">
+            <b>نماد اعتماد الکترونیکی</b>
+            <p>یوآیدی دارای نماد اعتماد الکترونیکی است. برای دیدن اطلاعات ثبت‌شده نماد،
+              روی آن کلیک کنید.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="loc-fig" aria-hidden="true">
+        <svg class="rings" viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice" focusable="false">
+          <defs>
+            <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#29BCCE" stop-opacity=".55"/>
+              <stop offset="1" stop-color="#29BCCE" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <g fill="none" stroke="url(#rg)" stroke-width="1.2">
+            <path d="M200 56 L262 92 L262 164 L200 200 L138 164 L138 92 Z"/>
+            <path d="M200 20 L293 74 L293 182 L200 236 L107 182 L107 74 Z" stroke-opacity=".7"/>
+            <path d="M200 -16 L324 56 L324 200 L200 272 L76 200 L76 56 Z" stroke-opacity=".45"/>
+            <path d="M200 -52 L355 38 L355 218 L200 308 L45 218 L45 38 Z" stroke-opacity=".25"/>
+          </g>
+        </svg>
+        <div class="pin">
+          <span class="hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1116 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+          <b>فرصت شیرازی</b>
+          <span>دفتر یوآیدی — شرکت بینش هوشمند نسل پیشرو</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     FOUR QUESTIONS ABOUT GETTING IN TOUCH
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section class="sec" id="faq" style="padding-block:0 clamp(52px,6.5vw,92px)">
+  <div class="wrap" style="max-width:900px">
+    <div class="sec-head mid rv">
+      <span class="eyebrow"><i></i>پیش از تماس</span>
+      <h2 class="h-sec">چهار پرسش پرتکرار</h2>
+    </div>
+    <div class="faq rv">
+      <div class="faq-i">
+        <button class="faq-q" type="button" aria-expanded="false"><span class="fq-tx">خارج از ساعات کاری چطور با شما تماس بگیرم؟</span><span class="pm" aria-hidden="true"></span></button>
+        <div class="faq-a"><p>تلگرام، ایمیل و فرم در هر ساعتی باز هستند و پیام‌ها در نخستین روز کاری بررسی
+          می‌شوند. کادر «وضعیت پاسخگویی» بالای صفحه، ساعت تهران را نشان می‌دهد و می‌گوید دفتر
+          همین حالا باز است یا نه.</p></div>
+      </div>
+      <div class="faq-i">
+        <button class="faq-q" type="button" aria-expanded="false"><span class="fq-tx">برای ثنا و سجام با کدام بخش تماس بگیرم؟</span><span class="pm" aria-hidden="true"></span></button>
+        <div class="faq-a"><p>با پشتیبانی، نه با فروش. پیام در تلگرام <span class="lat">Uid_poshtiban</span>
+          سریع‌ترین راه است و در ساعات کاری می‌توانید با ۰۲۱۶۶۱۲۳۲۹۰ هم تماس بگیرید.</p></div>
+      </div>
+      <div class="faq-i">
+        <button class="faq-q" type="button" aria-expanded="false"><span class="fq-tx">پیامی که در فرم می‌نویسم به کجا می‌رسد؟</span><span class="pm" aria-hidden="true"></span></button>
+        <div class="faq-a"><p>به همان بخشی که در «با کدام بخش کار دارید؟» انتخاب می‌کنید. اگر گزینه‌ای انتخاب
+          نکنید، پیام به تیم پشتیبانی می‌رسد و در صورت نیاز به بخش مربوطه ارجاع داده می‌شود.</p></div>
+      </div>
+      <div class="faq-i">
+        <button class="faq-q" type="button" aria-expanded="false"><span class="fq-tx">پاسخ را از چه راهی دریافت می‌کنم؟</span><span class="pm" aria-hidden="true"></span></button>
+        <div class="faq-a"><p>از همان راهی که در فرم وارد کرده‌اید — اگر شماره موبایل بنویسید تماس می‌گیریم و
+          اگر ایمیل بنویسید پاسخ را ایمیل می‌کنیم. وارد کردن یکی از این دو کافی است.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ FOOTER ══════════════════════════════ -->
+<footer>
+  <div class="wrap">
+    <div class="f-grid">
+      <div class="f-brand">
+        <img class="mk" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEMAAABUCAYAAADZGYpQAAAkaElEQVR42s2ceZRdV3Xmf/ucc+8b6r2aVbIka7LkCQ/YGNvAQsYYEyDBJoYFDiFgpjAlwCLQEJJ0Ypw0CUk6LEg3JNBJiBmawTQmMWEwMSSOMbIBY+RJHmWNpaFU4xvucM7uP+6tqldSyUgMIbWWpKeqW+/du88evv3t7xxRVeVn8qWAHPW/gBJUMQoSADGoAdHimgAEAasgKKqChlBcL4JayAFEMAK2fE8AGxRVEGt+Jk8gP5kxQvm4pnxkRfGgBsGAQE7AouQh0DJCJRgsOYohUsGLxxOwIqBSvJtAV6GLIRKhpoEIQ1APgBFXWFEMKITS4iKFIcGUBgeVYklEpXeNfh7GWN4xFC1feBBBEXyWEzQQicOIgcgseJB6RWz5Wsvvhp73NEpXQEIOqhgMxkhhfjF4wKAYVQyKF4ctDTT/UPLz84zyUi28AZn/KE+uQgAiKZ7Mq+KMLW7HK4l6diVd9s62mOnk7Ag5+/AEnyLBY3AEA0aEla7GSTZiVTVmY3+NUWpUHGQOLAENoCJYQEqvClJ41tJAnQ/W4zOJ+wkia9EogA8BlQwnVQCykCEozseMZyl3Tk5zz+HDPDw3xd5M2J8kzKAEL+XHK7EqAUNeJA4qwWLI6JPA+qjKaC3mlKE+zhse5imNfkbiqAjWkJCjYCyqgvGu8M7SKGpOzDtOOEy8Box4RJUk8VSqNQB27DqAWmHd6hFUu+xuB667+3H+Y7ZLyzqMzYito4IQGY9VQRScL5KjGggaiIOFYOi4jJbNyb0gmSf2SjMoqxpNzh2rc8lJwzxjYJC+oPiQ0BXBSJWAEiE4DRhjOIGUcTzGCGWiLHKCegFSAhnORuw9lPA3H/0W139vK9Wkzfuu/iVe/JoX8Kndu/nQvQ+S1kYZSC2p87RthCQx1nsyOmhIwUBQoaIWb5VUwZkIYyzqFGsCFR/wLqPjUnyiRGlgFMO5K4d5/tqTeEH/IJEXZkzOnPHUiBhMhTxWnKFI6j+9MYq4UzVFghMIvoOxBpEKN3z1dv7n397Ew4/kuOFhbCdj2O7hH//+ncysHOOtW+9gpjFIPbOkYY7+3FJ1MQP1iBU1x5AT+lyEiJAbS4anlaRM5zmHuilTScp0rqQaYSNDzRoiH2GzmGA9dFtEsefCkRqvX7eO84eGyLRLCjip4AAjioj5aXOGLtQoDWA04EPAxspsO+dP/upG/u+N20htlcrqLqPTXVqVfnaYmGS6w5Yz+/mNzSfz7b1T1CoVTh8d48J6ndPqfayoV+mLI+rWli48n4cCqkLLB6Zyz+5ul3vbc9w/2eW+iVn2dVJmfILpq1MXj3WGqdDg5vGE2yfv5TUnj/LajZvpizxZ3sHaepHsRY8rczyBZ/SEh6ZkWU4c19ixa5rf+cNP8O3vP0jfyEoCNYIN1OYOk7RbvPiaS/irt7+EiJxZV2Gmk9IQQ381WridjBxCVoAqVUIAIwaDIlKUUIwFX1QjlcBEknDXTJubJsf55uEJplNDU+sM+QgVZbySk2Y5z+53vOvUTZzX108gQFmhllQV7a2EP9YYihLAGxBPFjJiV+PeR/fyprd/ggd2tqitjEjzNhWJmdsfsX5DxO+94XKufOFFOG0TVBEMYiGIgLcEY5FgCihhFPEeDYq1DlVBRMnJEWswCuSQk5K6Ng0sVgbwCI9Ntblp1z4+e3CcxyLHgGtwygHHRJ9j0k2xoT3DNRedwytGRzFZRmYDBotBUAVjzIkZI5Aj3hF8go2r3P3wbt7w9o+x60BGNNggl4C2LaE7zlXPfTLvedvL2LCqSe5zbA4+tqhkGA9eIqxKYeDgC0geFGcFCQHyQFqz+JAT5YoVS6Yg1hFZQbVL6sFLjEpOn4kgGH40N8vf7Rjn5vEJTGyoe0ekMYeMp+bneOfGtbxk01oqvotiQAqEbMXMw9bjNEbICepxNubRXYd59ds+yoO75nBDgNbQVgWXp7zjt5/N2655JoaUPM0IzoI6MA6PYoNBRcEolWDBBAg53UQYt55UlbyTYKoV1lQrNLtdciu4qEY3TZiYajE22k9kivQ2RYbJA7WgRFEEmeXre/fy3gMPMd2OGQkjtCxEOkvo7OdlZ5/O767ZhEu7zFQhUkdNyvA7IpMcwxgB71MEYard5pq3/CN33tOlMjJHyGNUYwz7+IvffRVXv+ACcj+HhCLMMxEQgwsW8Q4RAQfTPueuVouHZrpsn22xf3qWfZowXQn4TKmGwNtXr+PqlavRqmPrjx7nzz50Pftn5hgbWcslT9nMZU87hfNPPw0q0NUW3jtiMiLn+H47548eeJhH9ucMVz0PV2HUN9BsnLdvOo3XrVuLph3SyFEjKrKhLO0vlxqjTCyq4LOAiQ3v+JO/5jNfeJTa0Cay+CAyW2XI5bz//c/jRVvOw+dtDAOoCKlV4lCEQuoEh+G+NOG2ffu5f8ch7slyptoR01EVZwVnc5xmWHEcjCI2puP83dMuYqWNeclr/5w77pmmMjxM2mkzXZ2i0Uh43vozefOVz+c5z30SOOgm06QR9IcB9uaB99+/na8f2E0tGqGZ9ZG4LoftJH96xhlcPTRG16XEJsaoLC00Ir2lteg8BYuqx8WOz3/tu3zuSzuojpxEkElCHlFnive/+0petOUi8qSDjep4owTNAY94QaIKj6RdvvHYbr6x/yDb87KjrFZoOGGlgmigbZRm16Gmyu56xkwwiBiSTpd9s4epD4xSt01sM7BCV9CZUW793gG+c9f1POPO9fzlb76YDWMr0ZCSaofVVrj2vDPItsEtBw4S+gzOx1jT5P/cdz+nXFDnwoEmuQ+oNdgF7ygpgWuvvfbawiE8SMB7jzURD++a4J1/+EmmgiExULGWbPow//3Nz+E3rr6MA5mnYiJcEFLjSSWjLwl4V+dThw7xv3+4na8cniTL69SlgqtGgGHWwqRPyPKEdtSmG6cIOatDizds2syzBodp9sVUcNx2xw/odFrMdiw1GvQbh4kiQr3KD+9/iJu/tY3TNp7CaetHSLVFapXBvMLTxwYZn5tma5KAGDbMVngsFn6QHOKK2kpqYmmZfL4xLvKHKqJBVclBFPUBj+JslXf98Ze4/ou3EK9ogq+Tz7V43jNX8Yk//21yyekYR58KTjNyBGMC3Vz44MMP8pFDk9SzBoMasEQYhXFpE6tnNRVOHezngr4q6weqRI0KlUzZ5CJOqtfwPiWvGGKN+cE9O/m3H2xn69YdbL1vB1OdhP56AxsMkUZM5Dl9lWn+/gOv4fKLzyLLZkAaiPPMdeENd93L1iRjTaeP6bpjVg/wnoGVvOWcU5kzXeoaEYzBqhY0iYagQRUjgdynOFdj67aHuea3P86sN5hKP5p4xuop13/8LZy+fiWSeVwANZaO81TFcaCT8wcP3c83Ds5ysh8mtUo7TujkgSjknN1f5YVrRrlkeIiNUbUgdQygHhUhISH1HiOGmIgQDFXnClQacn54zw6u//y/c9Mt9zEdalTq/UTeEzpzjA4qH/nwG7nojLWEPCMYixPDtqk53rRtG4/aAdZ3anTNLLPNOT5x2rls6e/HB0gtVFRRCRhFEaQAPcaTIXzy87cxOeex0SAhRKTtQ7zhN57F2etXEdI22Ig0UpSEWCL2ZDnX/ehuvjiVMGJXMtiB2QgOa8rTrfJH56znI085i9eOrWGzq9Em5XBI6WaBLBF8Kri0SkSDyFSJAsSak6Yt8izBC5x/7kY++Cev5wPXvZKxFYa0NYv3gbg2yt4DVd77p5/hwFyGmgSPJ00zzhms8rYNp9DsdjlUyan4iHYS8fePPU7iywSKQBAy1ZInM4FAhjUxP3pwD1+/9UFsfQCRiKw1x1PPXs3Lr3oG3neo+IhcYc54jBE6eeDDP7yf70622JRXEN/igdE2HZ3gjQP9fPTC83jF2ApWSpsOLWYlABF9zlCNIKoKLja4WKhZqGDIrSPHEVEBV8NLTJYGfNLlxZefzz/8+evZOKq0NWXKdqgM17n7+xN85ou3YU0fEoSOM8xozovHVnNpI6LNNMEKw/kg94y3uf3AfowR4hAQERwRrjCPB8mBBjd97U7Gp3OaQxFoQuxneNXVz2egWSNJUnxUwZlA01u6NubvHt7BjYdb2L4BhlNlb8Vg/BzvW7uOV5yygdjDbPDYUKGmijghzz2PHJzl7m6Hna0OUyFQQRmpVNnYV+f0vj5WN+sEFOtTjPGoc4h3ZN0OF565nvf/96t53Xs/RZuITKep1oe44YatvOx5F7B6ZZOgHu8rREZ5yelrueuOHzJdjajpAKnUuP7gLs5btYLBPCOPIowYnGLRkGKNcGimy7e/s5241ocaIW21OGvTCM/dci6qXZyt0DUBF7pUiPj3wy0+s3M/1Vof9U6Hiaoh7ijvPXUzL98wgukqHeOpOXCmwgH1fGPPON/YP8s9h7v4TJiVjE41R7xlMJvGiac+6LikOcivr1zFecMNgs6RqEdchHGGLJ3jsqedy8tf8HQ+/uk7sGOOUBUe3TvDV/79Pn7zZU/H5nNUfR8zrs3FgwNc2VzBh/NZRrpNOmK4tdvlwcMtLhqsk0pGrFFZWdQDEXc/uJeH98xQdwWf2OmkXH7pOYz09xGCgMtBhBjDtHo+ed9DzPgI8GS2ik87vGrTKl61fg0h5GQuRVyCM44HJ1u87/ZtXLv9UbZOTiAmQZtdBpqek6KcsapSaViiqEZnpsKXdx7gN7fdyfsfvZ+DWqWuNZzmQAVrI4ImvO5ll7JuRYV2FqhGoJLzzX+7izwozjo0UsTAAIZnnraOETUQuuSx0ukY7jw4AdaWYwopu1sEiPjeXfcz1+lirIUsY7Df8oyLz5mfUgCC0RwxVb61bz/fbU9RNTGBiJ3ieepwnTdvWIWdzaj4KrlLqBrhln2TvPEH93BjFuPcRqpxlck+YR9NWi2LnxHSWWEqgYnIUTM1hqIhxqMGf7NzF9fdfS97ghKJIfZFW55rzqYNQzx7y2bSuUBmAlpp8MDD+3ls9wRi6gQxVEyM+MBZA/08pdGgJQneCdZU2DZ+kENpRqQO9QGjXhERfAjc+8BORBxRZEnaXTatHeTsM09CCAgRokIsMJMFbth5gMPNPowVTBo4N0S8a9PpjEiLTi1nzlpqWueBvcJ12x7ijsEU25xlrDPBjAidNOHpJudZK4Z4ycnruGLVGJf397NaUx6JJjhY8axpNzklWcXXDnf5w+33M5MHvCioQUNBJj/zwjOpSUzX50ilyr4DczywfRcgeAXUollghTU8Z3CA3GR4lApV7k063NdqYYwFFKcErIk4NDnHg4/uw8U1QlBsrpx+6iqG6lU0T4AaimJFuHVmhu8nMOJi1GbMpSmvHhvlqf1NEp2iHWXUtcJUF/5o+6M8EsecM5vTjhIm7RRP7Qzyqs2nsWVVjUa1hiNHURJ17Jxq89l9O/n0wQkOVAcZTiNWap27H5/ic24vrzxzHS73iESAsGnDKvqrOR0EEwmzWcqBgwfLdjNgNSI4xUqHiwYGqMguNAjVLGavi9g2M8klQ4OIBVM0so7x/RMcnJxFXEwICl44c/MGhFD2HQv0OLfOHWYiarBuGhJa1KvClvUjhJDjfR/9OVQ054ZHD3FnaFGLEtoySKc7yumNk/i9p5/DFRtHaMR9kAW6WSDJAqo5m4cavPdJ5/DudZsYCdPs6GvTdnOEyhCf3DPFjpkpnC06qUyVTaeMcdmzTqc1eYCD43s5c/PJXLblfNA2gkcUEqt0whzrmnVWDQxiuoGaj5iJIh5uzZFrQTm6okdR9ox3yNIVmFqGeEutajl9wwBgUWpgE4zCXO54YHKKRtZiqq9J0mrwjFVw7mATr0pwSpT0ca/k/PPkfppe6GqDGfWcF7e49rwLObtqyLKUTDPq1uJsDcgJPiXNBEfONRvXEoUuf/HIBHO1Ok1gd1f58t4JTj1jEKttcoS6q/GB3305z75gHRPTXV5w2UVsXDtMnrSITMScS4kQ4qwfGzvOsJ7t4qnFM6zpWLa3lQOas1oDLnjACdMzLdLU4PogpIFGX5Wx0UEgIGJRSRGJ2NNNGJ9NiIxlziq1JOKpY0NUxeAJGDxEEY9OTrInmSF2DbpYBpIZrjxnFZurjpBnGOOo2oi5XLn3R4+y+qQR1o4NEil4yTEh4ZdP2cy3JnK+O9fFCkhkuHdyhukkZzhWUpSg0KgLV151KRaIQ0I36xBioaIGK4E4KFYLbmVDfxOdOIw3OdUcptOcdu7BQkk2Cu1WC5+nZTL1VOMqzf4G4HtGioadSYsZ7wiuCcHTJOXMSq0gkENJIVvYOTtZok1LyDts6Kty6ehqKqp4CVgjHDyQ8tp3f4KXvv3DXPW6D/LVm+/BOlCKSfyoCpeePEIt7xRJzim7W3McandAHILBiGK9YloJke8CxTiimhaMfl2LGW8oW6GT+vuIBAKCjyxpntFNEjAWU9ZWsizHa1FZ0KI+u/lR/wJ5KuzKUtIswmIJeUY9cmyIK5TCAeY58H3dDglCFBxZ8JzUiFkfRagvR4Ji+ad/vp1/+up95NVhHtiZ8aGP/QvTM7PENiJ4IFFOH6hRdeBzxRhl2hrmggIxopaOUQ7bolTeOt7iz7Y/xNcOThJsvWgC8aBCMMWzDBaBQB5yghHaIdBN04KdW+D/juBHVZeMVBe+DvgucVY4VG4K1mjERAWBHCLmWXlvDBUfEYcYb1PiyGIFWhQPouTsn+0wEo8Bh2nUVzCdO6a7c/T3NwnWgBFMN0UwaB7hog4tAzOUugOBEAIda/jSoT18+N7HmTURJz2+j/Enn8qrV51MHjxihEQVh1ATxeDJxZAbyERLbsf2zN1Ulzy7oD3W0YUZiviI3KQ4CZg8JjVp0QdgyAQIWpRJU6C6ig9kkjMblTIFkTJ7GySOyEKbWlDQgDeKKYlfLxZsocHIrGDVogh2Yf7hsUDkc4a6ObdMHGSq0uAkN8SMbXDboUnwGRaDqixoHYyXciJUhH1QCjxCwBQk4FGiA0SUBfPoojGaWY12LQP1xH4AX0mxFmxu6YoSgqIa6Ap0HRjNsZqQ2kJjUVGLGi3nn4FOLSXOmmQ2w2uHSG15m4XoRYwht4KoL8BSECJdDNvgImIRrK0RByVnlhRLH0MFYVXeeVyGuojDi2DUYHGYIHgBNPROZAuqWJYReUiPmVQKSVIx+g8FH1Diem9DISDJLA1fIcqqdE2NSlplKLOFUdUvvKOUN4Vq0RfokRM9SsMs9d7eywyFKEY1ENQTBML8QopdfKIjh0bKUXnAHbckY8mbSEEIlU6TGFALFQp3xoLJFCMx++qOjkaEzBDEYNQtPNxiYC4KKZabXGj5iYuJTZf+TOavUYKBPCiKLdVDetSUVVhep3DCyrBeLYyU2TJGEB+oe0EiR+pgrCpIfohpc4C4e5CNcYyWc894cVBRTicMwQesNYszjGMOimUZfy2uNlqOMqVcqtKT5IhsuPzrJ/AMPcbNyBInXrxSy78yEfAZL1+7Dj/dYdvMJGeMDvPyU9ZCyFBxRBp6HiGAFp7We8+KLFvNBD2WuKoI31JiZTQcoTTSI4UWxy9JMMcY4ivgWUxMIgUsE2PJNBDwxJqySmL+2wXnMgs0AfIEH7KCCdBF8QulUm/e3dETEFiqIBLACtYroqFAmsVUt0B/okjQhdBQKQ0moOKLdk6KBXHHXn5d/sZUUS0TlJYRKQqkGIQYj7GGXBw33HgLt951Pxc/+SxeccUWjMtQEkTqix9l6HmP+dB7YjmF9qg6lnix9AaYLtHgLa/+m0//hXHcT5IzKEf7usSlHRIMBEUiw2e+9B3ec+1nyNwQX7jhIbrTyhte82w0dApUWMwJilX6Gclyl/Me7Xm1/LrLQtJePoGqlLG3/C/LPGItXdz0lEMpJ1W333U/vrqS5opTyGtD3HrXA2UomCPua3nhyE+yROZImeOChx9buaM9pjM/vqQegUxLbYMsuKpgCcVo0mR40wKg2qiQa5fczJCaCSqD+eLtiO1p/o5Uwv7ivsyxbb0cABOQDCFF1CDBkBkt+VEQHEKl+P0guABRiHDBIZnt+ci8tEUhXQpPsBg676Xiy7WXo4wnnKBnyZGy7+Kb5lg5QZAFpK497xBChNeY1Fk6VhjqRCQBMrJCthQKcWzsDUENqMGEKpI3etzSl8YQjAbCsgK0xYQqYoqqUaLVI8urPmFWWN4a8yUYdCFpnyDoKkpnMwv0pxPk0TQDeUJFQ9Hz6WIV90SojQlurhCaEZdz0wAhOsbd61EvC2PIzzwkZJlXbnkxdNkDLHMPLemQ2ZTIVGkby55Sv20UvEq5jyIQJCJgCCYrUmxwPT2COepGtEcasFwr8QvNGUevXAGzzhocwuUZB7oNzJSwudKPq1hS8rJJKIwR+d7EaMsqIyWnqkdhl6L7119oAnXH61AF2k/55ZEqetEZ3L3HsrpqedH6BlFIkbKt0BL4ZKZAhCYYJMzniXkIGBbQIRRhIFYIPvRApl4UUwIolCNhifRmEOGIFlDh+PSwT+wZcsSejbLlJ7KGNYeF9k23svtf7uDgnkmcixDyHnpMECl0F0goeQVTYopCKjUvj0UNokJAC1XgEV5j5hOmOkRCaRpzBKQqjBTmH0kX64vKT7vFQo5u04IqzkQ8vneCN/zOx3n0kTY5Kd++7X6+8NHfYsVwTAiFsPW4c3tpcV0mSSxWsgL+S087LseiJcoKIXJ0GB5PEjr+aqLF5Xv2H+TQgZShFSsZXD3I43sP8vCOcUSqPTF/nFptIyUzBj95vlwswcFosSfuKDAux7U45kRrkXMxdVfDZzl52qEWWWq1aqH0W7KyckQBk6Pzsi7esBzxO9LbfIk+4Y0tLnqJSXpasBPZoOVOdAWCUby2EbFYqkiuix7Rw0JpD42ounyJUlXEmLJ1X75LFl1K5+hy7zQfUmGZcCjz2PGg1BNmuiweIwW/mNMBCRjfC23n0Zxi1OKJi6SpJWTXRaZENOBNKK+WZXFN7/f0SCcpy5coBSchRzb3i++hP001OWaJDRbVcj5i5vdM9oaEKf6IBw0ELcS2Zp6AE49Kmfe1mHRJWQeWGmMpGpVluxAh6OIeWT0GpD/ejWonmEABLbZDBEkRraK4Ug9GqQ0rPjnXBJGsfBKFsrUXfM/1rlAklzrUn/mX0oNtjjSKLJMztDfzmh9bFec7j0A58aKCc3ER/yVuUCKsKbzAYovQmDcAWoKu3nX+6bG39jDr0lO69QiKZ5HEO5o3N0eTpHqsPUvlvxlickQdQTLm2gmduYBITJZnC5hgbi5gQzEmsepQ3+35SLt0k08JlH66hmsxlJYnBWSJs/SuuvbMYBa8omCobQ8HrUeVpmazQqMRk/sMS0buPR//5D9zcHKaamUQa+t8+V+/zy23/pBGvY88D4Dn5FUryoxvFhCkSoAQFsqNPNFiLJMHBCXIUtyimrIIZLVQookcMR3UJUVHFsOk/E2jiCSg9QJaiys/SIuMbYSgOaesXcWZm9fy+H88wkA9hv4+vrJ1O3ve+hFe/MtbeHjPXr5w051keR+mHqEhohrP8axLTu+p5rLIbod5mB5QDSeQvhQhoBqVjV6xu8lQeK2qK/sht8C3LiRjXR6iu3L8QpYliOQY68iiCB9aRd0mLjGdokGJbcbrfu0ybr99NyGHDMU0VnLXY7Ns/YvPgnNUqqOYahUq0Np1kFf8yvk87YLT8KGFMZWFUw4W6SxzAlljnnIsqlMcCsGKDUpx9EAFb/KiZKs5avPifC5dbm5i5mVMJ69dA3lKazLh8OE2a8YMQ80+fBDEaHFcg1i891z+zFP5g3c+Fz83TbfdJmCxfYNUx8aoDY8izpL5jP37H+OZFwzy++94Ma40ejGr6KHQTPFgQY8PC2h5/ATljFUIxe7JPCWjTdfkSNamnwTKIfbSeZQcM/AcJiXxKZc9+2ze81uX87Vv/5CB4TW8+81X0N+o4jOPc3nJmBvQBj5Pef2vX8LIyAAf/NsbeWzHDrqhhrdNbJZSMbM0m55ffdGTed9br+akkSY+A7FVRNLSTefxg5wQaSdHTJrUKNZ4XnLKRnbOfZ/x5BAn16pcvnEl3hbyR2dYqGDzVUb06BbKGXEEnxGbhHe96Vd40ysvJ645rIE862KMQ8kKPMEi1sh9wlXPO5ctF23iO7fdy53bHmM6dUTes35VjUsvfTJnnbkeqx6fZxBFRZyXCXqhsmjvaPkYc1BZOhwM82yZgpiAydtc3hzinC3P5ntTkzx5eJjVXkl8wMk8uS1LxwM9dOJCAhWJiSOLao7PAo1qBZWU4D3xwiC4UmbrgCnDBjF432J0qMKVL7yYK1948VGmDiHH4zFOykbOojhMeTiIYrGSI1JugJFlpmYhxnpLxybkUnbj8/VRIAOgTj7e4TOf/TI3je/lirOexJtf9lziCgTv0cgswTTH6mFd0VUU2MA4IYSAKFjjeloju3QcWMJpa6plZeyWpM3iQwoOMW4ByC10kZKXowILmiFk5CYQzDxjvTSmvQheDNXM0XWKaLdQCeMJ6smxmCjiuhs+zV996mbcwBhbv/kgB1td3vdbV2BNQQoVuP2JsbkJZf8QyhmqsZRSWVPOLOxiv4GgMp8/LEEtiMOYGDRGqSFSx0gVkYilldIcRcuYYJCsTpAcJaNibOm6vtwzp1hNEJPQiQOiipWM3PiFOUfde6ptz+5HDjHsVnF6WMFYtJbbv/MI7fYMxphC5Ltkir98fnLWLJ6bg5ieZtAsQw6VkF3cQpaef1BrzUKYaMnWGFmGJdAS2hAY6R/EhSYJ04X+sxvTTfJy1N+FqEYlsTQ6sKfuaGSWSlLIpAmGjgrWKtINTE10UKO0o4RWt8umlRuoRjVyDYiGhdZeVJEFWZYuB8fliJ7tyLrfa0171Cxl8U8hOxbRnv3ES7takXkSyLL25CpRpUOuljiqsXv/HD/avhvEkgFBc1YMNDm1EhFNHcS3ZxgzlrFaHfJAJVMqEnH3nnEe29kirvbTtYJIi7POXEMcV8Fnxd73heMv5MeQO8dNBpkn6BCO79QfJZQyBOWMJ53MSSuVx2c8tlIhwfPZL9/K5ZeeS2Rr+CxhNM5443lnsPmRHbSwbFm/mrVVh8+7OANGYj53423MdgJSi5G0SzN2nHPB+oUR5iI/UCAwPQYfapbQ30/YDsmPl7UcBxEtGoFxaFDWrRziaU9diW8XN9vXqHPLfzzKP3zqq1SNw4olJB2eXK/wtvPO4vfPO4NL+/upJS1yWpi4zqe/diefu/G76ECExJDMzXHek9Zw8VknF5uVy5BeFAjKMdfrZ3Pa1wm2mYKgXrFkvOxXn0ZN6tjUg5kiaozxl//rdj52/TfITYWoMoCxnkjncCHBBCWu9lOJVvDZf9rKdX/8RUQGimOr1BC6CS+94iIa1ahInHL8JzK5/3RjaLF9SkTIk8CW88/ndb82zkeuv5nG2Chtq9TqI/zxX/8rX7/jPn79pZdz4RnrGB2qosYw3WqzffsePv//buWrt9yHmpUYB5Ht0jq0l5f8ykVc9YKLCaGDsVUCYMNyfKL+FzBGeV/GSgHmgvKut1zOY3se5ys376a2YpgQTWObdb69dT+3fedTbF41yJo1g+TOsGvfIXbtm6KT59QHBwlBicRzeGofW84+mT9691U4Ux6hV45E9ed3TtfPgIoTS0AQ69EQaNYcH7zuGsT+LV/5+h7qfSuQutAYrCFZh8cOT/PQxARBDFYqVKt9VKoZyhyhO0syPcOl55/Jh/7Hq1k1GpPnAWuLbtuoKTcH9PSGBStRSCHmZeLyC/KMxXmqQazifcJoM+bjH3gbHzvnFv76E9/kwFSKq9SIq02kVicyCTZKIDh8IuTTMVlbGKjlvOYVz+Edb/lVhuqUBw9FxSFmUrKaQRZpg1DQz04LXGX8og7lP98YC7PYRZrO2ojghYqFt17zSzznknO48avf5eZbt7Fz7yRzU4bgQaWDcZbhWpPVK5pccskFvPD553PB2asL5YhPcDZakD1oD9UnJYmlVslcIA4RRh25LZvFoL8IY/RKFXoIG2NQzVE/x5M2ruBJb7mKN77y+Wy773Eee/QA7VaCak5fo8mGk4c4+8w1rBgdBFK8b5eeIIgWtOJ8nyqhkNjI/OQ/QD2J0IpHpYNSHMSIml+EMebLXOjpIue74wgkIs9y1GYMNWMuvfgMLr34jJLC6+1vlNwnoIIxjgJk2qPQgsr8rtwCORtnSVxKME3iEFPtdIhNDIZflGf0Dgt7OA0BbHFUlZQ7BXzIyx/rkomZEYOTeEGmrD3aLOnhwudl3N4IJuScMdzgpSv6uXnnON1Q5YpVq9g01CDQ/RmeB/rTgw9Yos8oxGzFyvY0kMvOzswT5ifVeWrYg0IrM9wzMU4r81ywZjVN6/Ga/Vcxxs87XS/+xxcnZBQRCaA5wStiDf8feSwqMGszcp4AAAAASUVORK5CYII=" alt="یوآیدی">
+        <p>شرکت بینش هوشمند نسل پیشرو ارائه‌دهنده خدمات وب‌سرویس‌های احراز هویت به کسب‌وکارها می‌باشد.</p>
+      </div>
+      <div class="f-col"><h4>سرویس‌ها</h4>
+        <a href="/uid-plus/">یوآیدی‌پلاس (PWA)</a>
+        <a href="/api/">وب‌سرویس احراز هویت تصویری</a>
+        <a href="/sana/">احراز هویت ثنا</a>
+        <a href="/authentication-digital-currency-exchange/">احراز هویت صرافی ارز دیجیتال</a>
+      </div>
+      <div class="f-col"><h4>فناوری و مستندات</h4>
+        <a href="/face-detection/">تطبیق و تشخیص چهره</a>
+        <a href="/liveness-detection/">تشخیص زنده‌بودن</a>
+        <a href="/pwa-ekyc-docs/">مستندات PWA</a>
+        <a href="/api-ekyc-docs/">مستندات API</a>
+        <a href="/faq/">سوالات متداول</a>
+      </div>
+      <div class="f-col"><h4>یوآیدی</h4>
+        <a href="/products/">همه محصولات</a>
+        <a href="https://blog.u-id.net/">وبلاگ</a>
+        <a href="/about-us/">درباره ما</a>
+        <a href="/contact-us/">تماس با ما</a>
+        <a href="tel:02166123290" class="mono" data-track="call_click">02166123290</a>
+      </div>
+    </div>
+    <div class="f-bot">
+      <p>تمامی حقوق برای شرکت بینش هوشمند نسل پیشرو محفوظ است © ۱۴۰۲</p>
+      <div class="f-social">
+        <a href="https://www.linkedin.com/company/uid-net/" aria-label="لینکدین"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.76-2.05C21.4 8.65 22 11 22 14.1V21h-4v-6.1c0-1.45-.03-3.3-2-3.3-2 0-2.3 1.57-2.3 3.2V21h-4z"/></svg></a>
+        <a href="https://www.instagram.com/uid_net/" aria-label="اینستاگرام"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://twitter.com/UID_net/" aria-label="توییتر"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.2 2H21l-6.6 7.5L22 22h-6.2l-4.8-6.3L5.4 22H2.6l7-8L2 2h6.3l4.4 5.8zm-1 18h1.6L7.5 3.7H5.8z"/></svg></a>
+        <a href="https://t.me/uid_official" aria-label="تلگرام"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg></a>
+        <!-- SAMAN: the live contact page also carries Aparat and YouTube, but no
+             URL for either exists in the materials handed over. Paste the real
+             profile URLs into the two anchors below and uncomment them — they
+             are left out rather than shipped pointing at "#".
+        <a href="PASTE_APARAT_URL" aria-label="آپارات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4"/></svg></a>
+        <a href="PASTE_YOUTUBE_URL" aria-label="یوتیوب"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.9-.5-5.8a3 3 0 00-2.1-2.1C18.5 3.6 12 3.6 12 3.6s-6.5 0-8.4.5a3 3 0 00-2.1 2.1C1 8.1 1 12 1 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.5 8.4.5 8.4.5s6.5 0 8.4-.5a3 3 0 002.1-2.1C23 15.9 23 12 23 12zM9.9 15.4V8.6l5.8 3.4z"/></svg></a>
+        -->
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════ QUICK-CONTACT MODAL ═════════════════════════ -->
+<div class="modal" id="modal" data-open="0" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-bg" data-close-modal></div>
+  <div class="modal-box">
+    <button class="modal-x" type="button" data-close-modal aria-label="بستن">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <h3 id="modalTitle">همه راه‌های تماس</h3>
+    <p>هر کدام که برای شما راحت‌تر است. ساعات کاری: شنبه تا چهارشنبه، ۹ تا ۱۸.</p>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <a class="btn btn-white btn-block" href="tel:02166123290" data-track="call_click"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg> <span class="mono">02166123290</span></a>
+      <a class="btn btn-ghost-d btn-block" href="https://t.me/Uid_poshtiban" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg> پشتیبان تلگرام — Uid_poshtiban</a>
+      <a class="btn btn-ghost-d btn-block" href="mailto:info@uid.ir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg> info@uid.ir</a>
+      <a class="btn btn-ghost-d btn-block" href="#router" data-close-modal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h9"/></svg> فرم تماس</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ DESKTOP CONTACT FAB ═════════════════════════ -->
+<div class="fab-cluster" id="fabCluster">
+  <div class="fab-item" style="--d:0;">
+    <span class="fab-label">تماس تلفنی</span>
+    <a href="tel:02166123290" class="fab-circle fab-phone" aria-label="تماس تلفنی" data-track="call_click"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg></a>
+  </div>
+  <div class="fab-item" style="--d:1;">
+    <span class="fab-label">تلگرام</span>
+    <a href="https://t.me/Uid_poshtiban" target="_blank" rel="noopener" class="fab-circle fab-telegram" aria-label="تلگرام"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg></a>
+  </div>
+  <div class="fab-item" style="--d:2;">
+    <span class="fab-label">ایمیل</span>
+    <a href="mailto:info@uid.ir" class="fab-circle fab-mail" aria-label="ایمیل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg></a>
+  </div>
+</div>
+<button class="lead-fab" id="leadFab" aria-expanded="false" aria-controls="fabCluster">
+  <svg class="fab-icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg>
+  <svg class="fab-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  <span>راه‌های تماس</span>
+</button>
+
+<button class="back-to-top" id="backToTop" aria-label="بازگشت به بالا">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<!-- ═════════════════════════ BOTTOM MOBILE NAVBAR ═════════════════════════
+     86% of this site's traffic is mobile, so the raised centre button is the
+     phone — the action the analytics already show winning. -->
+<nav class="mobile-navbar" aria-label="ناوبری سریع">
+  <a class="mnav-item" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/></svg><span>خانه</span></a>
+  <a class="mnav-item" href="#router"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg><span>فرم</span></a>
+  <a class="mnav-item raised" href="tel:02166123290" aria-label="تماس تلفنی" data-track="call_click"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg><span>تماس</span></a>
+  <a class="mnav-item" href="https://t.me/Uid_poshtiban" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg><span>تلگرام</span></a>
+  <button class="mnav-item" type="button" data-open-modal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>راه‌ها</span></button>
+</nav>
+
+<div class="toast" id="toast" aria-live="polite"><span id="toastTx"></span></div>
+
+<script>
+(function(){
+  'use strict';
+  var $ = function(s,r){return (r||document).querySelector(s);};
+  var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+
+  /* ── Persian digits ─────────────────────────────────────────────────── */
+  var FA = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+  function fa(n){ return String(n).replace(/\d/g, function(d){ return FA[+d]; }); }
+  function pad2(n){ return (n<10?'0':'')+n; }
+  /* the reverse, for validating input the visitor typed in Persian/Arabic */
+  function toLatinDigits(s){
+    return String(s)
+      .replace(/[۰-۹]/g, function(c){ return String(c.charCodeAt(0)-0x06F0); })
+      .replace(/[٠-٩]/g, function(c){ return String(c.charCodeAt(0)-0x0660); });
+  }
+
+  /* ── scroll chrome ──────────────────────────────────────────────────── */
+  var prog = $('#prog'), btt = $('#backToTop');
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var y = window.pageYOffset || document.documentElement.scrollTop;
+    if(prog) prog.style.transform = 'scaleX(' + (h>0 ? Math.min(1, y/h) : 0) + ')';
+    document.body.classList.toggle('scrolled', y > 8);
+    if(btt) btt.classList.toggle('show', y > 520);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+  if(btt) btt.addEventListener('click', function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+
+  /* ── nav: blob, mega, mobile sheet ──────────────────────────────────── */
+  var blob = $('#navblob'), links = $$('#navlinks > .navlink');
+  function moveBlob(el){
+    if(!blob || !el) return;
+    var p = el.parentNode.getBoundingClientRect(), r = el.getBoundingClientRect();
+    blob.style.width = r.width + 'px';
+    blob.style.right = (p.right - r.right) + 'px';
+    blob.style.opacity = '1';
+  }
+  links.forEach(function(l){
+    l.addEventListener('mouseenter', function(){ moveBlob(l); });
+  });
+  var nl = $('#navlinks');
+  if(nl) nl.addEventListener('mouseleave', function(){ if(blob) blob.style.opacity='0'; });
+
+  var megaBtn = $('#megaBtn'), mega = $('#mega');
+  function setMega(open){
+    if(!mega || !megaBtn) return;
+    mega.setAttribute('data-open', open ? '1' : '0');
+    megaBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  if(megaBtn){
+    megaBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      setMega(mega.getAttribute('data-open') !== '1');
+    });
+    document.addEventListener('click', function(e){
+      if(mega && !mega.contains(e.target) && e.target !== megaBtn) setMega(false);
+    });
+  }
+
+  var burger = $('#burger');
+  if(burger){
+    burger.addEventListener('click', function(){
+      var open = !document.body.classList.contains('mopen');
+      document.body.classList.toggle('mopen', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    $$('#msheet a').forEach(function(a){
+      a.addEventListener('click', function(){
+        document.body.classList.remove('mopen');
+        burger.setAttribute('aria-expanded','false');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     LIVE TEHRAN CLOCK → AVAILABILITY
+     Reads the visitor's own clock and converts it to Asia/Tehran, then tests
+     it against the published شنبه–چهارشنبه ۹:۰۰–۱۸:۰۰ window. The remaining
+     time shown is simply the distance to the next real boundary — there is no
+     invented countdown anywhere on this page.
+     ══════════════════════════════════════════════════════════════════════ */
+  var OPEN_H = 9, CLOSE_H = 18;
+  var ORDER = ['Sat','Sun','Mon','Tue','Wed','Thu','Fri'];
+  var OPEN_DAYS = {Sat:1, Sun:1, Mon:1, Tue:1, Wed:1};
+  var FA_DAY = {Sat:'شنبه', Sun:'یکشنبه', Mon:'دوشنبه', Tue:'سه‌شنبه',
+                Wed:'چهارشنبه', Thu:'پنجشنبه', Fri:'جمعه'};
+
+  function tehranNow(){
+    var now = new Date();
+    try{
+      var parts = new Intl.DateTimeFormat('en-US', {
+        timeZone:'Asia/Tehran', hour12:false,
+        weekday:'short', hour:'2-digit', minute:'2-digit', second:'2-digit'
+      }).formatToParts(now);
+      var p = {};
+      parts.forEach(function(x){ p[x.type] = x.value; });
+      var h = parseInt(p.hour, 10); if(h === 24) h = 0;
+      return { wd:p.weekday, h:h, m:parseInt(p.minute,10), s:parseInt(p.second,10) };
+    }catch(e){
+      /* Iran has had no DST since 2022, so a fixed +03:30 is a safe fallback
+         for engines without full tz data. */
+      var t = new Date(now.getTime() + (now.getTimezoneOffset() + 210) * 60000);
+      var names = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      return { wd:names[t.getDay()], h:t.getHours(), m:t.getMinutes(), s:t.getSeconds() };
+    }
+  }
+
+  function humanGap(mins){
+    if(mins < 1) return 'کمتر از یک دقیقه';
+    var h = Math.floor(mins/60), m = mins % 60;
+    if(h === 0) return fa(m) + ' دقیقه';
+    if(m === 0) return fa(h) + ' ساعت';
+    return fa(h) + ' ساعت و ' + fa(m) + ' دقیقه';
+  }
+
+  var elClock = $('#clock'), elAvail = $('#avail'),
+      elTitle = $('#stateTitle'), elNote = $('#stateNote'), elIcon = $('#stateIcon'),
+      elBadge = $('#phoneBadge'), elPhoneNote = $('#phoneNote'),
+      elPhone = $('#chanPhone'), elChans = $('.chans');
+
+  var ICON_OPEN  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+  var ICON_SHUT  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></svg>';
+
+  function tick(){
+    var t = tehranNow();
+    if(elClock) elClock.textContent = pad2(t.h) + ':' + pad2(t.m) + ':' + pad2(t.s);
+
+    var mins = t.h * 60 + t.m;
+    var isWorkday = !!OPEN_DAYS[t.wd];
+    var open = isWorkday && mins >= OPEN_H*60 && mins < CLOSE_H*60;
+
+    if(elAvail) elAvail.classList.toggle('shut', !open);
+    if(elChans) elChans.classList.toggle('async-first', !open);
+    if(elPhone){
+      elPhone.classList.toggle('is-now', open);
+      elPhone.classList.toggle('is-off', !open);
+    }
+
+    if(open){
+      var left = CLOSE_H*60 - mins;
+      if(elIcon)  elIcon.innerHTML = ICON_OPEN;
+      if(elTitle) elTitle.textContent = 'الان باز هستیم';
+      if(elNote)  elNote.textContent =
+        'تا ساعت ۱۸:۰۰ پاسخگوی تماس شما هستیم — حدود ' + humanGap(left) + ' دیگر.';
+      if(elBadge) elBadge.textContent = 'باز';
+      if(elPhoneNote) elPhoneNote.textContent = 'سریع‌ترین راه — همین حالا پاسخ داده می‌شود';
+    }else{
+      /* distance to the next 09:00 on a working day */
+      var idx = ORDER.indexOf(t.wd);
+      var gap = 0, found = null;
+      for(var i = 0; i < 8; i++){
+        var d = ORDER[(idx + i) % 7];
+        if(OPEN_DAYS[d] && !(i === 0 && mins >= OPEN_H*60)){ found = d; gap = i; break; }
+      }
+      var until = (gap * 24 * 60) + (OPEN_H*60) - mins;
+      var dayName = found ? FA_DAY[found] : 'شنبه';
+      var when = (gap === 0)
+        ? 'امروز ساعت ۹:۰۰'
+        : (gap === 1 ? 'فردا (' + dayName + ') ساعت ۹:۰۰' : dayName + ' ساعت ۹:۰۰');
+
+      if(elIcon)  elIcon.innerHTML = ICON_SHUT;
+      if(elTitle) elTitle.textContent = 'الان بسته است';
+      /* past a day away, "حدود ۴۵ ساعت دیگر" is arithmetic, not information —
+         the day and the hour are what the visitor actually needs. */
+      var gapPhrase = (until > 24*60) ? '' : ' — حدود ' + humanGap(until) + ' دیگر';
+      if(elNote)  elNote.textContent =
+        'بازگشایی ' + when + gapPhrase + '. ' +
+        'تلگرام، ایمیل و فرم باز هستند و پیام‌ها در نخستین روز کاری بررسی می‌شوند.';
+      if(elBadge) elBadge.textContent = 'بسته';
+      if(elPhoneNote) elPhoneNote.textContent = 'خارج از ساعات کاری کسی پاسخ نمی‌دهد';
+    }
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  /* ══════════════════════════════════════════════════════════════════════
+     INTENT ROUTER
+     One question before anything is asked. The individual route deliberately
+     hides the form: a private ثنا enquiry in the B2B queue helps nobody.
+     ══════════════════════════════════════════════════════════════════════ */
+  var ROUTES = {
+    sana:    { form:false },
+    biz:     { form:true, org:'required',
+               title:'ارسال پیام به بخش کسب‌وکارها',
+               hint:'کارشناس در ساعات کاری با شما تماس می‌گیرد.',
+               ok:'پیام شما به بخش کسب‌وکارها رسید. در ساعات کاری تماس می‌گیریم؛ اگر عجله دارید، ۰۲۱۶۶۱۲۳۲۹۰ سریع‌تر است.' },
+    dev:     { form:true, org:'optional', orgLabel:'نام کسب‌وکار یا پروژه',
+               title:'ارسال پیام به پشتیبانی فنی',
+               hint:'متن دقیق خطا و زمان رخ دادن آن را بنویسید تا سریع‌تر بررسی شود.',
+               ok:'پیام شما به پشتیبانی فنی رسید. پاسخ را از همان راه ارتباطی که وارد کردید می‌فرستیم.' },
+    support: { form:true, org:'optional', orgLabel:'نام کسب‌وکار یا شناسه مشتری',
+               title:'پیگیری سرویس فعال',
+               hint:'برای بررسی سریع‌تر، جزئیات مورد و زمان آن را بنویسید.',
+               ok:'پیگیری شما ثبت شد. برای موارد فوری، تلفن و تلگرام سریع‌تر پاسخ می‌دهند.' },
+    press:   { form:true, org:'hidden',
+               title:'رسانه و همکاری',
+               hint:'موضوع همکاری یا درخواست خود را کوتاه بنویسید.',
+               ok:'پیام شما ثبت شد. برای ارسال فایل و مکاتبات رسمی، info@uid.ir در دسترس است.' },
+    none:    { form:true, org:'hidden',
+               title:'ارسال پیام',
+               hint:'نام، یک راه ارتباطی و توضیح کوتاه — همین برای تماس گرفتن با شما کافی است.',
+               ok:'پیام شما ثبت شد. در ساعات کاری با شما تماس می‌گیریم؛ اگر عجله دارید، ۰۲۱۶۶۱۲۳۲۹۰ سریع‌تر است.' }
+  };
+
+
+  var routerBox = $('#routerBox'), fOrg = $('#f-org'), iOrg = $('#i-org'),
+      orgOpt = $('#orgOpt'), fTitle = $('#formTitle'), fHint = $('#formHint'),
+      iIntent = $('#i-intent'), okNote = $('#okNote');
+
+  function applyRoute(key){
+    var cfg = ROUTES[key] || ROUTES.none;
+
+    $$('.rchip').forEach(function(c){
+      var on = c.getAttribute('data-r') === key;
+      c.classList.toggle('on', on);
+      c.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    $$('.rpanel').forEach(function(p){
+      p.classList.toggle('on', p.getAttribute('data-p') === key);
+    });
+
+    if(routerBox) routerBox.classList.toggle('no-form', !cfg.form);
+    if(iIntent) iIntent.value = (key === 'none' ? '' : key);
+
+    if(cfg.form){
+      if(fTitle) fTitle.textContent = cfg.title;
+      if(fHint)  fHint.textContent  = cfg.hint;
+      if(okNote) okNote.textContent = cfg.ok;
+
+      var mode = cfg.org || 'hidden';
+      if(fOrg){
+        fOrg.classList.toggle('on', mode !== 'hidden');
+        fOrg.classList.remove('bad');
+        if(mode === 'hidden' && iOrg) iOrg.value = '';
+      }
+      if(iOrg){
+        iOrg.required = (mode === 'required');
+        var lbl = fOrg ? fOrg.querySelector('label') : null;
+        if(lbl){
+          var txt = (mode === 'required') ? 'نام کسب‌وکار' : (cfg.orgLabel || 'نام کسب‌وکار');
+          lbl.childNodes[0].nodeValue = txt + ' ';
+        }
+        if(orgOpt) orgOpt.style.display = (mode === 'required') ? 'none' : '';
+      }
+    }
+  }
+
+  $$('.rchip').forEach(function(c){
+    c.addEventListener('click', function(){ applyRoute(c.getAttribute('data-r')); });
+  });
+  applyRoute('none');
+
+  /* ══════════════════════════════════════════════════════════════════════
+     THE FORM — three fields, inline validation, no captcha.
+     The live page asks for five required fields plus a reCAPTCHA; the company
+     name is dropped for everyone who is not a business, and phone/email became
+     one field because either one is enough to answer somebody.
+     ══════════════════════════════════════════════════════════════════════ */
+  var form = $('#cform');
+  var RE_MAIL   = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var RE_MOBILE = /^09\d{9}$/;
+  var RE_TEL    = /^0\d{9,10}$/;
+
+  function setBad(fld, bad, msg){
+    if(!fld) return;
+    fld.classList.toggle('bad', !!bad);
+    if(msg){
+      var t = fld.querySelector('.errtx');
+      if(t) t.textContent = msg;
+    }
+  }
+
+  function checkName(silent){
+    var f = $('#f-name'), v = $('#i-name').value.trim();
+    var ok = v.length >= 2;
+    if(!silent) setBad(f, !ok);
+    if(ok) f.classList.add('good');
+    return ok;
+  }
+  function checkContact(silent){
+    var f = $('#f-contact'), raw = $('#i-contact').value.trim();
+    var v = toLatinDigits(raw).replace(/[\s\-()]/g, '');
+    var ok = RE_MAIL.test(raw.trim()) || RE_MOBILE.test(v) || RE_TEL.test(v);
+    if(!silent){
+      setBad(f, !ok, raw ? 'یک شماره موبایل یا ایمیل معتبر وارد کنید.'
+                         : 'یک راه ارتباطی وارد کنید — موبایل یا ایمیل.');
+    }
+    f.classList.toggle('good', ok);
+    return ok;
+  }
+  function checkOrg(silent){
+    var f = $('#f-org');
+    if(!iOrg || !iOrg.required) { if(f) f.classList.remove('bad'); return true; }
+    var ok = iOrg.value.trim().length >= 2;
+    if(!silent) setBad(f, !ok);
+    return ok;
+  }
+  function checkMsg(silent){
+    var f = $('#f-msg'), ok = $('#i-msg').value.trim().length >= 5;
+    if(!silent) setBad(f, !ok);
+    f.classList.toggle('good', ok);
+    return ok;
+  }
+
+  function wire(inputSel, fldSel, fn){
+    var el = $(inputSel), fld = $(fldSel);
+    if(!el) return;
+    el.addEventListener('blur', function(){ if(el.value.trim() !== '') fn(false); });
+    el.addEventListener('input', function(){
+      if(fld && fld.classList.contains('bad')) fn(false);
+    });
+  }
+  wire('#i-name', '#f-name', checkName);
+  wire('#i-contact', '#f-contact', checkContact);
+  wire('#i-org', '#f-org', checkOrg);
+  wire('#i-msg', '#f-msg', checkMsg);
+
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      /* honeypot: a bot fills this, a person never sees it */
+      if($('#i-hp') && $('#i-hp').value !== ''){ form.classList.add('is-sent'); return; }
+
+      var a = checkName(), b = checkContact(), c = checkOrg(), d = checkMsg();
+      if(a && b && c && d){
+        form.classList.add('is-sent');
+        var ok = form.querySelector('.form-ok');
+        if(ok) ok.focus && ok.focus();
+        return;
+      }
+      var first = form.querySelector('.fld.bad input, .fld.bad textarea');
+      if(first) first.focus();
+    });
+  }
+
+  /* ── copy-to-clipboard + toast ──────────────────────────────────────── */
+  var toast = $('#toast'), toastTx = $('#toastTx'), toastT = null;
+  function say(msg){
+    if(!toast) return;
+    if(toastTx) toastTx.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(function(){ toast.classList.remove('show'); }, 2200);
+  }
+  $$('.copybtn').forEach(function(b){
+    b.addEventListener('click', function(){
+      var txt = b.getAttribute('data-copy') || '';
+      var label = b.getAttribute('data-label') || 'متن';
+      var done = function(){
+        b.classList.add('done');
+        var s = b.querySelector('span'); if(s) s.textContent = 'کپی شد';
+        say(label + ' کپی شد');
+        setTimeout(function(){
+          b.classList.remove('done');
+          if(s) s.textContent = 'کپی';
+        }, 2000);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(done, function(){ say('کپی نشد — متن را دستی انتخاب کنید'); });
+      }else{
+        try{
+          var ta = document.createElement('textarea');
+          ta.value = txt; ta.setAttribute('readonly','');
+          ta.style.position='fixed'; ta.style.opacity='0';
+          document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); document.body.removeChild(ta);
+          done();
+        }catch(err){ say('کپی نشد — متن را دستی انتخاب کنید'); }
+      }
+    });
+  });
+
+  /* ── FAQ ────────────────────────────────────────────────────────────── */
+  $$('.faq-q').forEach(function(q){
+    q.addEventListener('click', function(){
+      var item = q.parentNode, ans = item.querySelector('.faq-a');
+      var open = item.classList.toggle('open');
+      q.setAttribute('aria-expanded', open ? 'true' : 'false');
+      ans.style.maxHeight = open ? (ans.scrollHeight + 'px') : '0px';
+    });
+  });
+  window.addEventListener('resize', function(){
+    $$('.faq-i.open .faq-a').forEach(function(a){ a.style.maxHeight = a.scrollHeight + 'px'; });
+  });
+
+  /* ── desktop FAB cluster + modal ────────────────────────────────────── */
+  var leadFab = $('#leadFab'), cluster = $('#fabCluster');
+  if(leadFab && cluster){
+    leadFab.addEventListener('click', function(){
+      var open = cluster.classList.toggle('open');
+      leadFab.classList.toggle('is-open', open);
+      leadFab.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+  var modal = $('#modal');
+  function setModal(open){
+    if(!modal) return;
+    modal.setAttribute('data-open', open ? '1' : '0');
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  $$('[data-open-modal]').forEach(function(b){
+    b.addEventListener('click', function(){ setModal(true); });
+  });
+  $$('[data-close-modal]').forEach(function(b){
+    b.addEventListener('click', function(){ setModal(false); });
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){ setModal(false); setMega(false); }
+  });
+
+  /* ── reveal ─────────────────────────────────────────────────────────── */
+  var rvs = $$('.rv');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('is-in'); io.unobserve(en.target); }
+      });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0.06});
+    rvs.forEach(function(el){ io.observe(el); });
+  }else{
+    rvs.forEach(function(el){ el.classList.add('is-in'); });
+  }
+})();
+</script>
+
+</body>
+</html>

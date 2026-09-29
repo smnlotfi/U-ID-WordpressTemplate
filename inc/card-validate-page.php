@@ -1,0 +1,2209 @@
+<?php
+/**
+ * صفحه اختصاصی «تطبیق شماره کارت با کد ملی» — دقیقاً همان الگوی صفحات قبلی:
+ * برگه‌ی واقعی خودکارساخته + قالب صفحه + سیستم سکشن قابل‌مدیریت از پیشخوان.
+ * اسلاگ‌های سکشن با پیشوند «cv» نام‌گذاری شده‌اند تا در نام آپشن‌های wp_options
+ * با سکشن‌های هم‌نام صفحات دیگر تداخل نکنند.
+ *
+ * ۹ سکشن این صفحه (what/vs/how/who/gain/team/dev/xsell/faq) سیستم «فصل تاخوردنی»
+ * موبایل دارند (دقیقاً مثل inc/iban-sheba-page.php) — نگاه کنید به
+ * uid_cv_folded_slugs()/uid_render_cv_foldbar(). این صفحه یک فیلتر «فقط بخش‌های
+ * ضروری» اضافه دارد که چهار فصل کلیدی (what/vs/who/dev) را با data-fold-hot
+ * مشخص می‌کند؛ منطق فیلتر در assets/js/card-validate-page.js است.
+ */
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+define( 'UID_CARD_VALIDATE_TEMPLATE', 'template-card-validate.php' );
+
+/* =====================================================================
+ * رجیستری سکشن‌ها + ترتیب/نمایش
+ * ===================================================================== */
+function uid_cv_sections_registry() {
+	return array(
+		'cvhero'     => array( 'label' => __( 'هیرو + کنسول زنده تطبیق کارت با کد ملی', 'uid-theme' ), 'icon' => 'dashicons-star-filled' ),
+		'cvtrust'    => array( 'label' => __( 'باند اعتماد کوتاه (۴ آمار)', 'uid-theme' ),               'icon' => 'dashicons-chart-bar' ),
+		'cvtldr'     => array( 'label' => __( 'کپسول ۳۰ ثانیه‌ای (فقط موبایل)', 'uid-theme' ),           'icon' => 'dashicons-smartphone' ),
+		'cvloss'     => array( 'label' => __( 'محاسبه‌گر ریسک کارت تاییدنشده', 'uid-theme' ),            'icon' => 'dashicons-calculator' ),
+		'cvwhat'     => array( 'label' => __( 'فصل ۱ — معرفی سرویس (چیستی)', 'uid-theme' ),              'icon' => 'dashicons-editor-help' ),
+		'cvvs'       => array( 'label' => __( 'فصل ۲ — تفاوت با سرویس‌های مشابه', 'uid-theme' ),         'icon' => 'dashicons-image-flip-horizontal' ),
+		'cvhow'      => array( 'label' => __( 'فصل ۳ — نحوه کار سرویس (پله‌ای)', 'uid-theme' ),          'icon' => 'dashicons-randomize' ),
+		'cvwho'      => array( 'label' => __( 'فصل ۴ — کاربردها (انتخابگر صنعت)', 'uid-theme' ),         'icon' => 'dashicons-groups' ),
+		'cvgain'     => array( 'label' => __( 'فصل ۵ — مزایا + پوشش بانک‌ها (BIN)', 'uid-theme' ),       'icon' => 'dashicons-awards' ),
+		'cvteam'     => array( 'label' => __( 'فصل ۶ — تیم متخصص + تعهدنامه', 'uid-theme' ),             'icon' => 'dashicons-businessperson' ),
+		'cvdev'      => array( 'label' => __( 'فصل ۷ — مستندات فنی و نمونه‌کد', 'uid-theme' ),           'icon' => 'dashicons-editor-code' ),
+		'cvxsell'    => array( 'label' => __( 'فصل ۸ — سرویس‌های مکمل', 'uid-theme' ),                   'icon' => 'dashicons-networking' ),
+		'cvfaq'      => array( 'label' => __( 'فصل ۹ — سوالات متداول', 'uid-theme' ),                    'icon' => 'dashicons-editor-help' ),
+		'cvadv'      => array( 'label' => __( 'مشخصات عملیاتی (پنل تیره)', 'uid-theme' ),                'icon' => 'dashicons-performance' ),
+		'cvconnect'  => array( 'label' => __( 'نحوه اتصال (۳ گام)', 'uid-theme' ),                       'icon' => 'dashicons-controls-forward' ),
+		'cvprice'    => array( 'label' => __( 'محاسبه‌گر هزینه ماهانه', 'uid-theme' ),                    'icon' => 'dashicons-money-alt' ),
+		'cvlastcall' => array( 'label' => __( 'بند تماس میانی', 'uid-theme' ),                           'icon' => 'dashicons-megaphone' ),
+		'cvlead'     => array( 'label' => __( 'بنر تماس نهایی (فرم)', 'uid-theme' ),                     'icon' => 'dashicons-email-alt' ),
+	);
+}
+
+function uid_get_cv_layout() {
+	$registry = uid_cv_sections_registry();
+	$saved    = get_option( 'uid_cv_layout', array() );
+
+	if ( empty( $saved ) || ! is_array( $saved ) ) {
+		$layout = array();
+		foreach ( $registry as $slug => $meta ) {
+			$layout[] = array( 'slug' => $slug, 'enabled' => true );
+		}
+		return $layout;
+	}
+
+	$clean = array();
+	$seen  = array();
+	foreach ( $saved as $row ) {
+		if ( empty( $row['slug'] ) || ! isset( $registry[ $row['slug'] ] ) ) continue;
+		$clean[] = array( 'slug' => $row['slug'], 'enabled' => ! empty( $row['enabled'] ) );
+		$seen[ $row['slug'] ] = true;
+	}
+	foreach ( $registry as $slug => $meta ) {
+		if ( empty( $seen[ $slug ] ) ) {
+			$clean[] = array( 'slug' => $slug, 'enabled' => true );
+		}
+	}
+	return $clean;
+}
+
+function uid_sanitize_cv_layout( $input ) {
+	$raw = is_string( $input ) ? json_decode( $input, true ) : $input;
+	if ( ! is_array( $raw ) ) return array();
+
+	$registry = uid_cv_sections_registry();
+	$clean    = array();
+	foreach ( $raw as $row ) {
+		if ( empty( $row['slug'] ) || ! isset( $registry[ $row['slug'] ] ) ) continue;
+		$clean[] = array(
+			'slug'    => sanitize_key( $row['slug'] ),
+			'enabled' => ! empty( $row['enabled'] ),
+		);
+	}
+	return $clean;
+}
+
+/**
+ * اسلاگ‌های سکشن‌هایی که سیستم «فصل تاخوردنی» موبایل رویشان اعمال می‌شود.
+ */
+function uid_cv_folded_slugs() {
+	return array( 'cvwhat', 'cvvs', 'cvhow', 'cvwho', 'cvgain', 'cvteam', 'cvdev', 'cvxsell', 'cvfaq' );
+}
+
+/**
+ * اسلاگ‌های فصل‌های «کلیدی» (data-fold-hot) — پایه فیلتر «فقط بخش‌های ضروری»
+ * که در assets/js/card-validate-page.js پیاده‌سازی شده است.
+ */
+function uid_cv_hot_slugs() {
+	return array( 'cvwhat', 'cvvs', 'cvwho', 'cvdev' );
+}
+
+function uid_render_cv_sections() {
+	$folded    = uid_cv_folded_slugs();
+	$layout    = uid_get_cv_layout();
+	$folded_on = 0;
+	foreach ( $layout as $row ) {
+		if ( ! empty( $row['enabled'] ) && in_array( $row['slug'], $folded, true ) ) $folded_on++;
+	}
+
+	$foldbar_done = false;
+	echo '<div id="chapters" class="fold-run">';
+	foreach ( $layout as $row ) {
+		if ( empty( $row['enabled'] ) ) continue;
+		$is_folded = in_array( $row['slug'], $folded, true );
+		if ( $is_folded && ! $foldbar_done ) {
+			uid_render_cv_foldbar( $folded_on );
+			$foldbar_done = true;
+		}
+		$fn = 'uid_render_section_' . $row['slug'];
+		if ( function_exists( $fn ) ) {
+			call_user_func( $fn );
+		}
+	}
+	echo '</div>';
+}
+
+/**
+ * نوار «فهرست فصل‌ها» — عنصر ساختاری ثابت، فقط زیر ۹۰۰px نمایش داده می‌شود.
+ * شامل دکمه «فقط بخش‌های ضروری» (فیلتر data-fold-hot) و نوار پیشرفت مطالعه.
+ */
+function uid_render_cv_foldbar( $count ) {
+	?>
+	<div class="foldbar" id="foldbar">
+	  <span class="fb-tx"><b><?php echo esc_html( uid_fa_digits( $count ) ); ?></b> <?php esc_html_e( 'بخش — روی هر کدام بزنید تا باز شود. لازم نیست همه را بخوانید.', 'uid-theme' ); ?></span>
+	  <button class="fb-filter" id="foldFilter" type="button" aria-pressed="false">
+	    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>
+	    <span><?php esc_html_e( 'فقط بخش‌های ضروری', 'uid-theme' ); ?></span></button>
+	  <span class="fold-meter"><i id="foldMeter"></i></span>
+	  <button type="button" id="foldAll"><?php esc_html_e( 'باز کردن همه', 'uid-theme' ); ?></button>
+	</div>
+	<?php
+}
+
+/* =====================================================================
+ * آیکون‌های کوچک اشتراکی این صفحه
+ * ===================================================================== */
+function uid_cv_check_icon() {
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>';
+}
+function uid_cv_x_icon() {
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+}
+function uid_cv_dash_icon() {
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg>';
+}
+function uid_cv_search_icon() {
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-4.3-4.3"/><circle cx="11" cy="11" r="7"/></svg>';
+}
+function uid_cv_warn_icon() {
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>';
+}
+function uid_cv_info_icon() {
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16v-4M12 8h.01"/><circle cx="12" cy="12" r="10"/></svg>';
+}
+function uid_cv_okcircle_icon() {
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>';
+}
+function uid_cv_phone_icon() {
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .3 1.9.6 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.1a2 2 0 012.1-.5c.9.3 1.8.5 2.8.6a2 2 0 011.7 2z"/></svg>';
+}
+function uid_cv_submit_icon() {
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>';
+}
+function uid_cv_shield_icon() {
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+}
+function uid_cv_arrow_icon() {
+	return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+}
+function uid_cv_who_icon_svg( $key ) {
+	$icons = array(
+		'fin'    => '<path d="M16 20v-1.5a4 4 0 00-4-4H6a4 4 0 00-4 4V20"/><circle cx="9" cy="7" r="3.5"/><path d="M17 11l2 2 4-4"/>',
+		'psp'    => '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',
+		'wallet' => '<path d="M3 7.5A2.5 2.5 0 015.5 5H19a2 2 0 012 2v10a2 2 0 01-2 2H5.5A2.5 2.5 0 013 16.5z"/><path d="M16 12h3"/>',
+		'crypto' => '<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+		'lend'   => '<path d="M3 21h18M4 10h16M5 10V7l7-4 7 4v3"/><path d="M7 10v11M12 10v11M17 10v11"/>',
+		'market' => '<path d="M3 3h2l2.7 12.4a2 2 0 002 1.6h7.7a2 2 0 002-1.6L21 8H6"/><circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/>',
+		'broker' => '<path d="M4 20V10M10 20V4M16 20v-8M22 20v-5"/>',
+	);
+	return $icons[ $key ] ?? $icons['fin'];
+}
+function uid_cv_who_color( $key ) {
+	$colors = array( 'fin' => 'navy', 'psp' => '', 'wallet' => 'warm', 'crypto' => 'warm', 'lend' => 'navy', 'market' => '', 'broker' => 'navy' );
+	return $colors[ $key ] ?? '';
+}
+function uid_cv_gain_icon_svg( $key ) {
+	$icons = array(
+		'auto'    => '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M14.5 15.5l2 2 4-4.5"/>',
+		'fraud'   => '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>',
+		'fast'    => '<path d="M13 2L4.1 13.4a1 1 0 00.8 1.6H11l-1 7 8.9-11.4a1 1 0 00-.8-1.6H12z"/>',
+		'api'     => '<path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>',
+		'support' => '<path d="M12 2v20M17 6H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>',
+	);
+	return $icons[ $key ] ?? $icons['auto'];
+}
+function uid_cv_gain_color( $key ) {
+	$colors = array( 'auto' => 'navy', 'fraud' => 'warm', 'fast' => '', 'api' => 'navy', 'support' => 'warm' );
+	return $colors[ $key ] ?? '';
+}
+function uid_cv_team_icon_svg( $key ) {
+	$icons = array(
+		'connect' => '<path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>',
+		'monitor' => '<path d="M4 20V10M10 20V4M16 20v-8M22 20v-5"/>',
+		'doc'     => '<path d="M4 4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5z"/><path d="M8 7h8M8 11h6"/>',
+		'shield'  => '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+	);
+	return $icons[ $key ] ?? $icons['connect'];
+}
+function uid_cv_adv_icon_svg( $key ) {
+	$icons = array(
+		'sla'    => '<path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/>',
+		'fast'   => '<path d="M13 2L4.1 13.4a1 1 0 00.8 1.6H11l-1 7 8.9-11.4a1 1 0 00-.8-1.6H12z"/>',
+		'json'   => '<path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>',
+		'secure' => '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>',
+		'quick'  => '<path d="M4 4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5z"/><path d="M8 7h8"/>',
+	);
+	return $icons[ $key ] ?? $icons['sla'];
+}
+function uid_cv_xsell_icon_svg( $key ) {
+	$icons = array(
+		'iban'    => '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h5"/>',
+		'match'   => '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>',
+		'convert' => '<path d="M4 4v6h6"/><path d="M20 20v-6h-6"/><path d="M20 9a8 8 0 00-14-3L4 8M4 15a8 8 0 0014 3l2-2"/>',
+		'shahkar' => '<rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/>',
+	);
+	return $icons[ $key ] ?? $icons['iban'];
+}
+/**
+ * آیکون‌های ثابتِ کارت‌های تزئینی سه‌تایی (مسائل/اثبات) — مثل ibloss در
+ * inc/iban-sheba-page.php، بر اساس اندیس آیتم انتخاب می‌شوند، نه فیلد select.
+ */
+function uid_cv_probs_icon_svg( $i ) {
+	$icons = array(
+		'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M3 3l18 18"/>',
+		'<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/>',
+		'<path d="M16 20v-1.5a4 4 0 00-4-4H6a4 4 0 00-4 4V20"/><circle cx="9" cy="7" r="3.5"/><path d="M22 20v-1.5a4 4 0 00-3-3.9"/>',
+	);
+	return $icons[ $i ] ?? $icons[0];
+}
+function uid_cv_proof_icon_svg( $i ) {
+	$icons = array(
+		'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>',
+		'<path d="M16 20v-1.5a4 4 0 00-8 0V20"/><circle cx="12" cy="8" r="4"/><path d="M3 3l18 18"/>',
+		'<path d="M12 2v20M17 6H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>',
+	);
+	return $icons[ $i ] ?? $icons[0];
+}
+
+/* =====================================================================
+ * ۱) هیرو + کنسول زنده تطبیق کارت با کد ملی (شبیه‌سازی نمایشی، منطق آن در JS هاردکد است)
+ * ===================================================================== */
+function uid_default_cv_hero_tags() {
+	return array(
+		'تطابق در لحظه، پاسخ <span class="lat">true</span> یا <span class="lat">false</span>',
+		'خروجی استاندارد <span class="lat">JSON</span>',
+		'اتصال رمزنگاری‌شده و امن',
+		'نرخ در دسترس بودن سرویس ۹۹.۹٪',
+	);
+}
+/**
+ * برچسب دو دکمه تست + مقادیر نمونه‌ای که هنگام کلیک پر می‌شوند (دقیقاً همان VTESTS در
+ * assets/js/card-validate-page.js). با یک اسکریپت کوچک پیش از فایل اصلی enqueue و در
+ * ابتدای اجرای آن با VTESTS ادغام می‌شود — فقط رشته‌ها عوض می‌شوند.
+ */
+function uid_default_cv_vtests() {
+	return array(
+		'ok_label' => 'تست سناریوی موفق', 'no_label' => 'تست سناریوی ناموفق',
+		'ok_card' => '6037997599999993', 'ok_nid' => '0079845612', 'ok_bd' => '1370/05/17',
+		'no_card' => '6037997599999993', 'no_nid' => '1288394576', 'no_bd' => '1365/11/02',
+	);
+}
+function uid_field_cv_vtests( $args ) {
+	$v = uid_current_value( $args['group'], $args['key'], $args['default'] );
+	if ( ! is_array( $v ) ) $v = $args['default'];
+	$rows = array(
+		'ok' => __( 'دکمه تست سناریوی موفق', 'uid-theme' ),
+		'no' => __( 'دکمه تست سناریوی ناموفق', 'uid-theme' ),
+	);
+	foreach ( $rows as $prefix => $row_label ) : ?>
+		<p><b><?php echo esc_html( $row_label ); ?></b></p>
+		<p>
+			<label><?php esc_html_e( 'برچسب دکمه:', 'uid-theme' ); ?>
+				<input type="text" class="regular-text" name="<?php echo esc_attr( $args['group'] ); ?>[<?php echo esc_attr( $args['key'] ); ?>][<?php echo esc_attr( $prefix ); ?>_label]" value="<?php echo esc_attr( $v[ $prefix . '_label' ] ?? '' ); ?>">
+			</label>
+		</p>
+		<p>
+			<label><?php esc_html_e( 'شماره کارت نمونه:', 'uid-theme' ); ?> <input type="text" dir="ltr" name="<?php echo esc_attr( $args['group'] ); ?>[<?php echo esc_attr( $args['key'] ); ?>][<?php echo esc_attr( $prefix ); ?>_card]" value="<?php echo esc_attr( $v[ $prefix . '_card' ] ?? '' ); ?>"></label>
+			<label><?php esc_html_e( 'کد ملی نمونه:', 'uid-theme' ); ?> <input type="text" dir="ltr" name="<?php echo esc_attr( $args['group'] ); ?>[<?php echo esc_attr( $args['key'] ); ?>][<?php echo esc_attr( $prefix ); ?>_nid]" value="<?php echo esc_attr( $v[ $prefix . '_nid' ] ?? '' ); ?>"></label>
+			<label><?php esc_html_e( 'تاریخ تولد نمونه:', 'uid-theme' ); ?> <input type="text" dir="ltr" name="<?php echo esc_attr( $args['group'] ); ?>[<?php echo esc_attr( $args['key'] ); ?>][<?php echo esc_attr( $prefix ); ?>_bd]" value="<?php echo esc_attr( $v[ $prefix . '_bd' ] ?? '' ); ?>"></label>
+		</p>
+		<hr>
+	<?php endforeach;
+}
+function uid_cv_vtests_json() {
+	$v = uid_section_val( 'cvhero', 'vtests', uid_default_cv_vtests() );
+	if ( ! is_array( $v ) ) $v = uid_default_cv_vtests();
+	$out = array(
+		'ok' => array( 'card' => $v['ok_card'] ?? '', 'nid' => $v['ok_nid'] ?? '', 'bd' => $v['ok_bd'] ?? '' ),
+		'no' => array( 'card' => $v['no_card'] ?? '', 'nid' => $v['no_nid'] ?? '', 'bd' => $v['no_bd'] ?? '' ),
+	);
+	return wp_json_encode( $out );
+}
+function uid_render_section_cvhero() {
+	$tag    = uid_section_tag( 'cvhero', 'h1' );
+	$tags   = array_filter( array_map( 'trim', explode( "\n", uid_section_val( 'cvhero', 'tags', implode( "\n", uid_default_cv_hero_tags() ) ) ) ) );
+	$vtests = uid_section_val( 'cvhero', 'vtests', uid_default_cv_vtests() );
+	if ( ! is_array( $vtests ) ) $vtests = uid_default_cv_vtests();
+	?>
+	<section class="dark heroA" id="top">
+	  <div class="cv-wrap">
+	    <div style="padding-block-start:80px">
+	      <div class="crumb"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'خانه', 'uid-theme' ); ?></a><span class="sep">/</span>
+	        <a href="<?php echo esc_url( home_url( '/api/' ) ); ?>"><?php esc_html_e( 'وب‌سرویس‌های استعلام', 'uid-theme' ); ?></a><span class="sep">/</span><b><?php echo esc_html( get_the_title() ?: __( 'تطبیق شماره کارت با کد ملی', 'uid-theme' ) ); ?></b></div>
+	    </div>
+	    <div class="heroA-grid">
+	      <div class="rv">
+	        <span class="eyebrow on-dark"><i></i><span><?php echo wp_kses( uid_section_val( 'cvhero', 'eyebrow', __( 'وب‌سرویس تطبیق کارت و کد ملی · <span class="lat">Card Validate API</span>', 'uid-theme' ) ), array( 'span' => array( 'class' => array() ) ) ); ?></span></span>
+	        <?php echo '<' . $tag . ' class="h-hero">'; ?><?php echo wp_kses( uid_section_val( 'cvhero', 'heading', __( 'شماره کارت معتبر است.<mark>ولی مال خودش است؟</mark>', 'uid-theme' ) ), array( 'mark' => array() ) ); ?><?php echo '</' . $tag . '>'; ?>
+	        <p class="lede on-dark"><?php echo wp_kses( uid_section_val( 'cvhero', 'text', __( 'یک شماره کارت ۱۶ رقمیِ سالم هیچ چیزی درباره دارنده‌اش نمی‌گوید. تا لحظه‌ای که کارت ثبت شود یا پول جابه‌جا شود، شما نمی‌دانید این کارت متعلق به همان کاربری است که احراز هویتش کرده‌اید یا کارت شخص دیگری. این وب‌سرویس با گرفتن شماره کارت، کد ملی و تاریخ تولد، مالکیت کارت را پیش از تراکنش تایید یا رد می‌کند.', 'uid-theme' ) ), array( 'b' => array( 'style' => array() ) ) ); ?></p>
+	        <div class="btn-row">
+	          <button class="btn btn-cta" data-open-modal><?php echo uid_cv_submit_icon(); ?><?php echo esc_html( uid_section_val( 'cvhero', 'btn1_text', __( 'فرم درخواست فعال‌سازی سرویس', 'uid-theme' ) ) ); ?></button>
+	          <a class="btn btn-call" href="<?php echo esc_attr( uid_phone_href( uid_phone_raw() ) ); ?>"><?php echo uid_cv_phone_icon(); ?>
+	            <span class="num"><?php echo esc_html( uid_phone_display() ); ?></span></a>
+	        </div>
+	        <?php if ( $tags ) : ?>
+	        <div class="hero-tags">
+	          <?php foreach ( $tags as $t ) : ?>
+	          <span class="hero-tag"><?php echo uid_cv_check_icon(); ?><?php echo wp_kses( $t, array( 'span' => array( 'class' => array() ) ) ); ?></span>
+	          <?php endforeach; ?>
+	        </div>
+	        <?php endif; ?>
+	      </div>
+
+	      <!-- card ownership match console -->
+	      <div class="idw rv rv-d2" id="vw">
+	        <div class="idw-hd"><span class="live"></span><b><?php esc_html_e( 'تست زنده سرویس', 'uid-theme' ); ?></b>
+	          <span class="mono">validate/card/ownership</span></div>
+
+	        <div class="vtests" id="v_tests">
+	          <button class="vtest ok" type="button" data-vtest="ok">
+	            <i><?php echo uid_cv_check_icon(); ?></i>
+	            <span><?php echo esc_html( $vtests['ok_label'] ?? '' ); ?></span></button>
+	          <button class="vtest no" type="button" data-vtest="no">
+	            <i><?php echo uid_cv_x_icon(); ?></i>
+	            <span><?php echo esc_html( $vtests['no_label'] ?? '' ); ?></span></button>
+	        </div>
+
+	        <div class="vstage" id="v_stage">
+	          <div class="vplate">
+	            <div class="vplate-hd">
+	              <span class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></span>
+	              <b><?php esc_html_e( 'سمت کارت بانکی', 'uid-theme' ); ?></b>
+	              <span class="tail" id="v_bank"><?php esc_html_e( 'بانک شناسایی نشده', 'uid-theme' ); ?></span>
+	            </div>
+
+	            <div class="cardface" id="v_face">
+	              <div class="cf-top">
+	                <span class="cf-chip" aria-hidden="true"></span>
+	                <span class="cf-bank" id="cf_bank"><?php esc_html_e( 'در انتظار شماره کارت', 'uid-theme' ); ?></span>
+	                <span class="cf-flag" id="cf_flag">BIN —</span>
+	              </div>
+	              <div class="cf-num" id="cf_num" aria-hidden="true">
+	                <span class="empty">••••</span><span class="empty">••••</span>
+	                <span class="empty">••••</span><span class="empty">••••</span>
+	              </div>
+	              <div class="cf-foot"><span><?php esc_html_e( 'کارت عضو شبکه شتاب', 'uid-theme' ); ?></span>
+	                <span class="luhn" id="cf_luhn"><?php esc_html_e( 'ساختار: —', 'uid-theme' ); ?></span></div>
+	            </div>
+
+	            <div class="vfld" id="f_card">
+	              <label for="v_card"><?php esc_html_e( 'شماره کارت (', 'uid-theme' ); ?><span class="lat">cardNumber</span><?php esc_html_e( ') — ۱۶ رقم', 'uid-theme' ); ?>
+	                <span class="cnt" id="v_ccnt">۰/۱۶</span></label>
+	              <span class="vin"><input id="v_card" class="cardin" type="text" inputmode="numeric" autocomplete="off"
+	                       maxlength="19" placeholder="6037 1111 1111 1111" dir="ltr"></span>
+	            </div>
+	          </div>
+
+	          <div class="vlock" id="v_lock">
+	            <span class="beam" aria-hidden="true"></span>
+	            <span class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></span>
+	            <span class="tx"><b id="v_lockt"><?php esc_html_e( 'تطبیق مالکیت انجام نشده', 'uid-theme' ); ?></b>
+	              <?php esc_html_e( 'سرویس بررسی می‌کند این کارت به همین شخص تعلق دارد یا نه.', 'uid-theme' ); ?></span>
+	          </div>
+
+	          <div class="vplate idn">
+	            <div class="vplate-hd">
+	              <span class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-1.5a4 4 0 00-8 0V20"/><circle cx="12" cy="8" r="4"/><rect x="2.5" y="3" width="19" height="18" rx="3"/></svg></span>
+	              <b><?php esc_html_e( 'سمت اطلاعات هویتی', 'uid-theme' ); ?></b>
+	              <span class="tail"><?php esc_html_e( 'دارنده ادعایی کارت', 'uid-theme' ); ?></span>
+	            </div>
+	            <div class="vrow2">
+	              <div class="vfld" id="f_nid">
+	                <label for="v_nid"><?php esc_html_e( 'کد ملی (', 'uid-theme' ); ?><span class="lat">nationalId</span>)
+	                  <span class="cnt" id="v_ncnt">۰/۱۰</span></label>
+	                <span class="vin"><input id="v_nid" type="text" inputmode="numeric" autocomplete="off"
+	                       maxlength="10" placeholder="0123456789" dir="ltr"></span>
+	              </div>
+	              <div class="vfld" id="f_bd">
+	                <label for="v_bd"><?php esc_html_e( 'تاریخ تولد (', 'uid-theme' ); ?><span class="lat">birthDate</span>)</label>
+	                <span class="vin"><input id="v_bd" type="text" inputmode="numeric" autocomplete="off"
+	                       maxlength="10" placeholder="1370/05/17" dir="ltr"></span>
+	              </div>
+	            </div>
+	          </div>
+	        </div>
+
+	        <div style="margin-block-start:12px">
+	          <button class="btn btn-cta btn-block" type="button" id="v_run"><?php echo uid_cv_okcircle_icon(); ?><?php esc_html_e( 'اجرای تطبیق مالکیت کارت', 'uid-theme' ); ?></button>
+	        </div>
+
+	        <div class="vverdict" id="v_verdict">
+	          <div class="vv-hd"><span class="ic" id="v_vic"></span><b id="v_vtx"></b>
+	            <span class="lat" id="v_vlat"></span></div>
+	          <p class="vv-tx" id="v_vsub"></p>
+	        </div>
+
+	        <div style="margin-block-start:16px">
+	          <div class="rswitch">
+	            <button type="button" class="on" data-rview="g"><?php esc_html_e( 'نمای ساختاری', 'uid-theme' ); ?></button>
+	            <button type="button" data-rview="j"><?php esc_html_e( 'پاسخ', 'uid-theme' ); ?> <span class="lat">JSON</span></button>
+	            <span class="idbadge wait" id="v_badge"><?php esc_html_e( 'در انتظار ورودی', 'uid-theme' ); ?></span>
+	          </div>
+
+	          <div data-rpane="g" class="on">
+	            <div class="idgrid" id="v_grid">
+	              <div class="idrow wide"><span class="k"><?php esc_html_e( 'نتیجه تطابق مالکیت (', 'uid-theme' ); ?><span class="lat">isMatched</span>)</span><span class="v mut" id="o_match">—</span></div>
+	              <div class="idrow"><span class="k"><?php esc_html_e( 'بانک صادرکننده کارت', 'uid-theme' ); ?></span><span class="v mut" id="o_bank">—</span></div>
+	              <div class="idrow"><span class="k"><?php esc_html_e( 'کد ملی ارسالی', 'uid-theme' ); ?></span><span class="v mut" id="o_nid">—</span></div>
+	              <div class="idrow"><span class="k"><?php esc_html_e( 'کد وضعیت پاسخ', 'uid-theme' ); ?></span><span class="v mut" id="o_code">—</span></div>
+	              <div class="idrow"><span class="k"><?php esc_html_e( 'پیام وضعیت', 'uid-theme' ); ?></span><span class="v mut" id="o_msg">—</span></div>
+	            </div>
+	          </div>
+
+	          <div data-rpane="j">
+	            <pre class="rjson" id="o_json">{
+  "responseContext": { "status": { "code": …, "message": "…" } },
+  "isMatched": …
+}</pre>
+	          </div>
+
+	          <div class="idmeta">
+	            <span><?php esc_html_e( 'متد فراخوانی: ', 'uid-theme' ); ?><b>POST</b></span>
+	            <span><?php esc_html_e( 'سرویس: ', 'uid-theme' ); ?><span class="mono">validate/card/ownership</span></span>
+	          </div>
+	        </div>
+
+	        <div class="idw-note"><?php echo uid_cv_info_icon(); ?>
+	          <span><?php esc_html_e( 'این نمایش با داده نمونه کار می‌کند؛ ساختار پاسخ دقیقاً همان چیزی است که سرویس برمی‌گرداند. برای تطبیق واقعی روی زیرساخت بانکی، کلید ', 'uid-theme' ); ?><span class="lat">API</span><?php esc_html_e( ' لازم است.', 'uid-theme' ); ?></span></div>
+
+	        <!-- highest-intent second on the page: one field, right here -->
+	        <div class="idw-lead" id="vwLead">
+	          <p><?php esc_html_e( 'همین بررسی را می‌خواهید پیش از ثبت کارت در سامانه خودتان اجرا کنید؟ ', 'uid-theme' ); ?><b><?php esc_html_e( 'شماره‌تان را بگذارید', 'uid-theme' ); ?></b><?php esc_html_e( '، کارشناس یوآیدی دسترسی تست را همین امروز فعال می‌کند.', 'uid-theme' ); ?></p>
+	          <form class="micro" id="microForm" novalidate>
+	            <div class="micro-fields">
+	              <input type="hidden" name="source" value="card-validate-lp-hero">
+	              <div class="micro-row">
+	                <div class="fld"><input name="phone" type="tel" inputmode="numeric"
+	                  placeholder="۰۹xxxxxxxxx" data-req data-tel>
+	                  <span class="err"><?php esc_html_e( 'شماره موبایل معتبر وارد کنید.', 'uid-theme' ); ?></span></div>
+	                <button class="btn btn-cta" type="button" data-submit><?php esc_html_e( 'دریافت کلید تست', 'uid-theme' ); ?></button>
+	              </div>
+	            </div>
+	            <div class="form-ok"><?php echo uid_cv_okcircle_icon(); ?>
+	              <span><?php esc_html_e( 'کارشناس یوآیدی تماس می‌گیرد. پیگیری فوری: ', 'uid-theme' ); ?><span class="mono"><?php echo esc_html( uid_phone_display() ); ?></span></span></div>
+	          </form>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</section>
+	<?php
+}
+
+/* =====================================================================
+ * ۲) باند اعتماد کوتاه (۴ آمار)
+ * ===================================================================== */
+function uid_default_cv_trust() {
+	return array(
+		array( 'value' => '۹۹.۹٪', 'label' => 'نرخ در دسترس بودن سرویس، با مانیتورینگ ۲۴ ساعته', 'numeric' => '1' ),
+		array( 'value' => 'تطابق در لحظه', 'label' => 'میانگین زمان پاسخ‌دهی سرویس در جریان‌های پرتراکنش', 'numeric' => '' ),
+		array( 'value' => 'خروجی JSON', 'label' => 'پاسخ ساختاریافته استاندارد، آماده مصرف در سامانه شما', 'numeric' => '' ),
+		array( 'value' => 'اتصال امن', 'label' => 'ارتباط رمزنگاری‌شده در تمام مسیر درخواست و پاسخ', 'numeric' => '' ),
+	);
+}
+function uid_render_section_cvtrust() {
+	$items = uid_section_val( 'cvtrust', 'items', uid_default_cv_trust() );
+	if ( ! is_array( $items ) || empty( $items ) ) return;
+	?>
+	<section class="sec" style="padding-block:44px 0">
+	  <div class="cv-wrap">
+	    <div class="qstats rv">
+	      <?php foreach ( $items as $it ) :
+	        $is_num = ! empty( $it['numeric'] );
+	      ?>
+	      <div class="qstat"><span class="v<?php echo $is_num ? '' : ' txt'; ?>"><?php echo wp_kses( $it['value'] ?? '', array( 'span' => array( 'class' => array() ) ) ); ?></span><span class="l"><?php echo esc_html( $it['label'] ?? '' ); ?></span></div>
+	      <?php endforeach; ?>
+	    </div>
+	  </div>
+	</section>
+	<?php
+}
+
+/* =====================================================================
+ * ۳) کپسول ۳۰ ثانیه‌ای — فقط موبایل
+ * ===================================================================== */
+function uid_default_cv_tldr() {
+	return array(
+		'سه ورودی می‌فرستید — <b>شماره کارت، کد ملی و تاریخ تولد</b> — پاسخ فقط <b>تطبیق دارد یا ندارد</b> است.',
+		'هیچ اطلاعات محرمانه‌ای افشا نمی‌شود؛ سرویس <b>نام صاحب کارت را برنمی‌گرداند</b>.',
+		'استفاده از <b>کارت بانکی متعلق به شخص دیگر</b> در فرایندهای مالی تقریباً غیرممکن می‌شود.',
+		'اتصال ساده از طریق <span class="lat">API</span> با مستندات استاندارد و <b>محیط آزمایشی (سندباکس)</b>.',
+	);
+}
+function uid_render_section_cvtldr() {
+	$items = uid_section_val( 'cvtldr', 'items', implode( "\n", uid_default_cv_tldr() ) );
+	$items = array_filter( array_map( 'trim', explode( "\n", $items ) ) );
+	?>
+	<section class="sec" style="padding-block:24px 0">
+	  <div class="cv-wrap">
+	    <div class="tldr rv">
+	      <div class="tldr-hd">
+	        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.1 13.4a1 1 0 00.8 1.6H11l-1 7 8.9-11.4a1 1 0 00-.8-1.6H12z"/></svg></span>
+	        <b><?php echo esc_html( uid_section_val( 'cvtldr', 'heading', __( 'اگر عجله دارید، همین چهار خط کافی است', 'uid-theme' ) ) ); ?></b>
+	        <span><?php echo esc_html( uid_section_val( 'cvtldr', 'badge_text', __( '۳۰ ثانیه', 'uid-theme' ) ) ); ?></span>
+	      </div>
+	      <ul class="tldr-list">
+	        <?php foreach ( $items as $li ) : ?>
+	        <li><?php echo uid_cv_check_icon(); ?>
+	          <span><?php echo wp_kses( $li, array( 'b' => array(), 'span' => array( 'class' => array() ) ) ); ?></span></li>
+	        <?php endforeach; ?>
+	      </ul>
+	      <div class="tldr-acts">
+	        <a class="btn btn-cta btn-block" href="<?php echo esc_attr( uid_phone_href( uid_phone_raw() ) ); ?>"><?php echo uid_cv_phone_icon(); ?>
+	          <span class="num mono"><?php echo esc_html( uid_phone_display() ); ?></span></a>
+	        <button class="btn btn-ghost-d btn-block" data-open-modal><?php echo esc_html( uid_section_val( 'cvtldr', 'btn_text', __( 'فرم درخواست فعال‌سازی سرویس', 'uid-theme' ) ) ); ?></button>
+	      </div>
+	      <button class="tldr-more" type="button" data-jump-soft="#loss"><?php echo esc_html( uid_section_val( 'cvtldr', 'more_text', __( 'و اگر می‌خواهید عدد ریسک خودتان را ببینید', 'uid-theme' ) ) ); ?>
+	        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button>
+	    </div>
+	  </div>
+	</section>
+	<?php
+}
+
+/* =====================================================================
+ * ۴) محاسبه‌گر ریسک کارت تاییدنشده (RISK ENGINE) — منطق محاسبه در JS هاردکد است
+ * ===================================================================== */
+function uid_default_cv_proof() {
+	return array(
+		array( 'title' => 'کاهش تقلب و اجاره کارت', 'text' => 'استفاده از اطلاعات بانکی متعلق به افراد دیگر در فرایندهای مالی تقریباً غیرممکن می‌شود؛ سرویس همان لحظه مالکیت را رد می‌کند و مسیر تراکنش بسته می‌ماند.' ),
+		array( 'title' => 'بررسی سیستمی مالکیت کارت', 'text' => 'تعلق شماره کارت به صاحب کد ملی به‌صورت خودکار و بدون دخالت نیروی انسانی بررسی می‌شود — نه تماس تلفنی، نه بررسی چشمی، نه تیکت پشتیبانی.' ),
+		array( 'title' => 'صرفه‌جویی در هزینه پشتیبانی', 'text' => 'حذف نیاز به بررسی دستی، تماس‌های اعتبارسنجی و پیگیری‌های پرهزینه — همان هزینه‌ای که معمولاً هیچ‌جا ثبت نمی‌شود ولی هر ماه پرداخت می‌شود.' ),
+	);
+}
+function uid_render_section_cvloss() {
+	$tag   = uid_section_tag( 'cvloss', 'h2' );
+	$proof = uid_section_val( 'cvloss', 'proof', uid_default_cv_proof() );
+	if ( ! is_array( $proof ) ) $proof = array();
+	?>
+	<section class="dark sec" id="loss">
+	  <div class="cv-wrap">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow on-dark"><i></i><?php echo esc_html( uid_section_val( 'cvloss', 'eyebrow', __( 'قبل از اینکه ادامه بدهید', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php echo esc_html( uid_section_val( 'cvloss', 'heading', __( 'هر کارت تاییدنشده، یک پرونده باز است', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	      <p class="lede on-dark" style="margin-inline:auto"><?php echo esc_html( uid_section_val( 'cvloss', 'text', __( 'کارت اجاره‌ای، کارت شخص دیگر، یا یک رقم اشتباه در شماره کارت — نتیجه همه‌شان یکی است: تراکنش انجام شده، حساب مسدود شده و پرونده روی میز شماست. عددهای خودتان را وارد کنید و ببینید ماهانه چقدر ریسک روی کارت‌های تاییدنشده نشسته است.', 'uid-theme' ) ) ); ?></p>
+	    </div>
+
+	    <div class="heroA-grid rv" style="align-items:stretch">
+	      <div class="engine">
+	        <div class="engine-hd"><span class="live"></span><b><?php esc_html_e( 'محاسبه‌گر ریسک کارت تاییدنشده', 'uid-theme' ); ?></b>
+	          <span><?php esc_html_e( 'عددها را جابه‌جا کنید', 'uid-theme' ); ?></span></div>
+
+	        <div class="eng-fld">
+	          <div class="top"><label for="ls_tx"><?php esc_html_e( 'ثبت کارت، افزایش موجودی یا برداشت ماهانه در سامانه شما', 'uid-theme' ); ?></label>
+	            <output id="ls_tx_v">۴٬۰۰۰</output></div>
+	          <input type="range" id="ls_tx" min="200" max="60000" step="200" value="4000">
+	        </div>
+
+	        <div class="eng-fld">
+	          <div class="top"><label for="ls_rate"><?php esc_html_e( 'سهم کارت‌هایی که متعلق به خود کاربر نیست', 'uid-theme' ); ?></label>
+	            <output id="ls_rate_v">۲٫۵<small><?php esc_html_e( 'درصد', 'uid-theme' ); ?></small></output></div>
+	          <input type="range" id="ls_rate" min="5" max="300" step="5" value="25">
+	        </div>
+	        <p class="eng-hint"><?php esc_html_e( 'اینجا سه چیز با هم جمع می‌شود: اجاره کارت، خطای انسانی در ثبت شماره کارت، و کلاهبرداری فیشینگ. اگر عدد دقیق خودتان را دارید، جایگزینش کنید.', 'uid-theme' ); ?></p>
+
+	        <div class="eng-fld">
+	          <div class="top"><label for="ls_cost"><?php esc_html_e( 'هزینه هر مورد برای شما (برگشت وجه، مسدودی، پیگیری و بررسی دستی)', 'uid-theme' ); ?></label>
+	            <output id="ls_cost_v">۳٬۵۰۰٬۰۰۰</output></div>
+	          <input type="range" id="ls_cost" min="200000" max="60000000" step="100000" value="3500000">
+	        </div>
+
+	        <div class="eng-out">
+	          <div class="eng-cell bad"><span class="k"><?php esc_html_e( 'کارت‌های پرریسکی که ماهانه از فیلتر شما رد می‌شوند', 'uid-theme' ); ?></span>
+	            <span class="v" id="ls_fail">۱۰۰</span></div>
+	          <div class="eng-cell good"><span class="k"><?php esc_html_e( 'پیش از تراکنش متوقف می‌شود ', 'uid-theme' ); ?><small style="opacity:.75"><?php esc_html_e( '(برآورد ۹۵٪)', 'uid-theme' ); ?></small></span>
+	            <span class="v" id="ls_save">۹۵</span></div>
+	        </div>
+	        <div class="eng-total">
+	          <span class="k"><?php esc_html_e( 'ارزشی که ماهانه پشت یک بررسی نکرده می‌ماند', 'uid-theme' ); ?></span>
+	          <span class="v amt"><span class="num" id="ls_total">۳۳۲٬۵۰۰٬۰۰۰</span><span class="vu"><?php esc_html_e( 'تومان', 'uid-theme' ); ?></span></span>
+	        </div>
+	        <div class="eng-daily"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>
+	          <span><?php esc_html_e( 'یعنی روزانه حدود ', 'uid-theme' ); ?><b id="ls_daily">۱۱٬۰۸۳٬۳۳۳</b><?php esc_html_e( ' تومان — تا لحظه‌ای که این سرویس فعال شود.', 'uid-theme' ); ?></span></div>
+
+	        <div class="micro" id="lossMicro">
+	          <div class="micro-fields">
+	            <p><?php esc_html_e( 'می‌خواهید همین عدد را روی داده واقعی تراکنش‌های خودتان دقیق‌تر حساب کنیم؟ کارشناس یوآیدی رایگان بررسی می‌کند.', 'uid-theme' ); ?></p>
+	            <form id="lossForm" novalidate>
+	              <input type="hidden" name="source" value="card-validate-lp-risk">
+	              <input type="hidden" name="volume" id="lossVolume" value="">
+	              <div class="micro-row">
+	                <div class="fld"><input name="phone" type="tel" inputmode="numeric"
+	                  placeholder="۰۹xxxxxxxxx" data-req data-tel>
+	                  <span class="err"><?php esc_html_e( 'شماره موبایل معتبر وارد کنید.', 'uid-theme' ); ?></span></div>
+	                <button class="btn btn-cta" type="button" data-submit><?php esc_html_e( 'بررسی رایگان جریان مالی من', 'uid-theme' ); ?></button>
+	              </div>
+	            </form>
+	          </div>
+	          <div class="form-ok"><?php echo uid_cv_okcircle_icon(); ?>
+	            <span><?php esc_html_e( 'کارشناس یوآیدی تماس می‌گیرد. پیگیری فوری: ', 'uid-theme' ); ?><span class="mono"><?php echo esc_html( uid_phone_display() ); ?></span></span></div>
+	        </div>
+	      </div>
+
+	      <div class="deck-wrap">
+	        <div class="proof deck on-dark" data-deck="proof">
+	          <?php foreach ( $proof as $i => $p ) : ?>
+	          <article class="pfcard">
+	            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><?php echo wp_kses( uid_cv_proof_icon_svg( $i ), array( 'path' => array( 'd' => true ), 'circle' => array( 'cx' => true, 'cy' => true, 'r' => true ) ) ); ?></svg></div>
+	            <b><?php echo esc_html( $p['title'] ?? '' ); ?></b>
+	            <p><?php echo esc_html( $p['text'] ?? '' ); ?></p>
+	          </article>
+	          <?php endforeach; ?>
+	        </div>
+	        <div class="deck-ui" data-deck-ui="proof">
+	          <button class="deck-btn" type="button" data-deck-prev aria-label="<?php esc_attr_e( 'کارت قبلی', 'uid-theme' ); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+	          <span class="deck-bar"><i></i></span>
+	          <span class="deck-count"></span>
+	          <button class="deck-btn" type="button" data-deck-next aria-label="<?php esc_attr_e( 'کارت بعدی', 'uid-theme' ); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+	        </div>
+	        <div class="callband urgent" style="margin-block-start:16px">
+	          <div class="ic"><?php echo uid_cv_phone_icon(); ?></div>
+	          <div class="tx"><b><?php echo esc_html( uid_section_val( 'cvloss', 'cta_heading', __( 'ترجیح می‌دهید همین حالا صحبت کنید؟', 'uid-theme' ) ) ); ?></b>
+	            <p><?php echo esc_html( uid_section_val( 'cvloss', 'cta_text', __( 'یک تماس کوتاه کافی است تا جریان ثبت کارت و تراکنش شما بررسی و مسیر اتصال مشخص شود.', 'uid-theme' ) ) ); ?></p></div>
+	          <div class="acts">
+	            <a class="btn btn-cta" href="<?php echo esc_attr( uid_phone_href( uid_phone_raw() ) ); ?>"><span class="num mono"><?php echo esc_html( uid_phone_display() ); ?></span></a>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</section>
+	<?php
+}
+
+/* =====================================================================
+ * فصل ۱) معرفی سرویس (چیستی)
+ * ===================================================================== */
+function uid_default_cv_probs() {
+	return array(
+		array( 'title' => 'اجاره کارت و استفاده از کارت دیگران', 'text' => 'کاربر متخلف نمی‌تواند کارت شخص دیگری را به نام خودش ثبت کند؛ کارتی که به نام کاربر نیست، پیش از هر تراکنشی رد می‌شود.' ),
+		array( 'title' => 'خطای انسانی در ثبت شماره کارت', 'text' => 'یک رقم جابه‌جا در شماره ۱۶ رقمی کافی است تا تراکنش به حساب فرد ناآشنا برود. اعتبارسنجی ساختار و مالکیت، هر دو در همان فراخوانی انجام می‌شود.' ),
+		array( 'title' => 'هزینه پنهان بررسی دستی', 'text' => 'تماس اعتبارسنجی، درخواست تصویر کارت، تیکت پشتیبانی و پیگیری — همه اینها با یک فیلد بولین جایگزین می‌شود.' ),
+	);
+}
+function uid_render_section_cvwhat() {
+	$tag   = uid_section_tag( 'cvwhat', 'h2' );
+	$probs = uid_section_val( 'cvwhat', 'probs', uid_default_cv_probs() );
+	if ( ! is_array( $probs ) ) $probs = array();
+	?>
+	<section class="sec" id="what" data-fold data-fold-hot data-fold-min="<?php echo esc_attr( uid_section_val( 'cvwhat', 'fold_min', __( '۲ دقیقه', 'uid-theme' ) ) ); ?>"
+	         data-fold-title="<?php echo esc_attr( uid_section_val( 'cvwhat', 'fold_title', __( 'سه ورودی می‌فرستید، یک پاسخ قطعی می‌گیرید', 'uid-theme' ) ) ); ?>"
+	         data-fold-teaser="<?php echo esc_attr( uid_section_val( 'cvwhat', 'fold_teaser', __( 'این وب‌سرویس دقیقاً چه کاری انجام می‌دهد', 'uid-theme' ) ) ); ?>">
+	  <div class="fold-body"><div class="cv-wrap"><div class="fold-inner">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow"><i></i><?php echo esc_html( uid_section_val( 'cvwhat', 'eyebrow', __( 'معرفی سرویس', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php echo esc_html( uid_section_val( 'cvwhat', 'heading', __( 'وب‌سرویس تطبیق شماره کارت با کد ملی چیست؟', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	      <p class="lede" style="margin-inline:auto"><?php echo wp_kses( uid_section_val( 'cvwhat', 'text', __( 'وب‌سرویس تطبیق کد ملی و کارت بانکی یک سرویس اعتبارسنجی مالی آنلاین است که بررسی می‌کند آیا شماره کارت بانکی ارسال‌شده به صاحب کد ملی موردنظر تعلق دارد یا خیر. سامانه شما کد ملی، تاریخ تولد و شماره کارت کاربر را از طریق <span class="lat">API</span> ارسال می‌کند و نتیجه بررسی به‌صورت منطقی (تطبیق یا عدم تطبیق) دریافت می‌شود.', 'uid-theme' ) ), array( 'span' => array( 'class' => array() ) ) ); ?></p>
+	    </div>
+
+	    <div class="tri rv">
+	      <div class="tri-in">
+	        <div class="tri-row">
+	          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></span>
+	          <span class="tx"><span class="k">cardNumber</span><span class="v">6037 1111 1111 1111</span></span>
+	        </div>
+	        <div class="tri-row">
+	          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="16" rx="3"/><circle cx="9" cy="11" r="2.5"/><path d="M5 17c.6-1.8 2.2-2.6 4-2.6s3.4.8 4 2.6M15 10h4M15 14h4"/></svg></span>
+	          <span class="tx"><span class="k">nationalId</span><span class="v">0123456789</span></span>
+	        </div>
+	        <div class="tri-row">
+	          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg></span>
+	          <span class="tx"><span class="k">birthDate</span><span class="v">1370/05/17</span></span>
+	        </div>
+	      </div>
+	      <div class="tri-mid">
+	        <span class="pill"><?php esc_html_e( 'استعلام برخط مالکیت کارت', 'uid-theme' ); ?></span>
+	        <span class="ar"><?php echo uid_cv_arrow_icon(); ?></span>
+	        <span class="pill"><?php esc_html_e( 'پاسخ ', 'uid-theme' ); ?><span class="lat">JSON</span></span>
+	      </div>
+	      <div class="tri-out">
+	        <span class="cap">"isMatched"</span>
+	        <span class="bool"><?php echo uid_cv_check_icon(); ?>true</span>
+	        <span class="alt"><?php esc_html_e( 'و اگر کارت متعلق به این شخص نباشد، همان فیلد ', 'uid-theme' ); ?><span class="lat">false</span><?php esc_html_e( ' برمی‌گردد. همین. نه نامی، نه موجودی‌ای، نه اطلاعات حسابی.', 'uid-theme' ); ?></span>
+	      </div>
+	    </div>
+
+	    <div class="secbox rv" style="margin-block-start:22px;background:var(--n50);border-color:var(--n200)">
+	      <div class="ic" style="color:var(--navy)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg></div>
+	      <div><b style="color:var(--ink)"><?php echo esc_html( uid_section_val( 'cvwhat', 'box_heading', __( 'این بررسی دقیقاً کجا انجام می‌شود؟', 'uid-theme' ) ) ); ?></b>
+	        <p style="color:var(--n600)"><?php echo esc_html( uid_section_val( 'cvwhat', 'box_text', __( 'پیش از فعال‌سازی خدمات مالی، ثبت کارت بانکی یا انجام تراکنش. یعنی درست همان‌جایی که هنوز چیزی جابه‌جا نشده و می‌شود جلوی آن را گرفت — و همین است که احتمال استفاده از کارت بانکی متعلق به شخص دیگر را به حداقل می‌رساند.', 'uid-theme' ) ) ); ?></p></div>
+	    </div>
+
+	    <div class="rv" style="margin-block-start:clamp(28px,4vw,44px)">
+	      <h3 class="h-sub" style="margin-block-end:16px;text-align:center"><?php esc_html_e( 'چه مسئله‌ای را حل می‌کند؟', 'uid-theme' ); ?></h3>
+	      <div class="probs">
+	        <?php foreach ( $probs as $i => $p ) : ?>
+	        <article class="prob">
+	          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><?php echo wp_kses( uid_cv_probs_icon_svg( $i ), array( 'path' => array( 'd' => true ), 'rect' => array( 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true ), 'circle' => array( 'cx' => true, 'cy' => true, 'r' => true ) ) ); ?></svg></div>
+	          <b><?php echo esc_html( $p['title'] ?? '' ); ?></b>
+	          <p><?php echo esc_html( $p['text'] ?? '' ); ?></p>
+	        </article>
+	        <?php endforeach; ?>
+	      </div>
+	    </div>
+
+	    <div class="rv" style="margin-block-start:clamp(26px,4vw,42px)">
+	      <h3 class="h-sub" style="margin-block-end:14px"><?php esc_html_e( 'پاسخ سرویس چه چیزهایی برمی‌گرداند؟', 'uid-theme' ); ?></h3>
+	      <div class="ftags">
+	        <span class="ftag warm"><span class="key">isMatched</span><?php esc_html_e( 'تطابق مالکیت: ', 'uid-theme' ); ?><span class="lat">true</span> / <?php esc_html_e( 'عدم تطابق: ', 'uid-theme' ); ?><span class="lat">false</span></span>
+	        <span class="ftag"><span class="key">status.code</span><?php esc_html_e( 'کد وضعیت یا خطای عملیات', 'uid-theme' ); ?></span>
+	        <span class="ftag"><span class="key">status.message</span><?php esc_html_e( 'توضیح وضعیت یا خطا', 'uid-theme' ); ?></span>
+	        <span class="ftag"><span class="key">requestId</span><?php esc_html_e( 'شناسه پیگیری یکتای درخواست', 'uid-theme' ); ?></span>
+	      </div>
+	    </div>
+
+	    <div class="secbox rv" style="margin-block-start:22px;background:var(--teal-l);border-color:rgba(41,188,206,.3)">
+	      <div class="ic" style="color:var(--teal-d)"><?php echo uid_cv_shield_icon(); ?></div>
+	      <div><b style="color:#0E5A66"><?php echo esc_html( uid_section_val( 'cvwhat', 'privacy_heading', __( 'محرمانگی داده، بخشی از طراحی سرویس است', 'uid-theme' ) ) ); ?></b>
+	        <p style="color:#136B4C"><?php echo esc_html( uid_section_val( 'cvwhat', 'privacy_text', __( 'هدف سرویس بررسی تطابق اطلاعات ارسال‌شده است و نتیجه فقط به‌صورت تایید یا رد مالکیت بازگردانده می‌شود؛ مشخصات کامل صاحب کارت نمایش داده نمی‌شود. یعنی می‌توانید مالکیت را تایید کنید بدون آنکه داده حساسی وارد سامانه شما شود.', 'uid-theme' ) ) ); ?></p></div>
+	    </div>
+	  </div></div></div>
+	  </section>
+	<?php
+}
+
+/* =====================================================================
+ * فصل ۲) تفاوت با سرویس‌های مشابه (استعلام هویتی / تبدیل کارت به شبا)
+ * ===================================================================== */
+function uid_default_cv_vs_bad_items() {
+	return array(
+		'خروجی، مشخصات هویتی فرد است',
+		'درباره کارت بانکی چیزی نمی‌گوید',
+		'مقایسه و تصمیم‌گیری سمت شما می‌ماند',
+	);
+}
+function uid_default_cv_vs_good_items() {
+	return array(
+		'خروجی یک تصمیم قطعی است: <span class="lat">true</span> یا <span class="lat">false</span>',
+		'منطق مقایسه سمت یوآیدی انجام می‌شود، نه سمت شما',
+		'تاریخ تولد به‌عنوان پارامتر سوم، ضریب دقت را بالا می‌برد',
+		'هیچ داده محرمانه‌ای به سامانه شما منتقل نمی‌شود',
+	);
+}
+function uid_render_section_cvvs() {
+	$tag        = uid_section_tag( 'cvvs', 'h2' );
+	$bad_items  = array_filter( array_map( 'trim', explode( "\n", uid_section_val( 'cvvs', 'bad_items', implode( "\n", uid_default_cv_vs_bad_items() ) ) ) ) );
+	$good_items = array_filter( array_map( 'trim', explode( "\n", uid_section_val( 'cvvs', 'good_items', implode( "\n", uid_default_cv_vs_good_items() ) ) ) ) );
+	?>
+	<section class="sec" id="vs" data-fold data-fold-hot data-fold-min="<?php echo esc_attr( uid_section_val( 'cvvs', 'fold_min', __( '۲ دقیقه', 'uid-theme' ) ) ); ?>"
+	         data-fold-title="<?php echo esc_attr( uid_section_val( 'cvvs', 'fold_title', __( 'تفاوت با استعلام هویتی و تبدیل کارت به شبا', 'uid-theme' ) ) ); ?>"
+	         data-fold-teaser="<?php echo esc_attr( uid_section_val( 'cvvs', 'fold_teaser', __( 'سه سرویس شبیه به هم که سه سوال کاملاً متفاوت را جواب می‌دهند', 'uid-theme' ) ) ); ?>">
+	  <div class="fold-body"><div class="cv-wrap"><div class="fold-inner">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow warm"><i></i><?php echo esc_html( uid_section_val( 'cvvs', 'eyebrow', __( 'پرتکرارترین سوال فنی', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php echo esc_html( uid_section_val( 'cvvs', 'heading', __( 'این سرویس داده نمی‌دهد؛ تصمیم می‌دهد', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	      <p class="lede" style="margin-inline:auto"><?php echo wp_kses( uid_section_val( 'cvvs', 'text', __( 'هر سه سرویس زیر با اطلاعات مالی کاربر کار می‌کنند، ولی یکی مشخصات فرد را <b>می‌آورد</b>، یکی شماره حساب معادل را <b>می‌سازد</b>، و این یکی ادعای کاربر را <b>تایید یا رد می‌کند</b>. انتخاب اشتباه بین این سه، یا شما را دچار افشای غیرلازم داده می‌کند یا بی‌دفاع در برابر اجاره کارت.', 'uid-theme' ) ), array( 'b' => array() ) ); ?></p>
+	    </div>
+
+	    <div class="vs2 rv">
+	      <article class="vscard bad">
+	        <span class="tag"><?php echo uid_cv_search_icon(); ?><?php echo esc_html( uid_section_val( 'cvvs', 'bad_tag', __( 'استعلام اطلاعات هویتی', 'uid-theme' ) ) ); ?></span>
+	        <h3><?php echo esc_html( uid_section_val( 'cvvs', 'bad_title', __( 'سوال: این شخص کیست؟', 'uid-theme' ) ) ); ?></h3>
+	        <p><?php echo esc_html( uid_section_val( 'cvvs', 'bad_text', __( 'برای دریافت یا بررسی مشخصات فرد استفاده می‌شود و داده هویتی را به سامانه شما تحویل می‌دهد.', 'uid-theme' ) ) ); ?></p>
+	        <ul class="vslist">
+	          <?php foreach ( $bad_items as $li ) : ?>
+	          <li><?php echo uid_cv_dash_icon(); ?><?php echo esc_html( $li ); ?></li>
+	          <?php endforeach; ?>
+	        </ul>
+	      </article>
+	      <article class="vscard good">
+	        <span class="tag"><?php echo uid_cv_check_icon(); ?><?php echo esc_html( uid_section_val( 'cvvs', 'good_tag', __( 'تطبیق شماره کارت با کد ملی', 'uid-theme' ) ) ); ?></span>
+	        <h3><?php echo esc_html( uid_section_val( 'cvvs', 'good_title', __( 'سوال: این کارت مال همین شخص است؟', 'uid-theme' ) ) ); ?></h3>
+	        <p><?php echo esc_html( uid_section_val( 'cvvs', 'good_text', __( 'مالکیت کارت را نسبت به کد ملی و تاریخ تولد اعتبارسنجی می‌کند و یک تصمیم قطعی برمی‌گرداند.', 'uid-theme' ) ) ); ?></p>
+	        <ul class="vslist">
+	          <?php foreach ( $good_items as $li ) : ?>
+	          <li><?php echo uid_cv_check_icon(); ?><?php echo wp_kses( $li, array( 'span' => array( 'class' => array() ) ) ); ?></li>
+	          <?php endforeach; ?>
+	        </ul>
+	      </article>
+	    </div>
+
+	    <div class="secbox rv" style="margin-block-start:20px;background:var(--orange-l);border-color:rgba(248,148,40,.32)">
+	      <div class="ic" style="color:var(--orange-d)"><?php echo uid_cv_warn_icon(); ?></div>
+	      <div><b style="color:#8A5410"><?php echo esc_html( uid_section_val( 'cvvs', 'note_heading', __( 'و تفاوتش با «تبدیل کارت به شبا» چیست؟', 'uid-theme' ) ) ); ?></b>
+	        <p style="color:#9A6A22"><?php echo esc_html( uid_section_val( 'cvvs', 'note_text', __( 'تبدیل کارت به شبا شماره شبای معادل کارت را تولید می‌کند؛ اما این سرویس مالکیت کارت را نسبت به کد ملی و تاریخ تولد اعتبارسنجی می‌کند. اگر جریان شما هر دو را لازم دارد — مثلاً کاربر فقط شماره کارتش را حفظ است و شما هم شبا می‌خواهید هم اطمینان از مالکیت — این دو سرویس پشت سر هم استفاده می‌شوند.', 'uid-theme' ) ) ); ?></p></div>
+	    </div>
+	  </div></div></div>
+	  </section>
+	<?php
+}
+
+/* =====================================================================
+ * فصل ۳) نحوه کار سرویس (پله تعاملی چهارمرحله‌ای هاردکد)
+ * ===================================================================== */
+function uid_render_section_cvhow() {
+	$tag = uid_section_tag( 'cvhow', 'h2' );
+	?>
+	<section class="sec" id="how" data-fold data-fold-min="<?php echo esc_attr( uid_section_val( 'cvhow', 'fold_min', __( '۲ دقیقه', 'uid-theme' ) ) ); ?>"
+	         data-fold-title="<?php echo esc_attr( uid_section_val( 'cvhow', 'fold_title', __( 'کارکرد سرویس و نحوه انجام تطبیق', 'uid-theme' ) ) ); ?>"
+	         data-fold-teaser="<?php echo esc_attr( uid_section_val( 'cvhow', 'fold_teaser', __( 'از ارسال داده تا دریافت نتیجه ساختاریافته در چهار قدم', 'uid-theme' ) ) ); ?>">
+	  <div class="fold-body"><div class="cv-wrap"><div class="fold-inner">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow"><i></i><?php echo esc_html( uid_section_val( 'cvhow', 'eyebrow', __( 'پشت صحنه یک فراخوانی', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php echo esc_html( uid_section_val( 'cvhow', 'heading', __( 'از سه ورودی تا یک تصمیم، در چهار قدم', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	      <p class="lede" style="margin-inline:auto"><?php echo esc_html( uid_section_val( 'cvhow', 'text', __( 'روی هر مرحله بزنید تا ببینید در آن لحظه دقیقاً چه اتفاقی می‌افتد و چه چیزی رد و بدل می‌شود.', 'uid-theme' ) ) ); ?></p>
+	    </div>
+
+	    <div class="stepper rv" id="howStep">
+	      <div class="st-track" id="st_track" role="tablist" aria-label="<?php esc_attr_e( 'مراحل عملکرد سرویس', 'uid-theme' ); ?>">
+	        <button class="st-node on" type="button" role="tab" aria-selected="true" data-st="0">
+	          <span class="st-dot">۱</span><span class="st-cap"><?php esc_html_e( 'ارسال اطلاعات کاربر', 'uid-theme' ); ?></span></button>
+	        <button class="st-node" type="button" role="tab" aria-selected="false" data-st="1">
+	          <span class="st-dot">۲</span><span class="st-cap"><?php esc_html_e( 'اعتبارسنجی ساختار داده‌ها', 'uid-theme' ); ?></span></button>
+	        <button class="st-node" type="button" role="tab" aria-selected="false" data-st="2">
+	          <span class="st-dot">۳</span><span class="st-cap"><?php esc_html_e( 'استعلام مالکیت کارت', 'uid-theme' ); ?></span></button>
+	        <button class="st-node" type="button" role="tab" aria-selected="false" data-st="3">
+	          <span class="st-dot">۴</span><span class="st-cap"><?php esc_html_e( 'دریافت نتیجه ساختاریافته', 'uid-theme' ); ?></span></button>
+	      </div>
+
+	      <div class="st-panel">
+	        <div class="st-body">
+	          <div data-st-pane="0">
+	            <span class="st-eyebrow"><?php esc_html_e( 'مرحله ۱ — سمت سامانه شما', 'uid-theme' ); ?></span>
+	            <h3><?php esc_html_e( 'ارسال شماره کارت، کد ملی و تاریخ تولد', 'uid-theme' ); ?></h3>
+	            <p><?php esc_html_e( 'شماره کارت ۱۶ رقمی، کد ملی ۱۰ رقمی و تاریخ تولد کاربر از طریق درخواست امن API برای وب‌سرویس ارسال می‌شود. این همان داده‌هایی است که در فرایند احراز هویت قبلاً از کاربر گرفته‌اید — فیلد جدیدی به فرم اضافه نمی‌شود.', 'uid-theme' ); ?></p>
+	            <div class="st-chips"><span class="src">POST</span><span><?php esc_html_e( 'سه پارامتر', 'uid-theme' ); ?></span><span><?php esc_html_e( 'ارتباط رمزنگاری‌شده', 'uid-theme' ); ?></span></div>
+	          </div>
+	          <div data-st-pane="1" hidden>
+	            <span class="st-eyebrow"><?php esc_html_e( 'مرحله ۲ — بررسی اولیه', 'uid-theme' ); ?></span>
+	            <h3><?php esc_html_e( 'اعتبارسنجی ساختار داده‌ها در همان ابتدای درخواست', 'uid-theme' ); ?></h3>
+	            <p><?php esc_html_e( 'بررسی صحت ساختار شماره کارت، معتبر بودن کد ملی و فرمت تاریخ تولد پیش از هر چیز انجام می‌شود. یعنی یک ورودی نادرست اصلاً به شبکه بانکی ارسال نمی‌شود و همان‌جا با کد خطای مشخص برمی‌گردد.', 'uid-theme' ); ?></p>
+	            <div class="st-chips"><span class="src"><?php esc_html_e( 'ساختار کارت', 'uid-theme' ); ?></span><span><?php esc_html_e( 'اعتبار کد ملی', 'uid-theme' ); ?></span><span><?php esc_html_e( 'فرمت تاریخ تولد', 'uid-theme' ); ?></span></div>
+	          </div>
+	          <div data-st-pane="2" hidden>
+	            <span class="st-eyebrow"><?php esc_html_e( 'مرحله ۳ — منطق تصمیم', 'uid-theme' ); ?></span>
+	            <h3><?php esc_html_e( 'بررسی سیستمی تعلق کارت به هویت ارسال‌شده', 'uid-theme' ); ?></h3>
+	            <p><?php esc_html_e( 'وب‌سرویس به‌صورت سیستمی بررسی می‌کند که شماره کارت به صاحب کد ملی و تاریخ تولد ارسال‌شده تعلق دارد یا خیر. این بررسی بدون دخالت نیروی انسانی و بدون افشای مشخصات دارنده کارت انجام می‌گیرد.', 'uid-theme' ); ?></p>
+	            <div class="st-chips"><span class="src"><?php esc_html_e( 'تطابق مالکیت', 'uid-theme' ); ?></span><span><?php esc_html_e( 'بدون دخالت انسانی', 'uid-theme' ); ?></span><span><?php esc_html_e( 'بدون افشای داده', 'uid-theme' ); ?></span></div>
+	          </div>
+	          <div data-st-pane="3" hidden>
+	            <span class="st-eyebrow"><?php esc_html_e( 'مرحله ۴ — بازگشت پاسخ', 'uid-theme' ); ?></span>
+	            <h3><?php esc_html_e( 'دریافت نتیجه در قالب ', 'uid-theme' ); ?><span class="lat">JSON</span></h3>
+	            <p><?php esc_html_e( 'نتیجه به‌صورت تطبیق (Matched) یا عدم تطبیق (Mismatched) در قالب JSON و همراه با نام بانک صادرکننده و شناسه پیگیری بازگردانده می‌شود. سامانه شما بر اساس همین یک فیلد تصمیم می‌گیرد که تراکنش انجام شود یا مسیر به بررسی دستی برود.', 'uid-theme' ); ?></p>
+	            <div class="st-chips"><span class="src">JSON</span><span>isMatched</span><span><?php esc_html_e( 'بانک صادرکننده', 'uid-theme' ); ?></span><span><?php esc_html_e( 'شناسه پیگیری', 'uid-theme' ); ?></span></div>
+	          </div>
+	        </div>
+	        <div class="st-nav">
+	          <button type="button" id="st_prev" aria-label="<?php esc_attr_e( 'مرحله قبل', 'uid-theme' ); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+	          <span class="st-count" id="st_count">۱ / ۴</span>
+	          <button type="button" id="st_next" aria-label="<?php esc_attr_e( 'مرحله بعد', 'uid-theme' ); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+	        </div>
+	      </div>
+
+	      <div class="st-foot">
+	        <span class="small"><?php esc_html_e( 'کل این چرخه در یک فراخوانی انجام می‌شود؛ تیم فنی شما فقط یک درخواست می‌نویسد.', 'uid-theme' ); ?></span>
+	        <button class="btn btn-navy btn-sm" data-open-modal><?php esc_html_e( 'دریافت کلید و مستندات', 'uid-theme' ); ?></button>
+	      </div>
+	    </div>
+	  </div></div></div>
+	  </section>
+	<?php
+}
+
+/* =====================================================================
+ * فصل ۴) کاربردها (انتخابگر صنعت)
+ * ===================================================================== */
+function uid_default_cv_who() {
+	return array(
+		array( 'icon' => 'fin', 'label' => 'ثبت‌نام در خدمات مالی', 'title' => 'ثبت‌نام در خدمات مالی', 'text' => 'بررسی تعلق کارت بانکی به صاحب کد ملی پیش از فعال‌سازی حساب کاربری یا ارائه خدمات مالی — یعنی همان ابتدای مسیر، نه بعد از اولین تراکنش مشکوک.', 'win' => 'حساب کاربری فقط با کارت خودِ کاربر' ),
+		array( 'icon' => 'psp', 'label' => 'درگاه و پلتفرم پرداخت', 'title' => 'درگاه‌ها و پلتفرم‌های پرداخت', 'text' => 'کنترل اطلاعات بانکی پیش از انجام برداشت، بازپرداخت یا عملیات مالی حساس — پیش از آنکه پول از مسیر خارج شود.', 'win' => 'برداشت و بازپرداخت بدون پرونده' ),
+		array( 'icon' => 'wallet', 'label' => 'کیف پول دیجیتال', 'title' => 'کیف پول‌های دیجیتال', 'text' => 'کنترل مالکیت کارت هنگام افزودن کارت بانکی، افزایش موجودی یا فعال‌سازی قابلیت‌های مالی درون کیف پول.', 'win' => 'افزودن کارت فقط با تایید مالکیت' ),
+		array( 'icon' => 'crypto', 'label' => 'صرافی رمزارز', 'title' => 'صرافی‌های رمزارز', 'text' => 'احراز مالکیت حساب بانکی کاربران پیش از واریز، برداشت ریالی و انجام معاملات — نقطه‌ای که بیشترین فشار تخلف و اجاره کارت روی آن است.', 'win' => 'واریز و برداشت ریالی امن' ),
+		array( 'icon' => 'lend', 'label' => 'اعتباری و لندتک', 'title' => 'سامانه‌های اعتباری و لندتک', 'text' => 'بررسی کارت بانکی متقاضیان پیش از ارائه اعتبار، تسهیلات یا خرید اقساطی — تا اعتبار به حساب خودِ متقاضی برود، نه به کارتی که در اختیارش گذاشته‌اند.', 'win' => 'اعتبار به کارت خودِ متقاضی' ),
+		array( 'icon' => 'market', 'label' => 'مارکت‌پلیس', 'title' => 'مارکت‌پلیس‌ها', 'text' => 'بررسی مالکیت کارت فروشندگان و ارائه‌دهندگان خدمات پیش از فعال‌سازی پرداخت و تسویه‌حساب دوره‌ای.', 'win' => 'تسویه دوره‌ای بدون برگشتی' ),
+		array( 'icon' => 'broker', 'label' => 'کارگزاری بورس', 'title' => 'کارگزاری‌های بورس', 'text' => 'اعتبارسنجی حساب بانکی مشتریان پیش از واریز و برداشت وجه، مطابق الزامات شناسایی مشتری در بازار سرمایه.', 'win' => 'واریز و برداشت با هویت تاییدشده' ),
+	);
+}
+function uid_render_section_cvwho() {
+	$tag   = uid_section_tag( 'cvwho', 'h2' );
+	$items = uid_section_val( 'cvwho', 'items', uid_default_cv_who() );
+	if ( ! is_array( $items ) || empty( $items ) ) return;
+	?>
+	<section class="sec" id="who" data-fold data-fold-hot data-fold-min="<?php echo esc_attr( uid_section_val( 'cvwho', 'fold_min', __( '۱ دقیقه', 'uid-theme' ) ) ); ?>"
+	         data-fold-title="<?php echo esc_attr( uid_section_val( 'cvwho', 'fold_title', __( 'کاربرد در کسب‌وکارها', 'uid-theme' ) ) ); ?>"
+	         data-fold-teaser="<?php echo esc_attr( uid_section_val( 'cvwho', 'fold_teaser', __( 'صنعت خودتان را انتخاب کنید تا فقط همان را ببینید', 'uid-theme' ) ) ); ?>">
+	  <div class="fold-body"><div class="cv-wrap"><div class="fold-inner">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow"><i></i><?php echo esc_html( uid_section_val( 'cvwho', 'eyebrow', __( 'کجا به کار می‌آید', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php echo esc_html( uid_section_val( 'cvwho', 'heading', __( 'هر جا که کارت بانکی وارد سامانه شما می‌شود', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	      <p class="lede" style="margin-inline:auto"><?php echo esc_html( uid_section_val( 'cvwho', 'text', __( 'صنعت خود را انتخاب کنید تا سناریوی دقیق شما را ببینید.', 'uid-theme' ) ) ); ?></p>
+	    </div>
+
+	    <div class="rv">
+	      <div class="pick-chips" data-pick-chips="ind" role="tablist" aria-label="<?php esc_attr_e( 'انتخاب صنعت', 'uid-theme' ); ?>"></div>
+	      <div class="pick" data-pick="ind">
+	        <?php foreach ( $items as $it ) :
+	          $color = uid_cv_who_color( $it['icon'] ?? 'fin' );
+	        ?>
+	        <article class="pick-card" data-label="<?php echo esc_attr( $it['label'] ?? '' ); ?>">
+	          <div class="ic<?php echo $color ? ' ' . esc_attr( $color ) : ''; ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><?php echo wp_kses( uid_cv_who_icon_svg( $it['icon'] ?? 'fin' ), array( 'path' => array( 'd' => true ), 'ellipse' => array( 'cx' => true, 'cy' => true, 'rx' => true, 'ry' => true ), 'circle' => array( 'cx' => true, 'cy' => true, 'r' => true ), 'rect' => array( 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true ) ) ); ?></svg></div>
+	          <b><?php echo esc_html( $it['title'] ?? '' ); ?></b>
+	          <p><?php echo esc_html( $it['text'] ?? '' ); ?></p>
+	          <span class="win"><?php echo uid_cv_check_icon(); ?><?php echo esc_html( $it['win'] ?? '' ); ?></span>
+	        </article>
+	        <?php endforeach; ?>
+	      </div>
+	      <div class="pick-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l-6-6 6-6M15 6l6 6-6 6"/></svg><?php esc_html_e( 'برای دیدن صنعت‌های دیگر، از نوارِ بالا انتخاب کنید', 'uid-theme' ); ?></div>
+	    </div>
+	  </div></div></div>
+	  </section>
+	<?php
+}
+
+/* =====================================================================
+ * فصل ۵) مزایا (کارت‌دک) + پوشش BIN بانکی
+ * ===================================================================== */
+function uid_default_cv_gain() {
+	return array(
+		array( 'icon' => 'auto', 'title' => 'بررسی سیستمی مالکیت کارت', 'text' => 'تعلق شماره کارت به صاحب کد ملی به‌صورت خودکار و بدون دخالت نیروی انسانی بررسی می‌شود؛ نتیجه یک تصمیم ماشین‌خوان است، نه یک گزارش برای بازخوانی دستی.', 'tagline' => 'بدون بررسی دستی' ),
+		array( 'icon' => 'fraud', 'title' => 'کاهش تقلب و اجاره کارت', 'text' => 'استفاده از اطلاعات بانکی متعلق به افراد دیگر در فرایندهای مالی تقریباً غیرممکن می‌شود — و این دقیقاً همان دسته از پرونده‌هایی است که بیشترین هزینه را دارد.', 'tagline' => 'بستن مسیر کارت اجاره‌ای' ),
+		array( 'icon' => 'fast', 'title' => 'پاسخ آنی و آنلاین', 'text' => 'نتیجه در لحظه بازگردانده می‌شود و فرایند کسب‌وکار شما متوقف نمی‌ماند؛ بررسی مالکیت وسط فرم انجام می‌شود بدون آنکه کاربر منتظر بماند.', 'tagline' => 'بدون افت تجربه کاربری' ),
+		array( 'icon' => 'api', 'title' => 'اتصال ساده از طریق API', 'text' => 'اتصال به وب‌سایت، اپلیکیشن یا نرم‌افزار سازمانی با مستندات استاندارد و محیط آزمایشی (سندباکس) — پیش از هر تعهد مالی می‌توانید تست کنید.', 'tagline' => 'سندباکس پیش از قرارداد' ),
+		array( 'icon' => 'support', 'title' => 'صرفه‌جویی در هزینه پشتیبانی', 'text' => 'حذف نیاز به بررسی دستی، تماس‌های اعتبارسنجی و پیگیری‌های پرهزینه؛ نیروی پشتیبانی شما به‌جای اعتبارسنجی کارت، سراغ کارهای ارزشمندتر می‌رود.', 'tagline' => 'کاهش بار تیم پشتیبانی' ),
+	);
+}
+function uid_default_cv_bins() {
+	return array(
+		array( 'code' => '603799', 'name' => 'ملی ایران' ), array( 'code' => '610433', 'name' => 'ملت' ),
+		array( 'code' => '603769', 'name' => 'صادرات' ), array( 'code' => '627353', 'name' => 'تجارت' ),
+		array( 'code' => '589210', 'name' => 'سپه' ), array( 'code' => '603770', 'name' => 'کشاورزی' ),
+		array( 'code' => '628023', 'name' => 'مسکن' ), array( 'code' => '589463', 'name' => 'رفاه کارگران' ),
+		array( 'code' => '502229', 'name' => 'پاسارگاد' ), array( 'code' => '621986', 'name' => 'سامان' ),
+		array( 'code' => '622106', 'name' => 'پارسیان' ), array( 'code' => '627412', 'name' => 'اقتصاد نوین' ),
+		array( 'code' => '627488', 'name' => 'کارآفرین' ), array( 'code' => '502806', 'name' => 'شهر' ),
+		array( 'code' => '502938', 'name' => 'دی' ), array( 'code' => '639346', 'name' => 'سینا' ),
+		array( 'code' => '636214', 'name' => 'آینده' ), array( 'code' => '627760', 'name' => 'پست بانک' ),
+	);
+}
+function uid_render_section_cvgain() {
+	$tag   = uid_section_tag( 'cvgain', 'h2' );
+	$items = uid_section_val( 'cvgain', 'items', uid_default_cv_gain() );
+	if ( ! is_array( $items ) ) $items = array();
+	$bins  = uid_section_val( 'cvgain', 'bins', uid_default_cv_bins() );
+	if ( ! is_array( $bins ) ) $bins = array();
+	?>
+	<section class="sec" id="gain" data-fold data-fold-min="<?php echo esc_attr( uid_section_val( 'cvgain', 'fold_min', __( '۲ دقیقه', 'uid-theme' ) ) ); ?>"
+	         data-fold-title="<?php echo esc_attr( uid_section_val( 'cvgain', 'fold_title', __( 'مزایای وب‌سرویس تطبیق کارت', 'uid-theme' ) ) ); ?>"
+	         data-fold-teaser="<?php echo esc_attr( uid_section_val( 'cvgain', 'fold_teaser', __( 'پنج دلیلی که تیم فنی و تیم ریسک هر دو قبول می‌کنند', 'uid-theme' ) ) ); ?>">
+	  <div class="fold-body"><div class="cv-wrap"><div class="fold-inner">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow"><i></i><?php echo esc_html( uid_section_val( 'cvgain', 'eyebrow', __( 'چرا یوآیدی', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php echo esc_html( uid_section_val( 'cvgain', 'heading', __( 'مزایای وب‌سرویس تطبیق شماره کارت با کد ملی', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	      <p class="lede" style="margin-inline:auto"><?php echo esc_html( uid_section_val( 'cvgain', 'text', __( 'این سرویس روی مسیر پول می‌نشیند؛ بنابراین سرعت، دقت و پشتیبانی آن مستقیماً روی ریسک عملیاتی شما اثر می‌گذارد.', 'uid-theme' ) ) ); ?></p>
+	    </div>
+
+	    <div class="deck-wrap rv">
+	      <div class="deck d3" data-deck="gain">
+	        <?php foreach ( $items as $it ) :
+	          $color = uid_cv_gain_color( $it['icon'] ?? 'auto' );
+	        ?>
+	        <article class="dcard">
+	          <div class="ic<?php echo $color ? ' ' . esc_attr( $color ) : ''; ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><?php echo wp_kses( uid_cv_gain_icon_svg( $it['icon'] ?? 'auto' ), array( 'path' => array( 'd' => true ), 'rect' => array( 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true ) ) ); ?></svg></div>
+	          <b><?php echo esc_html( $it['title'] ?? '' ); ?></b>
+	          <p><?php echo esc_html( $it['text'] ?? '' ); ?></p>
+	          <span class="tagline"><?php echo uid_cv_check_icon(); ?><?php echo esc_html( $it['tagline'] ?? '' ); ?></span>
+	        </article>
+	        <?php endforeach; ?>
+	      </div>
+	      <div class="deck-ui" data-deck-ui="gain">
+	        <button class="deck-btn" type="button" data-deck-prev aria-label="<?php esc_attr_e( 'کارت قبلی', 'uid-theme' ); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+	        <span class="deck-bar"><i></i></span>
+	        <span class="deck-count"></span>
+	        <button class="deck-btn" type="button" data-deck-next aria-label="<?php esc_attr_e( 'کارت بعدی', 'uid-theme' ); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+	      </div>
+	      <div class="deck-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l-6-6 6-6M15 6l6 6-6 6"/></svg><?php esc_html_e( 'برای دیدن کارت بعدی، بکشید یا روی کارت بزنید', 'uid-theme' ); ?></div>
+	    </div>
+
+	    <div class="rv" style="margin-block-start:clamp(28px,4vw,44px)">
+	      <h3 class="h-sub" style="margin-block-end:14px;text-align:center"><?php echo esc_html( uid_section_val( 'cvgain', 'bins_heading', __( 'شش رقم اول کارت، بانک صادرکننده را مشخص می‌کند', 'uid-theme' ) ) ); ?></h3>
+	      <p class="small" style="text-align:center;max-width:70ch;margin:0 auto 18px"><?php echo wp_kses( uid_section_val( 'cvgain', 'bins_text', __( 'شش رقم ابتدایی هر کارت بانکی (<span class="lat">BIN</span>) متعلق به بانک صادرکننده است. به همین دلیل نام بانک پیش از هر فراخوانی و بدون هزینه اضافه قابل تشخیص است — همان چیزی که در کادر تست بالای همین صفحه می‌بینید. سرویس، کارت‌های صادرشده توسط بانک‌ها و موسسات مالی مجاز عضو شبکه شتاب را پشتیبانی می‌کند.', 'uid-theme' ) ), array( 'span' => array( 'class' => array() ) ) ); ?></p>
+	      <div class="bins">
+	        <?php foreach ( $bins as $b ) : ?>
+	        <span class="binchip"><b><?php echo esc_html( $b['code'] ?? '' ); ?></b> <?php echo esc_html( $b['name'] ?? '' ); ?></span>
+	        <?php endforeach; ?>
+	        <span class="binchip more"><?php echo esc_html( uid_section_val( 'cvgain', 'bins_more', __( 'و سایر بانک‌ها و موسسات مجاز عضو شتاب', 'uid-theme' ) ) ); ?></span>
+	      </div>
+	    </div>
+	  </div></div></div>
+	  </section>
+	<?php
+}
+
+/* =====================================================================
+ * فصل ۶) تیم متخصص + تعهدنامه
+ * ===================================================================== */
+function uid_default_cv_team_rows() {
+	return array(
+		array( 'icon' => 'connect', 'title' => 'کارشناس فنی اختصاصی برای دوره اتصال', 'text' => 'کارشناسان با شما تماس می‌گیرند و پس از تایید، کلید وب‌سرویس و مستندات فنی در اختیار تیم شما قرار می‌گیرد؛ یک نفر مشخص تا اولین تطبیق موفق پاسخگوی تیم شماست.' ),
+		array( 'icon' => 'monitor', 'title' => 'مانیتورینگ روزمره و گزارش‌دهی دوره‌ای', 'text' => 'پایداری سرویس به‌صورت ۲۴ ساعته رصد می‌شود و گزارش تعداد استعلام‌ها، نرخ پاسخ موفق و لاگ تراکنش‌ها در اختیار شما قرار می‌گیرد تا هزینه و عملکرد همیشه قابل راستی‌آزمایی باشد.' ),
+		array( 'icon' => 'doc', 'title' => 'مستندات دقیق به همراه محیط آزمایشی', 'text' => 'ساختار درخواست، ساختار پاسخ و جدول پارامترها همگی مستند و در دسترس تیم توسعه شماست؛ به همین دلیل ادغام کامل معمولاً در کمتر از یک روز کاری انجام می‌شود.' ),
+		array( 'icon' => 'shield', 'title' => 'سابقه از سال ۱۳۹۶ در زیرساخت هویت دیجیتال', 'text' => 'شرکت دانش‌بنیان بینش هوشمند نسل پیشرو، کارگزار مورد تایید سامانه‌های سجام و ثنا، با تمرکز اختصاصی روی سرویس‌های استعلام و احراز هویت.' ),
+	);
+}
+function uid_default_cv_pledge_items() {
+	return array(
+		'دسترسی به محیط سندباکس و کلید آزمایشی پیش از هر تعهد مالی',
+		'محاسبه هزینه فقط بر اساس استعلام‌های موفق و معتبر',
+		'تعرفه پلکانی با افزایش حجم و امکان ارائه تعرفه اختصاصی برای حجم بالا',
+		'همراهی در طراحی جریان ثبت کارت برای کمترین ریسک و کمترین اصطکاک',
+	);
+}
+function uid_render_section_cvteam() {
+	$rows       = uid_section_val( 'cvteam', 'rows', uid_default_cv_team_rows() );
+	$pledge_raw = uid_section_val( 'cvteam', 'pledge_items', implode( "\n", uid_default_cv_pledge_items() ) );
+	$pledge     = array_filter( array_map( 'trim', explode( "\n", $pledge_raw ) ) );
+	if ( ! is_array( $rows ) ) $rows = array();
+	$tag = uid_section_tag( 'cvteam', 'h2' );
+	?>
+	<section class="sec" id="team" data-fold data-fold-min="<?php echo esc_attr( uid_section_val( 'cvteam', 'fold_min', __( '۲ دقیقه', 'uid-theme' ) ) ); ?>"
+	         data-fold-title="<?php echo esc_attr( uid_section_val( 'cvteam', 'fold_title', __( 'تیم متخصص و پشتیبانی', 'uid-theme' ) ) ); ?>"
+	         data-fold-teaser="<?php echo esc_attr( uid_section_val( 'cvteam', 'fold_teaser', __( 'با چه کسانی وصل می‌شوید و چه چیزی تعهد می‌شود', 'uid-theme' ) ) ); ?>">
+	  <div class="fold-body"><div class="cv-wrap"><div class="fold-inner">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow"><i></i><?php echo esc_html( uid_section_val( 'cvteam', 'eyebrow', __( 'پشت این وب‌سرویس', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php esc_html_e( 'یک ', 'uid-theme' ); ?><span class="lat">API</span><?php echo esc_html( uid_section_val( 'cvteam', 'heading', __( ' نمی‌فروشیم؛ راه‌اندازی‌اش را تحویل می‌دهیم', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	      <p class="lede" style="margin-inline:auto"><?php echo esc_html( uid_section_val( 'cvteam', 'text', __( 'این سرویس دقیقاً روی نقطه‌ای می‌نشیند که کارت بانکی وارد سامانه شما می‌شود. به همین دلیل تیم فنی یوآیدی از اولین تماس تا اولین تطبیق موفق روی محیط عملیاتی همراه شماست.', 'uid-theme' ) ) ); ?></p>
+	    </div>
+	    <div class="team rv">
+	      <div class="team-list">
+	        <?php foreach ( $rows as $r ) : ?>
+	        <div class="team-row">
+	          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><?php echo wp_kses( uid_cv_team_icon_svg( $r['icon'] ?? 'connect' ), array( 'path' => array( 'd' => true ) ) ); ?></svg></div>
+	          <div><b><?php echo esc_html( $r['title'] ?? '' ); ?></b>
+	            <p><?php echo esc_html( $r['text'] ?? '' ); ?></p></div>
+	        </div>
+	        <?php endforeach; ?>
+	      </div>
+	      <div class="pledge">
+	        <div class="pl-hd"><span class="ic"><?php echo uid_cv_check_icon(); ?></span>
+	          <b><?php echo esc_html( uid_section_val( 'cvteam', 'pledge_heading', __( 'تعهد یوآیدی به تیم فنی شما', 'uid-theme' ) ) ); ?></b></div>
+	        <ul>
+	          <?php foreach ( $pledge as $p ) : ?>
+	          <li><?php echo uid_cv_check_icon(); ?><?php echo esc_html( $p ); ?></li>
+	          <?php endforeach; ?>
+	        </ul>
+	        <div class="btn-row" style="margin-block-start:18px">
+	          <a class="btn btn-navy" href="<?php echo esc_attr( uid_phone_href( uid_phone_raw() ) ); ?>"><?php echo uid_cv_phone_icon(); ?>
+	            <span class="mono"><?php echo esc_html( uid_phone_display() ); ?></span></a>
+	          <button class="btn btn-ghost" data-open-modal><?php esc_html_e( 'درخواست کلید آزمایشی', 'uid-theme' ); ?></button>
+	        </div>
+	      </div>
+	    </div>
+	  </div></div></div>
+	  </section>
+	<?php
+}
+
+/* =====================================================================
+ * فصل ۷) مستندات فنی و نمونه کد
+ * ===================================================================== */
+function uid_render_section_cvdev() {
+	$tag = uid_section_tag( 'cvdev', 'h2' );
+	?>
+	<section class="sec" id="dev" data-fold data-fold-hot data-fold-min="<?php echo esc_attr( uid_section_val( 'cvdev', 'fold_min', __( '۳ دقیقه', 'uid-theme' ) ) ); ?>"
+	         data-fold-title="<?php echo esc_attr( uid_section_val( 'cvdev', 'fold_title', __( 'بخش فنی و نمونه کدها', 'uid-theme' ) ) ); ?>"
+	         data-fold-teaser="<?php echo esc_attr( uid_section_val( 'cvdev', 'fold_teaser', __( 'نمونه درخواست، نمونه پاسخ و جدول پارامترها', 'uid-theme' ) ) ); ?>">
+	  <div class="fold-body"><div class="cv-wrap"><div class="fold-inner">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow"><i></i><?php echo esc_html( uid_section_val( 'cvdev', 'eyebrow', __( 'برای تیم توسعه شما', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php echo esc_html( uid_section_val( 'cvdev', 'heading', __( 'یک فراخوانی، یک تصمیم، تمام', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	      <p class="lede" style="margin-inline:auto"><?php esc_html_e( 'برای استفاده از سرویس ', 'uid-theme' ); ?><span class="lat">API</span><?php esc_html_e( ' تطابقی اطلاعات مالی (شماره کارت با اطلاعات هویتی) یوآیدی می‌بایست سرویس زیر را با پارامترهای درخواستی فراخوانی نمایید. این سرویس با دریافت شماره کارت کاربر، کدملی و تاریخ تولد، صحت اطلاعات کاربر (', 'uid-theme' ); ?><span class="lat">true</span><?php esc_html_e( ' یا ', 'uid-theme' ); ?><span class="lat">false</span><?php esc_html_e( ') را در پاسخ برمی‌گرداند.', 'uid-theme' ); ?></p>
+	    </div>
+
+	    <div class="codepanel rv">
+	      <div>
+	        <div class="ftags" style="margin-block-end:18px">
+	          <span class="ftag"><span class="key">businessId</span><?php esc_html_e( 'شناسه کسب‌وکار', 'uid-theme' ); ?></span>
+	          <span class="ftag"><span class="key">businessToken</span><?php esc_html_e( 'توکن کسب‌وکار', 'uid-theme' ); ?></span>
+	          <span class="ftag warm"><span class="key">cardNumber</span><?php esc_html_e( 'شماره کارت کاربر', 'uid-theme' ); ?></span>
+	          <span class="ftag warm"><span class="key">nationalId</span><?php esc_html_e( 'کد ملی کاربر', 'uid-theme' ); ?></span>
+	          <span class="ftag warm"><span class="key">birthDate</span><?php esc_html_e( 'تاریخ تولد کاربر', 'uid-theme' ); ?></span>
+	          <span class="ftag"><span class="key">isMatched</span><?php esc_html_e( 'نتیجه تطابق مالکیت', 'uid-theme' ); ?></span>
+	        </div>
+	        <div class="secbox" style="background:var(--n50);border-color:var(--n200)">
+	          <div class="ic" style="color:var(--navy)"><?php echo uid_cv_info_icon(); ?></div>
+	          <div><b style="color:var(--ink)"><?php esc_html_e( 'درباره شناسه و توکن کسب‌وکار', 'uid-theme' ); ?></b>
+	            <p style="color:var(--n600)"><?php esc_html_e( 'مقادیر ', 'uid-theme' ); ?><span class="lat">businessId</span><?php esc_html_e( ' و ', 'uid-theme' ); ?><span class="lat">businessToken</span><?php esc_html_e( ' توسط یوآیدی در اختیار شما قرار می‌گیرد و هر دو الزامی هستند. نسخه فعلی مستندات سرویس ', 'uid-theme' ); ?><span class="mono">1.1.0</span><?php esc_html_e( ' است.', 'uid-theme' ); ?></p></div>
+	        </div>
+	        <div class="btn-row" style="margin-block-start:20px">
+	          <button class="btn btn-cta" data-open-modal><?php echo uid_cv_submit_icon(); ?><?php echo esc_html( uid_section_val( 'cvdev', 'btn1_text', __( 'دریافت کلید وب‌سرویس', 'uid-theme' ) ) ); ?></button>
+	          <a class="btn btn-ghost" href="<?php echo esc_url( home_url( '/card-validate-docs/' ) ); ?>"><?php esc_html_e( 'مشاهده مستندات کامل ', 'uid-theme' ); ?><span class="lat">API</span></a>
+	        </div>
+	      </div>
+
+	      <div class="code-box">
+	        <div class="code-tabs">
+	          <button type="button" class="on" data-code-tab="req"><?php esc_html_e( 'نمونه درخواست', 'uid-theme' ); ?></button>
+	          <button type="button" data-code-tab="res"><?php esc_html_e( 'نمونه پاسخ', 'uid-theme' ); ?></button>
+	          <button class="code-copy" type="button" data-copy><?php esc_html_e( 'کپی', 'uid-theme' ); ?></button>
+	        </div>
+	        <div class="code-body">
+<pre class="code-pane on" data-code-pane="req"><span class="m">POST</span> https://json-api.uid.ir/api/validate/card/ownership
+<span class="k">Content-Type</span>: application/json;charset=UTF-8
+
+{
+  <span class="k">"requestContext"</span>: {
+    <span class="k">"apiInfo"</span>: {
+      <span class="k">"businessId"</span>: <span class="s">"&lt;UID_BUSINESS_ID&gt;"</span>,
+      <span class="k">"businessToken"</span>: <span class="s">"&lt;UID_BUSINESS_TOKEN&gt;"</span>
+    }
+  },
+  <span class="k">"cardNumber"</span>: <span class="s">"6037111111111111"</span>,
+<span class="m">  // String - 16 Digits</span>
+  <span class="k">"nationalId"</span>: <span class="s">"0123456789"</span>,
+  <span class="k">"birthDate"</span>: <span class="s">"1370/05/17"</span>
+}</pre>
+<pre class="code-pane" data-code-pane="res">{
+  <span class="k">"responseContext"</span>: {
+    <span class="k">"status"</span>: {
+      <span class="k">"code"</span>: <span class="s">0</span>,
+      <span class="k">"message"</span>: <span class="s">"SUCCESS."</span>,
+      <span class="k">"details"</span>: []
+    },
+    <span class="k">"requestId"</span>: <span class="s">""</span>,
+    <span class="k">"correlationId"</span>: <span class="s">""</span>,
+    <span class="k">"navigationURI"</span>: <span class="s">""</span>,
+    <span class="k">"nextStepToken"</span>: <span class="s">""</span>,
+    <span class="k">"userSessionId"</span>: <span class="s">""</span>,
+    <span class="k">"custom"</span>: {}
+  },
+  <span class="k">"isMatched"</span>: <span class="s">true</span>
+}</pre>
+	        </div>
+	      </div>
+	    </div>
+
+	    <div class="rv" style="margin-block-start:clamp(28px,4vw,44px)">
+	      <h3 class="h-sub" style="margin-block-end:14px"><?php esc_html_e( 'پارامترهای درخواست', 'uid-theme' ); ?></h3>
+	      <div class="ptbl">
+	        <div class="r hd"><span><?php esc_html_e( 'فیلد', 'uid-theme' ); ?></span><span><?php esc_html_e( 'نوع', 'uid-theme' ); ?></span><span><?php esc_html_e( 'وضعیت', 'uid-theme' ); ?></span><span><?php esc_html_e( 'توضیح', 'uid-theme' ); ?></span></div>
+	        <div class="r"><span class="f">businessId</span><span class="t">string</span><span class="k req">Required</span><span class="d"><?php esc_html_e( 'شناسه کسب‌وکار (توسط یوآیدی در اختیار قرار می‌گیرد)', 'uid-theme' ); ?></span></div>
+	        <div class="r"><span class="f">businessToken</span><span class="t">string</span><span class="k req">Required</span><span class="d"><?php esc_html_e( 'توکن کسب‌وکار (توسط یوآیدی در اختیار قرار می‌گیرد)', 'uid-theme' ); ?></span></div>
+	        <div class="r"><span class="f">cardNumber</span><span class="t">string</span><span class="k req">Required</span><span class="d"><?php esc_html_e( 'شماره کارت کاربر', 'uid-theme' ); ?></span></div>
+	        <div class="r"><span class="f">nationalId</span><span class="t">string</span><span class="k req">Required</span><span class="d"><?php esc_html_e( 'کد ملی کاربر', 'uid-theme' ); ?></span></div>
+	        <div class="r"><span class="f">birthDate</span><span class="t">string</span><span class="k req">Required</span><span class="d"><?php esc_html_e( 'تاریخ تولد کاربر', 'uid-theme' ); ?></span></div>
+	      </div>
+
+	      <h3 class="h-sub" style="margin-block:26px 14px"><?php esc_html_e( 'پارامترهای پاسخ', 'uid-theme' ); ?></h3>
+	      <div class="ptbl">
+	        <div class="r hd"><span><?php esc_html_e( 'فیلد', 'uid-theme' ); ?></span><span><?php esc_html_e( 'نوع', 'uid-theme' ); ?></span><span><?php esc_html_e( 'بخش', 'uid-theme' ); ?></span><span><?php esc_html_e( 'توضیح', 'uid-theme' ); ?></span></div>
+	        <div class="r"><span class="f">code</span><span class="t">int</span><span class="k res">status</span><span class="d"><?php esc_html_e( 'کد خطا', 'uid-theme' ); ?></span></div>
+	        <div class="r"><span class="f">message</span><span class="t">string</span><span class="k res">status</span><span class="d"><?php esc_html_e( 'توضیحات خطا', 'uid-theme' ); ?></span></div>
+	        <div class="r"><span class="f">isMatched</span><span class="t">bool</span><span class="k res">root</span><span class="d"><?php esc_html_e( 'تطابق مالکیت: ', 'uid-theme' ); ?><b class="lat">true</b><?php esc_html_e( ' — عدم تطابق مالکیت: ', 'uid-theme' ); ?><b class="lat">false</b></span></div>
+	      </div>
+
+	      <div class="price-note" style="margin-block-start:16px">
+	        <?php echo uid_cv_info_icon(); ?>
+	        <span><?php esc_html_e( 'مقدار ', 'uid-theme' ); ?><span class="lat">cardNumber</span><?php esc_html_e( ' یک رشته ۱۶ رقمی است. کل تصمیم سرویس در یک فیلد بولین (', 'uid-theme' ); ?><span class="lat">isMatched</span><?php esc_html_e( ') خلاصه می‌شود؛ بنابراین شرط سمت شما یک ', 'uid-theme' ); ?><span class="lat">if</span><?php esc_html_e( ' ساده است، نه مقایسه رشته‌ای نام‌ها.', 'uid-theme' ); ?></span>
+	      </div>
+	    </div>
+	  </div></div></div>
+	  </section>
+	<?php
+}
+
+/* =====================================================================
+ * فصل ۸) سرویس‌های مکمل
+ * ===================================================================== */
+function uid_default_cv_xsell() {
+	return array(
+		array( 'icon' => 'iban',    'title' => 'وب‌سرویس استعلام شبا', 'text' => 'با ارسال شماره شبا، اطلاعات حساب شامل نام دارنده حساب و وضعیت حساب دریافت می‌شود — وقتی به خودِ داده نیاز دارید، نه فقط به تایید مالکیت.', 'url' => '/api-inquiry-iban/' ),
+		array( 'icon' => 'match',   'title' => 'وب‌سرویس تطبیق شماره شبا با کد ملی', 'text' => 'همان منطق تطبیق مالکیت، این بار روی شماره شبا — برای جریان‌هایی که کاربر شبا را وارد می‌کند، نه شماره کارت را.', 'url' => '/api-validate-iban/' ),
+		array( 'icon' => 'convert', 'title' => 'وب‌سرویس تبدیل شماره کارت به شبا', 'text' => 'شماره ۱۶ رقمی کارت را بفرستید و شبای متصل به همان حساب را بگیرید؛ در کنار این سرویس، هم شبا دارید هم اطمینان از مالکیت.', 'url' => '/api-inquiry-card/' ),
+		array( 'icon' => 'shahkar', 'title' => 'وب‌سرویس شاهکار', 'text' => 'تطبیق شماره موبایل با کد ملی؛ در کنار تطبیق کارت، حلقه سوم هویت کاربر را می‌بندد و امکان جعل در ثبت‌نام را به حداقل می‌رساند.', 'url' => '/shahkar/' ),
+	);
+}
+function uid_render_section_cvxsell() {
+	$tag   = uid_section_tag( 'cvxsell', 'h2' );
+	$items = uid_section_val( 'cvxsell', 'items', uid_default_cv_xsell() );
+	if ( ! is_array( $items ) || empty( $items ) ) return;
+	?>
+	<section class="sec" id="xsell" data-fold data-fold-min="<?php echo esc_attr( uid_section_val( 'cvxsell', 'fold_min', __( '۱ دقیقه', 'uid-theme' ) ) ); ?>"
+	         data-fold-title="<?php echo esc_attr( uid_section_val( 'cvxsell', 'fold_title', __( 'سرویس‌های مکمل و مرتبط', 'uid-theme' ) ) ); ?>"
+	         data-fold-teaser="<?php echo esc_attr( uid_section_val( 'cvxsell', 'fold_teaser', __( 'استعلام شبا، تطبیق شبا با کد ملی، تبدیل کارت به شبا و شاهکار', 'uid-theme' ) ) ); ?>">
+	  <div class="fold-body"><div class="cv-wrap"><div class="fold-inner">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow"><i></i><?php echo esc_html( uid_section_val( 'cvxsell', 'eyebrow', __( 'در کنار این وب‌سرویس', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php esc_html_e( 'اگر به چیزی بیش از یک ', 'uid-theme' ); ?><span class="lat">true/false</span><?php echo esc_html( uid_section_val( 'cvxsell', 'heading', __( ' نیاز دارید', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	      <p class="lede" style="margin-inline:auto"><?php echo esc_html( uid_section_val( 'cvxsell', 'text', __( 'خروجی این متد یک تصمیم است. اگر لازم است داده دارنده حساب را ببینید، شبای معادل کارت را بگیرید، یا همین تطبیق را روی شبا و شماره موبایل هم اجرا کنید، سرویس‌های زیر مکمل همین فراخوانی هستند.', 'uid-theme' ) ) ); ?></p>
+	    </div>
+	    <div class="xsell rv">
+	      <?php foreach ( $items as $it ) : ?>
+	      <a class="xtile" href="<?php echo esc_url( $it['url'] ?? '#' ); ?>">
+	        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><?php echo wp_kses( uid_cv_xsell_icon_svg( $it['icon'] ?? 'iban' ), array( 'rect' => array( 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true ), 'path' => array( 'd' => true ) ) ); ?></svg></div>
+	        <b><?php echo esc_html( $it['title'] ?? '' ); ?></b>
+	        <p><?php echo esc_html( $it['text'] ?? '' ); ?></p>
+	        <span class="go"><?php esc_html_e( 'مشاهده سرویس', 'uid-theme' ); ?> <?php echo uid_cv_arrow_icon(); ?></span>
+	      </a>
+	      <?php endforeach; ?>
+	    </div>
+	  </div></div></div>
+	  </section>
+	<?php
+}
+
+/* =====================================================================
+ * فصل ۹) سوالات متداول
+ * ===================================================================== */
+function uid_default_cv_faq() {
+	return array(
+		array( 'question' => 'برای تطبیق کد ملی و کارت بانکی چه اطلاعاتی لازم است؟', 'answer' => 'شماره کارت ۱۶ رقمی، کد ملی ۱۰ رقمی و تاریخ تولد دارنده کارت. هر سه مقدار باید کامل و با ساختار معتبر ارسال شوند.' ),
+		array( 'question' => 'نتیجه این وب‌سرویس چیست؟', 'answer' => 'نتیجه به‌صورت یک وضعیت منطقی مشخص می‌کند که شماره کارت به صاحب کد ملی موردنظر تعلق دارد یا خیر (تطبیق یا عدم تطبیق) و همراه با نام بانک صادرکننده و شناسه پیگیری بازگردانده می‌شود.' ),
+		array( 'question' => 'آیا این سرویس نام صاحب کارت را نمایش می‌دهد؟', 'answer' => 'خیر؛ هدف سرویس بررسی تطابق اطلاعات ارسال‌شده است و نتیجه فقط به‌صورت تایید یا رد مالکیت بازگردانده می‌شود؛ مشخصات کامل صاحب کارت نمایش داده نمی‌شود.' ),
+		array( 'question' => 'تفاوت این سرویس با استعلام اطلاعات هویتی چیست؟', 'answer' => 'استعلام اطلاعات هویتی برای دریافت یا بررسی مشخصات فرد استفاده می‌شود؛ اما این سرویس صرفاً تعلق یک شماره کارت بانکی به یک کد ملی مشخص را بررسی می‌کند.' ),
+		array( 'question' => 'تفاوت این سرویس با تبدیل کارت به شبا چیست؟', 'answer' => 'تبدیل کارت به شبا شماره شبای معادل کارت را تولید می‌کند؛ اما این سرویس مالکیت کارت را نسبت به کد ملی و تاریخ تولد اعتبارسنجی می‌کند.' ),
+		array( 'question' => 'در چه مواردی پاسخ خطا دریافت می‌کنیم؟', 'answer' => 'شماره کارت نامعتبر یا مسدود، کد ملی نادرست، فرمت تاریخ تولد اشتباه یا عدم در دسترس بودن سرویس بانکی. در همه این حالت‌ها کد خطای استاندارد همراه با پیام مناسب بازگردانده می‌شود.' ),
+		array( 'question' => 'پیاده‌سازی و اتصال این وب‌سرویس چقدر زمان می‌برد؟', 'answer' => 'با توجه به استاندارد بودن REST API و ارائه مستندات فنی دقیق به همراه محیط آزمایشی (سندباکس)، ادغام کامل این سرویس معمولاً در کمتر از یک روز کاری توسط تیم فنی انجام می‌شود.' ),
+		array( 'question' => 'مدل محاسبه هزینه و تعرفه به چه صورت است؟', 'answer' => 'محاسبه هزینه فقط بر اساس استعلام‌های موفق و معتبر انجام می‌شود و تعرفه با افزایش حجم ماهانه پلکانی می‌شود. سه پلن وجود دارد: استارتاپ، رشد و سازمانی؛ برای حجم بالا امکان ارائه تعرفه اختصاصی وجود دارد. برای دریافت نرخ دقیق کافی است با شماره ۰۲۱۶۶۱۲۳۲۹۰ تماس بگیرید.' ),
+	);
+}
+function uid_render_section_cvfaq() {
+	$tag   = uid_section_tag( 'cvfaq', 'h2' );
+	$items = uid_section_val( 'cvfaq', 'items', uid_default_cv_faq() );
+	if ( ! is_array( $items ) ) $items = array();
+	?>
+	<section class="sec" id="faq" data-fold data-fold-min="<?php echo esc_attr( uid_section_val( 'cvfaq', 'fold_min', __( '۲ دقیقه', 'uid-theme' ) ) ); ?>"
+	         data-fold-title="<?php echo esc_attr( uid_section_val( 'cvfaq', 'fold_title', __( 'سوالات متداول', 'uid-theme' ) ) ); ?>"
+	         data-fold-teaser="<?php echo esc_attr( uid_section_val( 'cvfaq', 'fold_teaser', __( 'پارامترها، محرمانگی، تفاوت با سرویس‌های مشابه و کدهای خطا', 'uid-theme' ) ) ); ?>">
+	  <div class="fold-body"><div class="cv-wrap"><div class="fold-inner">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow"><i></i><?php echo esc_html( uid_section_val( 'cvfaq', 'eyebrow', __( 'پیش از تماس، این‌ها را بخوانید', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php echo esc_html( uid_section_val( 'cvfaq', 'heading', __( 'سوالات متداول وب‌سرویس تطبیق کارت و کد ملی', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	    </div>
+	    <?php if ( $items ) : ?>
+	    <div class="faq rv" style="max-width:900px;margin-inline:auto">
+	      <?php foreach ( $items as $it ) : ?>
+	      <div class="faq-i"><button class="faq-q" aria-expanded="false"><span class="fq-tx"><?php echo esc_html( $it['question'] ?? '' ); ?></span><span class="pm"></span></button>
+	        <div class="faq-a"><p><?php echo esc_html( $it['answer'] ?? '' ); ?></p></div></div>
+	      <?php endforeach; ?>
+	    </div>
+	    <?php endif; ?>
+	  </div></div></div>
+	  </section>
+	<?php
+}
+
+/* =====================================================================
+ * مشخصات عملیاتی (پنل تیره)
+ * ===================================================================== */
+function uid_default_cv_adv() {
+	return array(
+		array( 'icon' => 'sla',    'value' => '۹۹.۹٪', 'text' => 'نرخ در دسترس بودن سرویس (SLA) با مانیتورینگ ۲۴ ساعته', 'percent' => '99', 'feat' => '1', 'wide' => '', 'numeric' => '1' ),
+		array( 'icon' => 'fast',   'value' => 'تطابق در لحظه', 'text' => 'میانگین زمان پاسخ‌دهی، مناسب جریان‌های پرتراکنش و ثبت‌نام برخط', 'percent' => '94', 'feat' => '', 'wide' => '', 'numeric' => '' ),
+		array( 'icon' => 'json',   'value' => 'خروجی JSON', 'text' => 'پاسخ استاندارد و ساختاریافته، آماده مصرف مستقیم در سامانه شما', 'percent' => '100', 'feat' => '', 'wide' => '', 'numeric' => '' ),
+		array( 'icon' => 'secure', 'value' => 'اتصال رمزنگاری‌شده و امن', 'text' => 'ارتباط امن در تمام مسیر درخواست و پاسخ، بدون افشای مشخصات دارنده کارت', 'percent' => '97', 'feat' => '', 'wide' => '1', 'numeric' => '' ),
+		array( 'icon' => 'quick',  'value' => 'کمتر از یک روز کاری', 'text' => 'زمان معمول ادغام کامل، به‌دلیل استاندارد بودن REST API، مستندات دقیق و محیط سندباکس', 'percent' => '92', 'feat' => '', 'wide' => '1', 'numeric' => '' ),
+	);
+}
+function uid_render_section_cvadv() {
+	$tag   = uid_section_tag( 'cvadv', 'h2' );
+	$items = uid_section_val( 'cvadv', 'items', uid_default_cv_adv() );
+	if ( ! is_array( $items ) || empty( $items ) ) return;
+	?>
+	<section class="dark sec" id="adv">
+	  <div class="cv-wrap">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow on-dark"><i></i><?php echo esc_html( uid_section_val( 'cvadv', 'eyebrow', __( 'مشخصات عملیاتی وب‌سرویس', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php echo esc_html( uid_section_val( 'cvadv', 'heading', __( 'پنج نکته‌ای که در ارزیابی فنی از شما می‌پرسند', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	      <p class="lede on-dark" style="margin-inline:auto"><?php echo esc_html( uid_section_val( 'cvadv', 'text', __( 'هر مورد زیر مستقیماً از شاخص‌های سرویس تطابقی اطلاعات مالی یوآیدی آمده است — نه یک ادعای تبلیغاتی.', 'uid-theme' ) ) ); ?></p>
+	    </div>
+	    <div class="opanel rv">
+	      <?php foreach ( $items as $it ) :
+	        $classes = 'ostat';
+	        if ( ! empty( $it['feat'] ) ) $classes .= ' feat';
+	        if ( ! empty( $it['wide'] ) ) $classes .= ' w2';
+	        $pct    = absint( $it['percent'] ?? 90 );
+	        $is_num = ! empty( $it['numeric'] );
+	        $value  = (string) ( $it['value'] ?? '' );
+	      ?>
+	      <div class="<?php echo esc_attr( $classes ); ?>">
+	        <div class="oic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><?php echo wp_kses( uid_cv_adv_icon_svg( $it['icon'] ?? 'sla' ), array( 'path' => array( 'd' => true ), 'circle' => array( 'cx' => true, 'cy' => true, 'r' => true ) ) ); ?></svg></div>
+	        <?php if ( $is_num && '٪' === mb_substr( $value, -1 ) ) : ?>
+	        <span class="ov"><?php echo esc_html( mb_substr( $value, 0, -1 ) ); ?><span style="font-size:.5em">٪</span></span>
+	        <?php else : ?>
+	        <span class="ov<?php echo $is_num ? '' : ' txt'; ?>"><?php echo esc_html( $value ); ?></span>
+	        <?php endif; ?>
+	        <span class="ol"><?php echo esc_html( $it['text'] ?? '' ); ?></span>
+	        <span class="ometer" style="--p:<?php echo esc_attr( $pct ); ?>%"><i></i></span>
+	      </div>
+	      <?php endforeach; ?>
+	    </div>
+	    <div class="opanel-foot rv">
+	      <span><?php echo esc_html( uid_section_val( 'cvadv', 'foot_text', __( 'می‌خواهید این سرویس را روی داده واقعی خودتان تست کنید؟', 'uid-theme' ) ) ); ?></span>
+	      <button class="btn btn-white btn-sm" data-open-modal><?php echo esc_html( uid_section_val( 'cvadv', 'btn_text', __( 'درخواست دسترسی سندباکس', 'uid-theme' ) ) ); ?></button>
+	    </div>
+	  </div>
+	</section>
+	<?php
+}
+
+/* =====================================================================
+ * نحوه اتصال (۳ گام)
+ * ===================================================================== */
+function uid_default_cv_connect() {
+	return array(
+		array( 'title' => 'ثبت درخواست فعال‌سازی', 'text' => 'تکمیل فرم درخواست فعال‌سازی سرویس در سایت با مشخصات کسب‌وکار. سه فیلد، کمتر از یک دقیقه.' ),
+		array( 'title' => 'دریافت راهنمایی و کلید API', 'text' => 'کارشناسان با شما تماس می‌گیرند و پس از تایید، کلید وب‌سرویس و مستندات فنی در اختیار تیم شما قرار می‌گیرد.' ),
+		array( 'title' => 'راه‌اندازی نهایی', 'text' => 'دریافت کلید محیط عملیاتی و آغاز استعلام‌های واقعی روی جریان کاربران شما.' ),
+	);
+}
+function uid_render_section_cvconnect() {
+	$tag   = uid_section_tag( 'cvconnect', 'h2' );
+	$steps = uid_section_val( 'cvconnect', 'steps', uid_default_cv_connect() );
+	if ( ! is_array( $steps ) ) $steps = array();
+	?>
+	<section class="sec" id="connect" style="padding-block-end:0">
+	  <div class="cv-wrap">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow warm"><i></i><?php echo esc_html( uid_section_val( 'cvconnect', 'eyebrow', __( 'نحوه اتصال', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php echo esc_html( uid_section_val( 'cvconnect', 'heading', __( 'از فرم تا اولین استعلام واقعی، سه مرحله', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	      <p class="lede" style="margin-inline:auto"><?php echo esc_html( uid_section_val( 'cvconnect', 'text', __( 'هیچ‌کدام از این سه مرحله نیاز به جلسه حضوری، قرارداد اولیه یا پیش‌پرداخت ندارد.', 'uid-theme' ) ) ); ?></p>
+	    </div>
+	    <div class="flow3 rv">
+	      <?php foreach ( $steps as $i => $s ) : ?>
+	      <div class="fl-node">
+	        <div class="fl-card"><span class="fl-num"><?php echo esc_html( uid_fa_digits( $i + 1 ) ); ?></span>
+	          <h4><?php echo esc_html( $s['title'] ?? '' ); ?></h4>
+	          <p><?php echo esc_html( $s['text'] ?? '' ); ?></p></div>
+	        <?php if ( $i < count( $steps ) - 1 ) : ?>
+	        <span class="fl-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></span>
+	        <?php endif; ?>
+	      </div>
+	      <?php endforeach; ?>
+	    </div>
+	  </div>
+	</section>
+	<?php
+}
+
+/* =====================================================================
+ * محاسبه‌گر هزینه ماهانه — منطق محاسبه در JS هاردکد است
+ * ===================================================================== */
+function uid_render_section_cvprice() {
+	$tag = uid_section_tag( 'cvprice', 'h2' );
+	?>
+	<section class="sec" id="price">
+	  <div class="cv-wrap">
+	    <div class="sec-head mid rv">
+	      <span class="eyebrow warm"><i></i><?php echo esc_html( uid_section_val( 'cvprice', 'eyebrow', __( 'مدل هزینه', 'uid-theme' ) ) ); ?></span>
+	      <?php echo '<' . $tag . ' class="h-sec">'; ?><?php echo esc_html( uid_section_val( 'cvprice', 'heading', __( 'محاسبه هزینه فقط بر اساس استعلام‌های موفق و معتبر', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	      <p class="lede" style="margin-inline:auto"><?php echo esc_html( uid_section_val( 'cvprice', 'text', __( 'تعداد استعلام تخمینی ماهانه خود را جابه‌جا کنید تا پلن متناسب و پله تخفیف آن را ببینید. تعرفه با افزایش حجم پلکانی می‌شود و برای حجم بالا امکان ارائه تعرفه اختصاصی وجود دارد.', 'uid-theme' ) ) ); ?></p>
+	    </div>
+
+	    <div class="calc rv">
+	      <div class="calc-in">
+	        <span class="lb"><?php esc_html_e( 'تعداد استعلام موفق تطبیق کارت در ماه', 'uid-theme' ); ?></span>
+	        <div class="calc-num"><span class="v" id="cl_qty">۲۰٬۰۰۰</span><span class="u"><?php esc_html_e( 'استعلام', 'uid-theme' ); ?></span></div>
+	        <div class="calc-slider">
+	          <input type="range" id="cl_range" min="0" max="1000" value="482" aria-label="<?php esc_attr_e( 'تعداد استعلام ماهانه', 'uid-theme' ); ?>">
+	          <div class="calc-ends"><span>۱٬۰۰۰</span><span>+۵۰۰٬۰۰۰</span></div>
+	        </div>
+	        <div class="calc-presets" id="cl_presets">
+	          <button class="calc-preset" type="button" data-qty="5000">۵٬۰۰۰</button>
+	          <button class="calc-preset" type="button" data-qty="20000">۲۰٬۰۰۰</button>
+	          <button class="calc-preset" type="button" data-qty="50000">۵۰٬۰۰۰</button>
+	          <button class="calc-preset" type="button" data-qty="100000">۱۰۰٬۰۰۰</button>
+	        </div>
+	        <div class="calc-note"><?php echo uid_cv_info_icon(); ?>
+	          <span><?php esc_html_e( 'ارقام این محاسبه‌گر نمایشی و صرفاً برای درک ساختار تعرفه پلکانی است. نرخ نهایی پس از بررسی حجم و سناریوی کسب‌وکار شما توسط کارشناس یوآیدی اعلام می‌شود.', 'uid-theme' ); ?></span></div>
+	      </div>
+	      <div class="calc-out">
+	        <div class="calc-plan"><span class="tag" id="cl_plan"><?php esc_html_e( 'پلن رشد', 'uid-theme' ); ?></span><span class="tag off" id="cl_off"><?php esc_html_e( '۱۴٪ تخفیف پلکانی', 'uid-theme' ); ?></span></div>
+	        <div class="calc-rows">
+	          <div class="calc-row"><span><?php esc_html_e( 'استعلام موفق ماهانه', 'uid-theme' ); ?></span><b id="cl_n">۲۰٬۰۰۰</b></div>
+	          <div class="calc-row"><span><?php esc_html_e( 'نرخ هر استعلام در این پله', 'uid-theme' ); ?></span><b id="cl_unit">—</b></div>
+	          <div class="calc-row"><span><?php esc_html_e( 'هزینه بدون تخفیف پلکانی', 'uid-theme' ); ?></span><b id="cl_gross">—</b></div>
+	          <div class="calc-row total"><span><?php esc_html_e( 'برآورد هزینه ماهانه', 'uid-theme' ); ?></span><b id="cl_total">—</b></div>
+	        </div>
+	        <div class="calc-free"><?php echo uid_cv_check_icon(); ?>
+	          <span id="cl_hint"><?php esc_html_e( 'استعلام‌های ناموفق و کارت‌های نامعتبر در این محاسبه لحاظ نمی‌شوند.', 'uid-theme' ); ?></span></div>
+	        <div class="calc-cta">
+	          <button class="btn btn-cta btn-block" data-open-modal><?php echo uid_cv_submit_icon(); ?><?php esc_html_e( 'دریافت تعرفه دقیق این حجم', 'uid-theme' ); ?></button>
+	          <p class="calc-dis"><?php esc_html_e( 'فرم را پر کنید تا کارشناس یوآیدی نرخ واقعی این پله را همراه با شرایط قرارداد برای شما ارسال کند.', 'uid-theme' ); ?></p>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</section>
+	<?php
+}
+
+/* =====================================================================
+ * بند تماس میانی
+ * ===================================================================== */
+function uid_render_section_cvlastcall() {
+	?>
+	<section class="sec" style="padding-block:0 var(--sec)">
+	  <div class="cv-wrap">
+	    <div class="callband rv">
+	      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg></div>
+	      <div class="tx"><b><?php echo esc_html( uid_section_val( 'cvlastcall', 'heading', __( 'هر روزی که این سرویس فعال نیست، کارت‌های تاییدنشده وارد سامانه شما می‌شود', 'uid-theme' ) ) ); ?></b>
+	        <p><?php echo esc_html( uid_section_val( 'cvlastcall', 'text', __( 'کارتی که امروز بدون بررسی ثبت شد، فردا با یک پرونده برمی‌گردد. یک تماس کوتاه کافی است تا کارشناس یوآیدی جریان ثبت کارت شما را بررسی و دسترسی سندباکس را فعال کند.', 'uid-theme' ) ) ); ?></p></div>
+	      <div class="acts">
+	        <a class="btn btn-cta" href="<?php echo esc_attr( uid_phone_href( uid_phone_raw() ) ); ?>"><?php echo uid_cv_phone_icon(); ?>
+	          <span class="num mono"><?php echo esc_html( uid_phone_display() ); ?></span></a>
+	        <button class="btn btn-ghost-d" data-open-modal><?php echo esc_html( uid_section_val( 'cvlastcall', 'btn_text', __( 'فرم درخواست سرویس', 'uid-theme' ) ) ); ?></button>
+	      </div>
+	    </div>
+	  </div>
+	</section>
+	<?php
+}
+
+/* =====================================================================
+ * بنر تماس نهایی (فرم لید)
+ * ===================================================================== */
+function uid_render_section_cvlead() {
+	$tag         = uid_section_tag( 'cvlead', 'h2' );
+	$trust_raw   = uid_section_val( 'cvlead', 'trust', "مشاوره رایگان، بدون تعهد\nکلید آزمایشی و سندباکس پیش از قرارداد\nهزینه فقط بابت استعلام موفق\nپشتیبانی اختصاصی سازمانی" );
+	$trust       = array_filter( array_map( 'trim', explode( "\n", $trust_raw ) ) );
+	$biztype_raw = uid_section_val( 'cvlead', 'biztype_options', "ثبت‌نام و خدمات مالی\nدرگاه و پلتفرم پرداخت\nکیف پول دیجیتال\nصرافی رمزارز\nسامانه اعتباری و لندتک\nمارکت‌پلیس\nکارگزاری بورس\nسایر کسب‌وکارها" );
+	$biztypes    = array_filter( array_map( 'trim', explode( "\n", $biztype_raw ) ) );
+	?>
+	<section class="sec" style="padding-block-start:0" id="lead">
+	  <div class="cv-wrap">
+	    <div class="lead-band rv">
+	      <div class="lb-grid">
+	        <div class="lb-copy">
+	          <span class="eyebrow on-dark"><i></i><?php echo esc_html( uid_section_val( 'cvlead', 'eyebrow', __( 'همین حالا شروع کنید', 'uid-theme' ) ) ); ?></span>
+	          <?php echo '<' . $tag . '>'; ?><?php echo esc_html( uid_section_val( 'cvlead', 'heading', __( 'فرم درخواست فعال‌سازی وب‌سرویس تطبیق شماره کارت با کد ملی', 'uid-theme' ) ) ); ?><?php echo '</' . $tag . '>'; ?>
+	          <p><?php echo esc_html( uid_section_val( 'cvlead', 'text', __( 'برای دریافت مشاوره رایگان، کلید API و فعال‌سازی وب‌سرویس تطبیق شماره کارت با اطلاعات هویتی، اطلاعات خود را در این فرم وارد کنید. کارشناسان یوآیدی در کوتاه‌ترین زمان ممکن با شما تماس خواهند گرفت.', 'uid-theme' ) ) ); ?></p>
+	          <?php if ( $trust ) : ?>
+	          <div class="lb-trust">
+	            <?php foreach ( $trust as $t ) : ?>
+	            <span><?php echo uid_cv_check_icon(); ?><?php echo esc_html( $t ); ?></span>
+	            <?php endforeach; ?>
+	          </div>
+	          <?php endif; ?>
+	        </div>
+	        <div class="lb-form">
+	          <h3><?php echo esc_html( uid_section_val( 'cvlead', 'form_title', __( 'درخواست وب‌سرویس تطبیق کارت و کد ملی', 'uid-theme' ) ) ); ?></h3>
+	          <p class="hint"><?php echo esc_html( uid_section_val( 'cvlead', 'form_hint', __( 'فقط سه فیلد. کارشناس ما در سریع‌ترین زمان ممکن تماس می‌گیرد.', 'uid-theme' ) ) ); ?></p>
+	          <form id="leadForm" novalidate>
+	            <input type="hidden" name="source" value="card-validate-api-lp">
+	            <input type="hidden" name="volume" id="leadVolume" value="">
+	            <div class="frow">
+	              <div class="fld"><input name="name" type="text" placeholder="<?php esc_attr_e( 'نام و نام خانوادگی', 'uid-theme' ); ?>" data-req>
+	                <span class="err"><?php esc_html_e( 'نام را وارد کنید.', 'uid-theme' ); ?></span></div>
+	              <div class="fld"><input name="phone" type="tel" inputmode="numeric" placeholder="۰۹xxxxxxxxx" data-req data-tel>
+	                <span class="err"><?php esc_html_e( 'شماره موبایل معتبر وارد کنید.', 'uid-theme' ); ?></span></div>
+	            </div>
+	            <div class="fld"><input name="business" type="text" placeholder="<?php esc_attr_e( 'نام کسب‌وکار', 'uid-theme' ); ?>" data-req>
+	              <span class="err"><?php esc_html_e( 'نام کسب‌وکار را وارد کنید.', 'uid-theme' ); ?></span></div>
+	            <div class="fld"><select name="biztype" data-req data-route>
+	                <option value=""><?php esc_html_e( 'نوع کسب‌وکار…', 'uid-theme' ); ?></option>
+	                <?php foreach ( $biztypes as $b ) : ?>
+	                <option value="<?php echo esc_attr( sanitize_title( $b ) ); ?>"><?php echo esc_html( $b ); ?></option>
+	                <?php endforeach; ?>
+	                <option value="ind"><?php esc_html_e( 'کاربر شخصی هستم (کسب‌وکار نیستم)', 'uid-theme' ); ?></option>
+	              </select><span class="err"><?php esc_html_e( 'نوع کسب‌وکار را انتخاب کنید.', 'uid-theme' ); ?></span></div>
+	            <div class="route-alert" id="routeAlert"><?php echo uid_cv_info_icon(); ?>
+	              <span><?php esc_html_e( 'این وب‌سرویس فقط به کسب‌وکارها ارائه می‌شود. اگر به‌صورت شخصی می‌خواهید اطلاعات کارت خودتان را ببینید، آن را در اینترنت‌بانک یا اپلیکیشن بانک خودتان پیدا کنید؛ برای خدمات فردی ', 'uid-theme' ); ?><a href="<?php echo esc_url( home_url( '/sana/' ) ); ?>"><?php esc_html_e( 'احراز هویت ثنا', 'uid-theme' ); ?></a> <?php esc_html_e( 'در دسترس شماست.', 'uid-theme' ); ?></span></div>
+	            <button class="btn btn-cta btn-block" type="button" data-submit><?php echo uid_cv_submit_icon(); ?> <?php echo esc_html( uid_section_val( 'cvlead', 'submit_text', __( 'ارسال درخواست و دریافت مشاوره رایگان', 'uid-theme' ) ) ); ?></button>
+	            <div class="lb-note"><?php echo uid_cv_shield_icon(); ?>
+	              <span><?php echo esc_html( uid_section_val( 'cvlead', 'note_text', __( 'اطلاعات شما محرمانه می‌ماند و فقط برای همین درخواست استفاده می‌شود.', 'uid-theme' ) ) ); ?></span></div>
+	            <div class="form-ok"><?php echo uid_cv_okcircle_icon(); ?>
+	              <span><?php echo esc_html( uid_section_val( 'cvlead', 'success_text', __( 'تیم یوآیدی به‌زودی با شما تماس می‌گیرد. برای پیگیری فوری: ', 'uid-theme' ) ) ); ?><span class="mono"><?php echo esc_html( uid_phone_display() ); ?></span></span></div>
+	          </form>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</section>
+	<?php
+}
+
+/* =====================================================================
+ * برگه واقعی خودکارساخته + اسلاگ قابل‌ویرایش
+ * ===================================================================== */
+function uid_get_cv_page_id() {
+	$page_id = (int) get_option( 'uid_cv_page_id' );
+	if ( $page_id && get_post( $page_id ) ) return $page_id;
+
+	$found = get_posts( array(
+		'post_type'      => 'page',
+		'post_status'    => 'any',
+		'meta_key'       => '_wp_page_template',
+		'meta_value'     => UID_CARD_VALIDATE_TEMPLATE,
+		'posts_per_page' => 1,
+		'fields'         => 'ids',
+	) );
+	if ( $found ) {
+		update_option( 'uid_cv_page_id', $found[0] );
+		return (int) $found[0];
+	}
+	return 0;
+}
+
+function uid_ensure_cv_page() {
+	if ( uid_get_cv_page_id() ) return;
+
+	$page_id = wp_insert_post( array(
+		'post_type'   => 'page',
+		'post_status' => 'publish',
+		'post_title'  => __( 'تطبیق شماره کارت با کد ملی', 'uid-theme' ),
+		'post_name'   => 'api-card-nationalid',
+	), true );
+
+	if ( is_wp_error( $page_id ) || ! $page_id ) return;
+
+	update_post_meta( $page_id, '_wp_page_template', UID_CARD_VALIDATE_TEMPLATE );
+	update_option( 'uid_cv_page_id', $page_id );
+}
+add_action( 'after_switch_theme', 'uid_ensure_cv_page' );
+add_action( 'admin_init', 'uid_ensure_cv_page' );
+
+function uid_register_cv_slug_setting() {
+	register_setting( 'uid_cv_group', 'uid_cv_page_slug', array(
+		'sanitize_callback' => 'uid_sanitize_cv_page_slug',
+		'default'           => '',
+	) );
+	add_settings_section( 'uid_cv_page_slug_section', '', '__return_false', 'uid_cv_layout' );
+	add_settings_field( 'uid_cv_page_slug', __( 'آدرس (اسلاگ) صفحه تطبیق کارت با کد ملی', 'uid-theme' ), 'uid_field_cv_page_slug', 'uid_cv_layout', 'uid_cv_page_slug_section', array() );
+}
+add_action( 'admin_init', 'uid_register_cv_slug_setting' );
+
+function uid_field_cv_page_slug( $args ) {
+	$page_id = uid_get_cv_page_id();
+	$slug    = $page_id ? get_post_field( 'post_name', $page_id ) : get_option( 'uid_cv_page_slug', '' );
+	?>
+	<input type="text" class="regular-text" dir="ltr" name="uid_cv_page_slug" value="<?php echo esc_attr( $slug ); ?>">
+	<?php if ( $page_id ) : ?>
+		<p class="description">
+			<?php
+			printf(
+				esc_html__( 'آدرس فعلی: %1$s — این برگه را می‌توانید مستقیماً از پیشخوان ← برگه‌ها هم ویرایش کنید (%2$s).', 'uid-theme' ),
+				'<code dir="ltr">' . esc_html( trailingslashit( home_url( '/' . $slug ) ) ) . '</code>',
+				'<a href="' . esc_url( get_edit_post_link( $page_id, '' ) ) . '">' . esc_html__( 'ویرایش برگه', 'uid-theme' ) . '</a>'
+			);
+			?>
+		</p>
+	<?php else : ?>
+		<p class="description" style="color:#b32d2e;"><?php esc_html_e( 'برگه تطبیق کارت با کد ملی هنوز ساخته نشده. صفحه را دوباره بارگذاری کنید.', 'uid-theme' ); ?></p>
+	<?php endif;
+}
+
+function uid_sanitize_cv_page_slug( $input ) {
+	$slug    = sanitize_title( is_string( $input ) ? $input : '' );
+	$page_id = uid_get_cv_page_id();
+
+	if ( $page_id && $slug ) {
+		$post = get_post( $page_id );
+		if ( $post && $post->post_name !== $slug ) {
+			wp_update_post( array( 'ID' => $page_id, 'post_name' => $slug ) );
+			flush_rewrite_rules( false );
+		}
+	}
+
+	return $page_id ? get_post_field( 'post_name', $page_id ) : $slug;
+}
+
+/* =====================================================================
+ * ثبت تنظیمات پیشخوان برای همه‌ی سکشن‌های این صفحه
+ * ===================================================================== */
+function uid_register_cv_settings() {
+	register_setting( 'uid_cv_group', 'uid_cv_layout', array(
+		'sanitize_callback' => 'uid_sanitize_cv_layout',
+		'default'           => array(),
+	) );
+	add_settings_section( 'uid_cv_layout_main', '', '__return_false', 'uid_cv_layout' );
+	add_settings_field( 'layout', '', 'uid_field_layout_sortable', 'uid_cv_layout', 'uid_cv_layout_main', array(
+		'option_name' => 'uid_cv_layout', 'registry_fn' => 'uid_cv_sections_registry', 'layout_fn' => 'uid_get_cv_layout',
+	) );
+
+	/* ---------------- هیرو ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvhero', array( 'sanitize_callback' => 'uid_sanitize_section_cvhero', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvhero_main', '', '__return_false', 'uid_section_cvhero' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvhero', 'uid_section_cvhero_main', array( 'group' => 'uid_section_cvhero', 'key' => 'title_tag', 'default' => 'h1', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک بالای عنوان (تگ span مجاز است)', 'uid-theme' ), 'uid_field_text', 'uid_section_cvhero', 'uid_section_cvhero_main', array( 'group' => 'uid_section_cvhero', 'key' => 'eyebrow', 'default' => 'وب‌سرویس تطبیق کارت و کد ملی · <span class="lat">Card Validate API</span>' ) );
+	add_settings_field( 'heading', __( 'عنوان اصلی (تگ mark مجاز است)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvhero', 'uid_section_cvhero_main', array( 'group' => 'uid_section_cvhero', 'key' => 'heading', 'default' => 'شماره کارت معتبر است.<mark>ولی مال خودش است؟</mark>' ) );
+	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvhero', 'uid_section_cvhero_main', array( 'group' => 'uid_section_cvhero', 'key' => 'text', 'default' => 'یک شماره کارت ۱۶ رقمیِ سالم هیچ چیزی درباره دارنده‌اش نمی‌گوید. تا لحظه‌ای که کارت ثبت شود یا پول جابه‌جا شود، شما نمی‌دانید این کارت متعلق به همان کاربری است که احراز هویتش کرده‌اید یا کارت شخص دیگری. این وب‌سرویس با گرفتن شماره کارت، کد ملی و تاریخ تولد، مالکیت کارت را پیش از تراکنش تایید یا رد می‌کند.', 'rows' => 4 ) );
+	add_settings_field( 'btn1_text', __( 'متن دکمه اول (باز کردن مودال)', 'uid-theme' ), 'uid_field_text', 'uid_section_cvhero', 'uid_section_cvhero_main', array( 'group' => 'uid_section_cvhero', 'key' => 'btn1_text', 'default' => 'فرم درخواست فعال‌سازی سرویس' ) );
+	add_settings_field( 'tags', __( 'برچسب‌های اطمینان زیر دکمه‌ها (هر خط یک مورد؛ تگ span مجاز است)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvhero', 'uid_section_cvhero_main', array( 'group' => 'uid_section_cvhero', 'key' => 'tags', 'default' => implode( "\n", uid_default_cv_hero_tags() ), 'rows' => 5 ) );
+	add_settings_field( 'vtests', __( 'دکمه‌های تست نمونه (برچسب + مقادیر پرشونده)', 'uid-theme' ), 'uid_field_cv_vtests', 'uid_section_cvhero', 'uid_section_cvhero_main', array( 'group' => 'uid_section_cvhero', 'key' => 'vtests', 'default' => uid_default_cv_vtests() ) );
+	add_settings_field( 'demo_notice', '', 'uid_field_notice', 'uid_section_cvhero', 'uid_section_cvhero_main', array( 'text' => __( 'کنسول زنده تطبیق کارت فقط در برچسب دکمه‌ها و مقادیر نمونه بالا قابل‌ویرایش است؛ منطق بررسی Luhn و ساخت پاسخ در assets/js/card-validate-page.js می‌ماند.', 'uid-theme' ) ) );
+
+	/* ---------------- باند اعتماد کوتاه ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvtrust', array( 'sanitize_callback' => 'uid_sanitize_section_cvtrust', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvtrust_main', '', '__return_false', 'uid_section_cvtrust' );
+	add_settings_field( 'items', __( 'آمار (خانه‌های باند)', 'uid-theme' ), 'uid_field_repeater', 'uid_section_cvtrust', 'uid_section_cvtrust_main', array(
+		'group' => 'uid_section_cvtrust', 'key' => 'items', 'default' => uid_default_cv_trust(), 'add_label' => __( 'افزودن آمار', 'uid-theme' ),
+		'fields' => array(
+			array( 'key' => 'value', 'type' => 'text', 'label' => __( 'مقدار (تگ span مجاز است)', 'uid-theme' ), 'required' => true ),
+			array( 'key' => 'label', 'type' => 'text', 'label' => __( 'برچسب', 'uid-theme' ) ),
+			array( 'key' => 'numeric', 'type' => 'select', 'label' => __( 'استایل عددی بزرگ', 'uid-theme' ), 'options' => array( '' => __( 'خیر (متن)', 'uid-theme' ), '1' => __( 'بله', 'uid-theme' ) ) ),
+		),
+	) );
+
+	/* ---------------- کپسول ۳۰ ثانیه‌ای ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvtldr', array( 'sanitize_callback' => 'uid_sanitize_section_cvtldr', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvtldr_main', '', '__return_false', 'uid_section_cvtldr' );
+	add_settings_field( 'heading', __( 'عنوان کپسول', 'uid-theme' ), 'uid_field_text', 'uid_section_cvtldr', 'uid_section_cvtldr_main', array( 'group' => 'uid_section_cvtldr', 'key' => 'heading', 'default' => 'اگر عجله دارید، همین چهار خط کافی است' ) );
+	add_settings_field( 'badge_text', __( 'برچسب کوچک (مثل «۳۰ ثانیه»)', 'uid-theme' ), 'uid_field_text', 'uid_section_cvtldr', 'uid_section_cvtldr_main', array( 'group' => 'uid_section_cvtldr', 'key' => 'badge_text', 'default' => '۳۰ ثانیه' ) );
+	add_settings_field( 'items', __( 'خطوط خلاصه (هر خط یک مورد؛ تگ‌های b/span مجازند)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvtldr', 'uid_section_cvtldr_main', array( 'group' => 'uid_section_cvtldr', 'key' => 'items', 'default' => implode( "\n", uid_default_cv_tldr() ), 'rows' => 5 ) );
+	add_settings_field( 'btn_text', __( 'متن دکمه (باز کردن مودال)', 'uid-theme' ), 'uid_field_text', 'uid_section_cvtldr', 'uid_section_cvtldr_main', array( 'group' => 'uid_section_cvtldr', 'key' => 'btn_text', 'default' => 'فرم درخواست فعال‌سازی سرویس' ) );
+	add_settings_field( 'more_text', __( 'متن پرش نرم به محاسبه‌گر', 'uid-theme' ), 'uid_field_text', 'uid_section_cvtldr', 'uid_section_cvtldr_main', array( 'group' => 'uid_section_cvtldr', 'key' => 'more_text', 'default' => 'و اگر می‌خواهید عدد ریسک خودتان را ببینید' ) );
+
+	/* ---------------- محاسبه‌گر ریسک ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvloss', array( 'sanitize_callback' => 'uid_sanitize_section_cvloss', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvloss_main', '', '__return_false', 'uid_section_cvloss' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvloss', 'uid_section_cvloss_main', array( 'group' => 'uid_section_cvloss', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvloss', 'uid_section_cvloss_main', array( 'group' => 'uid_section_cvloss', 'key' => 'eyebrow', 'default' => 'قبل از اینکه ادامه بدهید' ) );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvloss', 'uid_section_cvloss_main', array( 'group' => 'uid_section_cvloss', 'key' => 'heading', 'default' => 'هر کارت تاییدنشده، یک پرونده باز است' ) );
+	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvloss', 'uid_section_cvloss_main', array( 'group' => 'uid_section_cvloss', 'key' => 'text', 'default' => 'کارت اجاره‌ای، کارت شخص دیگر، یا یک رقم اشتباه در شماره کارت — نتیجه همه‌شان یکی است: تراکنش انجام شده، حساب مسدود شده و پرونده روی میز شماست. عددهای خودتان را وارد کنید و ببینید ماهانه چقدر ریسک روی کارت‌های تاییدنشده نشسته است.' ) );
+	add_settings_field( 'proof', __( 'کارت‌های اثبات (دکِ کنار محاسبه‌گر)', 'uid-theme' ), 'uid_field_repeater', 'uid_section_cvloss', 'uid_section_cvloss_main', array(
+		'group' => 'uid_section_cvloss', 'key' => 'proof', 'default' => uid_default_cv_proof(), 'add_label' => __( 'افزودن کارت', 'uid-theme' ),
+		'fields' => array( array( 'key' => 'title', 'type' => 'text', 'label' => __( 'عنوان', 'uid-theme' ), 'required' => true ), array( 'key' => 'text', 'type' => 'textarea', 'label' => __( 'توضیح', 'uid-theme' ) ) ),
+	) );
+	add_settings_field( 'cta_heading', __( 'عنوان بند تماس', 'uid-theme' ), 'uid_field_text', 'uid_section_cvloss', 'uid_section_cvloss_main', array( 'group' => 'uid_section_cvloss', 'key' => 'cta_heading', 'default' => 'ترجیح می‌دهید همین حالا صحبت کنید؟' ) );
+	add_settings_field( 'cta_text', __( 'توضیح بند تماس', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvloss', 'uid_section_cvloss_main', array( 'group' => 'uid_section_cvloss', 'key' => 'cta_text', 'default' => 'یک تماس کوتاه کافی است تا جریان ثبت کارت و تراکنش شما بررسی و مسیر اتصال مشخص شود.' ) );
+	add_settings_field( 'calc_notice', '', 'uid_field_notice', 'uid_section_cvloss', 'uid_section_cvloss_main', array( 'text' => __( 'منطق محاسبه‌گر ریسک (اسلایدرها و اعداد خروجی) در assets/js/card-validate-page.js تعریف شده و از این صفحه قابل‌ویرایش نیست.', 'uid-theme' ) ) );
+
+	/* ---------------- فصل ۱: معرفی سرویس ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvwhat', array( 'sanitize_callback' => 'uid_sanitize_section_cvwhat', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvwhat_main', '', '__return_false', 'uid_section_cvwhat' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvwhat', 'uid_section_cvwhat_main', array( 'group' => 'uid_section_cvwhat', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvwhat', 'uid_section_cvwhat_main', array( 'group' => 'uid_section_cvwhat', 'key' => 'eyebrow', 'default' => 'معرفی سرویس' ) );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvwhat', 'uid_section_cvwhat_main', array( 'group' => 'uid_section_cvwhat', 'key' => 'heading', 'default' => 'وب‌سرویس تطبیق شماره کارت با کد ملی چیست؟' ) );
+	add_settings_field( 'text', __( 'توضیح (تگ span مجاز است)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvwhat', 'uid_section_cvwhat_main', array( 'group' => 'uid_section_cvwhat', 'key' => 'text', 'default' => 'وب‌سرویس تطبیق کد ملی و کارت بانکی یک سرویس اعتبارسنجی مالی آنلاین است که بررسی می‌کند آیا شماره کارت بانکی ارسال‌شده به صاحب کد ملی موردنظر تعلق دارد یا خیر. سامانه شما کد ملی، تاریخ تولد و شماره کارت کاربر را از طریق API ارسال می‌کند و نتیجه بررسی به‌صورت منطقی (تطبیق یا عدم تطبیق) دریافت می‌شود.' ) );
+	add_settings_field( 'box_heading', __( 'عنوان کادر توضیح', 'uid-theme' ), 'uid_field_text', 'uid_section_cvwhat', 'uid_section_cvwhat_main', array( 'group' => 'uid_section_cvwhat', 'key' => 'box_heading', 'default' => 'این بررسی دقیقاً کجا انجام می‌شود؟' ) );
+	add_settings_field( 'box_text', __( 'توضیح کادر توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvwhat', 'uid_section_cvwhat_main', array( 'group' => 'uid_section_cvwhat', 'key' => 'box_text', 'default' => 'پیش از فعال‌سازی خدمات مالی، ثبت کارت بانکی یا انجام تراکنش. یعنی درست همان‌جایی که هنوز چیزی جابه‌جا نشده و می‌شود جلوی آن را گرفت — و همین است که احتمال استفاده از کارت بانکی متعلق به شخص دیگر را به حداقل می‌رساند.' ) );
+	add_settings_field( 'probs', __( 'مسائلی که حل می‌کند (سه مورد)', 'uid-theme' ), 'uid_field_repeater', 'uid_section_cvwhat', 'uid_section_cvwhat_main', array(
+		'group' => 'uid_section_cvwhat', 'key' => 'probs', 'default' => uid_default_cv_probs(), 'add_label' => __( 'افزودن مورد', 'uid-theme' ),
+		'fields' => array( array( 'key' => 'title', 'type' => 'text', 'label' => __( 'عنوان', 'uid-theme' ), 'required' => true ), array( 'key' => 'text', 'type' => 'textarea', 'label' => __( 'توضیح', 'uid-theme' ) ) ),
+	) );
+	add_settings_field( 'privacy_heading', __( 'عنوان کادر محرمانگی', 'uid-theme' ), 'uid_field_text', 'uid_section_cvwhat', 'uid_section_cvwhat_main', array( 'group' => 'uid_section_cvwhat', 'key' => 'privacy_heading', 'default' => 'محرمانگی داده، بخشی از طراحی سرویس است' ) );
+	add_settings_field( 'privacy_text', __( 'توضیح کادر محرمانگی', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvwhat', 'uid_section_cvwhat_main', array( 'group' => 'uid_section_cvwhat', 'key' => 'privacy_text', 'default' => 'هدف سرویس بررسی تطابق اطلاعات ارسال‌شده است و نتیجه فقط به‌صورت تایید یا رد مالکیت بازگردانده می‌شود؛ مشخصات کامل صاحب کارت نمایش داده نمی‌شود. یعنی می‌توانید مالکیت را تایید کنید بدون آنکه داده حساسی وارد سامانه شما شود.' ) );
+	add_settings_field( 'fold_min', __( 'زمان مطالعه (نمای تاخورده موبایل)', 'uid-theme' ), 'uid_field_text', 'uid_section_cvwhat', 'uid_section_cvwhat_main', array( 'group' => 'uid_section_cvwhat', 'key' => 'fold_min', 'default' => '۲ دقیقه' ) );
+	add_settings_field( 'fold_title', __( 'عنوان فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvwhat', 'uid_section_cvwhat_main', array( 'group' => 'uid_section_cvwhat', 'key' => 'fold_title', 'default' => 'سه ورودی می‌فرستید، یک پاسخ قطعی می‌گیرید' ) );
+	add_settings_field( 'fold_teaser', __( 'معرفی کوتاه فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvwhat', 'uid_section_cvwhat_main', array( 'group' => 'uid_section_cvwhat', 'key' => 'fold_teaser', 'default' => 'این وب‌سرویس دقیقاً چه کاری انجام می‌دهد' ) );
+
+	/* ---------------- فصل ۲: تفاوت با سرویس‌های مشابه ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvvs', array( 'sanitize_callback' => 'uid_sanitize_section_cvvs', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvvs_main', '', '__return_false', 'uid_section_cvvs' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'eyebrow', 'default' => 'پرتکرارترین سوال فنی' ) );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'heading', 'default' => 'این سرویس داده نمی‌دهد؛ تصمیم می‌دهد' ) );
+	add_settings_field( 'text', __( 'توضیح (تگ b مجاز است)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'text', 'default' => 'هر سه سرویس زیر با اطلاعات مالی کاربر کار می‌کنند، ولی یکی مشخصات فرد را می‌آورد، یکی شماره حساب معادل را می‌سازد، و این یکی ادعای کاربر را تایید یا رد می‌کند. انتخاب اشتباه بین این سه، یا شما را دچار افشای غیرلازم داده می‌کند یا بی‌دفاع در برابر اجاره کارت.' ) );
+	add_settings_field( 'bad_tag', __( 'برچسب کارت بد', 'uid-theme' ), 'uid_field_text', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'bad_tag', 'default' => 'استعلام اطلاعات هویتی' ) );
+	add_settings_field( 'bad_title', __( 'عنوان کارت بد', 'uid-theme' ), 'uid_field_text', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'bad_title', 'default' => 'سوال: این شخص کیست؟' ) );
+	add_settings_field( 'bad_text', __( 'توضیح کارت بد', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'bad_text', 'default' => 'برای دریافت یا بررسی مشخصات فرد استفاده می‌شود و داده هویتی را به سامانه شما تحویل می‌دهد.' ) );
+	add_settings_field( 'bad_items', __( 'موارد کارت بد (هر خط یک مورد)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'bad_items', 'default' => implode( "\n", uid_default_cv_vs_bad_items() ), 'rows' => 4 ) );
+	add_settings_field( 'good_tag', __( 'برچسب کارت خوب', 'uid-theme' ), 'uid_field_text', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'good_tag', 'default' => 'تطبیق شماره کارت با کد ملی' ) );
+	add_settings_field( 'good_title', __( 'عنوان کارت خوب', 'uid-theme' ), 'uid_field_text', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'good_title', 'default' => 'سوال: این کارت مال همین شخص است؟' ) );
+	add_settings_field( 'good_text', __( 'توضیح کارت خوب', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'good_text', 'default' => 'مالکیت کارت را نسبت به کد ملی و تاریخ تولد اعتبارسنجی می‌کند و یک تصمیم قطعی برمی‌گرداند.' ) );
+	add_settings_field( 'good_items', __( 'موارد کارت خوب (هر خط یک مورد؛ تگ span مجاز است)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'good_items', 'default' => implode( "\n", uid_default_cv_vs_good_items() ), 'rows' => 4 ) );
+	add_settings_field( 'note_heading', __( 'عنوان کادر هشدار', 'uid-theme' ), 'uid_field_text', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'note_heading', 'default' => 'و تفاوتش با «تبدیل کارت به شبا» چیست؟' ) );
+	add_settings_field( 'note_text', __( 'توضیح کادر هشدار', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'note_text', 'default' => 'تبدیل کارت به شبا شماره شبای معادل کارت را تولید می‌کند؛ اما این سرویس مالکیت کارت را نسبت به کد ملی و تاریخ تولد اعتبارسنجی می‌کند. اگر جریان شما هر دو را لازم دارد — مثلاً کاربر فقط شماره کارتش را حفظ است و شما هم شبا می‌خواهید هم اطمینان از مالکیت — این دو سرویس پشت سر هم استفاده می‌شوند.' ) );
+	add_settings_field( 'fold_min', __( 'زمان مطالعه', 'uid-theme' ), 'uid_field_text', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'fold_min', 'default' => '۲ دقیقه' ) );
+	add_settings_field( 'fold_title', __( 'عنوان فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'fold_title', 'default' => 'تفاوت با استعلام هویتی و تبدیل کارت به شبا' ) );
+	add_settings_field( 'fold_teaser', __( 'معرفی کوتاه فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvvs', 'uid_section_cvvs_main', array( 'group' => 'uid_section_cvvs', 'key' => 'fold_teaser', 'default' => 'سه سرویس شبیه به هم که سه سوال کاملاً متفاوت را جواب می‌دهند' ) );
+
+	/* ---------------- فصل ۳: نحوه کار سرویس (پله هاردکد) ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvhow', array( 'sanitize_callback' => 'uid_sanitize_section_cvhow', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvhow_main', '', '__return_false', 'uid_section_cvhow' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvhow', 'uid_section_cvhow_main', array( 'group' => 'uid_section_cvhow', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvhow', 'uid_section_cvhow_main', array( 'group' => 'uid_section_cvhow', 'key' => 'eyebrow', 'default' => 'پشت صحنه یک فراخوانی' ) );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvhow', 'uid_section_cvhow_main', array( 'group' => 'uid_section_cvhow', 'key' => 'heading', 'default' => 'از سه ورودی تا یک تصمیم، در چهار قدم' ) );
+	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvhow', 'uid_section_cvhow_main', array( 'group' => 'uid_section_cvhow', 'key' => 'text', 'default' => 'روی هر مرحله بزنید تا ببینید در آن لحظه دقیقاً چه اتفاقی می‌افتد و چه چیزی رد و بدل می‌شود.' ) );
+	add_settings_field( 'steps_notice', '', 'uid_field_notice', 'uid_section_cvhow', 'uid_section_cvhow_main', array( 'text' => __( 'محتوای چهار مرحله پله تعاملی، متن ثابت و از این صفحه قابل‌ویرایش نیست (برای تغییر، به inc/card-validate-page.php مراجعه کنید).', 'uid-theme' ) ) );
+	add_settings_field( 'fold_min', __( 'زمان مطالعه', 'uid-theme' ), 'uid_field_text', 'uid_section_cvhow', 'uid_section_cvhow_main', array( 'group' => 'uid_section_cvhow', 'key' => 'fold_min', 'default' => '۲ دقیقه' ) );
+	add_settings_field( 'fold_title', __( 'عنوان فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvhow', 'uid_section_cvhow_main', array( 'group' => 'uid_section_cvhow', 'key' => 'fold_title', 'default' => 'کارکرد سرویس و نحوه انجام تطبیق' ) );
+	add_settings_field( 'fold_teaser', __( 'معرفی کوتاه فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvhow', 'uid_section_cvhow_main', array( 'group' => 'uid_section_cvhow', 'key' => 'fold_teaser', 'default' => 'از ارسال داده تا دریافت نتیجه ساختاریافته در چهار قدم' ) );
+
+	/* ---------------- فصل ۴: کاربردها ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvwho', array( 'sanitize_callback' => 'uid_sanitize_section_cvwho', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvwho_main', '', '__return_false', 'uid_section_cvwho' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvwho', 'uid_section_cvwho_main', array( 'group' => 'uid_section_cvwho', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvwho', 'uid_section_cvwho_main', array( 'group' => 'uid_section_cvwho', 'key' => 'eyebrow', 'default' => 'کجا به کار می‌آید' ) );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvwho', 'uid_section_cvwho_main', array( 'group' => 'uid_section_cvwho', 'key' => 'heading', 'default' => 'هر جا که کارت بانکی وارد سامانه شما می‌شود' ) );
+	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvwho', 'uid_section_cvwho_main', array( 'group' => 'uid_section_cvwho', 'key' => 'text', 'default' => 'صنعت خود را انتخاب کنید تا سناریوی دقیق شما را ببینید.' ) );
+	add_settings_field( 'items', __( 'کارت‌های صنعت', 'uid-theme' ), 'uid_field_repeater', 'uid_section_cvwho', 'uid_section_cvwho_main', array(
+		'group' => 'uid_section_cvwho', 'key' => 'items', 'default' => uid_default_cv_who(), 'add_label' => __( 'افزودن صنعت', 'uid-theme' ),
+		'fields' => array(
+			array( 'key' => 'icon', 'type' => 'select', 'label' => __( 'آیکون', 'uid-theme' ), 'options' => array( 'fin' => __( 'خدمات مالی', 'uid-theme' ), 'psp' => __( 'درگاه پرداخت', 'uid-theme' ), 'wallet' => __( 'کیف پول', 'uid-theme' ), 'crypto' => __( 'صرافی رمزارز', 'uid-theme' ), 'lend' => __( 'اعتباری/لندتک', 'uid-theme' ), 'market' => __( 'مارکت‌پلیس', 'uid-theme' ), 'broker' => __( 'کارگزاری بورس', 'uid-theme' ) ) ),
+			array( 'key' => 'label', 'type' => 'text', 'label' => __( 'برچسب کوتاه (روی تب)', 'uid-theme' ), 'required' => true ),
+			array( 'key' => 'title', 'type' => 'text', 'label' => __( 'عنوان کارت', 'uid-theme' ), 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea', 'label' => __( 'توضیح', 'uid-theme' ) ),
+			array( 'key' => 'win', 'type' => 'text', 'label' => __( 'نتیجه/دستاورد', 'uid-theme' ) ),
+		),
+	) );
+	add_settings_field( 'fold_min', __( 'زمان مطالعه', 'uid-theme' ), 'uid_field_text', 'uid_section_cvwho', 'uid_section_cvwho_main', array( 'group' => 'uid_section_cvwho', 'key' => 'fold_min', 'default' => '۱ دقیقه' ) );
+	add_settings_field( 'fold_title', __( 'عنوان فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvwho', 'uid_section_cvwho_main', array( 'group' => 'uid_section_cvwho', 'key' => 'fold_title', 'default' => 'کاربرد در کسب‌وکارها' ) );
+	add_settings_field( 'fold_teaser', __( 'معرفی کوتاه فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvwho', 'uid_section_cvwho_main', array( 'group' => 'uid_section_cvwho', 'key' => 'fold_teaser', 'default' => 'صنعت خودتان را انتخاب کنید تا فقط همان را ببینید' ) );
+
+	/* ---------------- فصل ۵: مزایا + پوشش BIN ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvgain', array( 'sanitize_callback' => 'uid_sanitize_section_cvgain', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvgain_main', '', '__return_false', 'uid_section_cvgain' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvgain', 'uid_section_cvgain_main', array( 'group' => 'uid_section_cvgain', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvgain', 'uid_section_cvgain_main', array( 'group' => 'uid_section_cvgain', 'key' => 'eyebrow', 'default' => 'چرا یوآیدی' ) );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvgain', 'uid_section_cvgain_main', array( 'group' => 'uid_section_cvgain', 'key' => 'heading', 'default' => 'مزایای وب‌سرویس تطبیق شماره کارت با کد ملی' ) );
+	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvgain', 'uid_section_cvgain_main', array( 'group' => 'uid_section_cvgain', 'key' => 'text', 'default' => 'این سرویس روی مسیر پول می‌نشیند؛ بنابراین سرعت، دقت و پشتیبانی آن مستقیماً روی ریسک عملیاتی شما اثر می‌گذارد.' ) );
+	add_settings_field( 'items', __( 'کارت‌های مزیت', 'uid-theme' ), 'uid_field_repeater', 'uid_section_cvgain', 'uid_section_cvgain_main', array(
+		'group' => 'uid_section_cvgain', 'key' => 'items', 'default' => uid_default_cv_gain(), 'add_label' => __( 'افزودن مزیت', 'uid-theme' ),
+		'fields' => array(
+			array( 'key' => 'icon', 'type' => 'select', 'label' => __( 'آیکون', 'uid-theme' ), 'options' => array( 'auto' => __( 'بررسی خودکار', 'uid-theme' ), 'fraud' => __( 'کاهش تقلب', 'uid-theme' ), 'fast' => __( 'سرعت', 'uid-theme' ), 'api' => __( 'اتصال API', 'uid-theme' ), 'support' => __( 'پشتیبانی', 'uid-theme' ) ) ),
+			array( 'key' => 'title', 'type' => 'text', 'label' => __( 'عنوان', 'uid-theme' ), 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea', 'label' => __( 'توضیح', 'uid-theme' ) ),
+			array( 'key' => 'tagline', 'type' => 'text', 'label' => __( 'برچسب کوتاه پایین کارت', 'uid-theme' ) ),
+		),
+	) );
+	add_settings_field( 'bins_heading', __( 'عنوان بخش پوشش BIN', 'uid-theme' ), 'uid_field_text', 'uid_section_cvgain', 'uid_section_cvgain_main', array( 'group' => 'uid_section_cvgain', 'key' => 'bins_heading', 'default' => 'شش رقم اول کارت، بانک صادرکننده را مشخص می‌کند' ) );
+	add_settings_field( 'bins_text', __( 'توضیح بخش پوشش BIN (تگ span مجاز است)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvgain', 'uid_section_cvgain_main', array( 'group' => 'uid_section_cvgain', 'key' => 'bins_text', 'default' => 'شش رقم ابتدایی هر کارت بانکی (BIN) متعلق به بانک صادرکننده است. به همین دلیل نام بانک پیش از هر فراخوانی و بدون هزینه اضافه قابل تشخیص است — همان چیزی که در کادر تست بالای همین صفحه می‌بینید. سرویس، کارت‌های صادرشده توسط بانک‌ها و موسسات مالی مجاز عضو شبکه شتاب را پشتیبانی می‌کند.' ) );
+	add_settings_field( 'bins', __( 'فهرست پیش‌شماره‌های بانکی (BIN)', 'uid-theme' ), 'uid_field_repeater', 'uid_section_cvgain', 'uid_section_cvgain_main', array(
+		'group' => 'uid_section_cvgain', 'key' => 'bins', 'default' => uid_default_cv_bins(), 'add_label' => __( 'افزودن بانک', 'uid-theme' ),
+		'fields' => array(
+			array( 'key' => 'code', 'type' => 'text', 'label' => __( 'پیش‌شماره ۶ رقمی (BIN)', 'uid-theme' ), 'required' => true ),
+			array( 'key' => 'name', 'type' => 'text', 'label' => __( 'نام بانک', 'uid-theme' ), 'required' => true ),
+		),
+	) );
+	add_settings_field( 'bins_more', __( 'برچسب پایانی', 'uid-theme' ), 'uid_field_text', 'uid_section_cvgain', 'uid_section_cvgain_main', array( 'group' => 'uid_section_cvgain', 'key' => 'bins_more', 'default' => 'و سایر بانک‌ها و موسسات مجاز عضو شتاب' ) );
+	add_settings_field( 'fold_min', __( 'زمان مطالعه', 'uid-theme' ), 'uid_field_text', 'uid_section_cvgain', 'uid_section_cvgain_main', array( 'group' => 'uid_section_cvgain', 'key' => 'fold_min', 'default' => '۲ دقیقه' ) );
+	add_settings_field( 'fold_title', __( 'عنوان فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvgain', 'uid_section_cvgain_main', array( 'group' => 'uid_section_cvgain', 'key' => 'fold_title', 'default' => 'مزایای وب‌سرویس تطبیق کارت' ) );
+	add_settings_field( 'fold_teaser', __( 'معرفی کوتاه فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvgain', 'uid_section_cvgain_main', array( 'group' => 'uid_section_cvgain', 'key' => 'fold_teaser', 'default' => 'پنج دلیلی که تیم فنی و تیم ریسک هر دو قبول می‌کنند' ) );
+
+	/* ---------------- فصل ۶: تیم متخصص ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvteam', array( 'sanitize_callback' => 'uid_sanitize_section_cvteam', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvteam_main', '', '__return_false', 'uid_section_cvteam' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvteam', 'uid_section_cvteam_main', array( 'group' => 'uid_section_cvteam', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvteam', 'uid_section_cvteam_main', array( 'group' => 'uid_section_cvteam', 'key' => 'eyebrow', 'default' => 'پشت این وب‌سرویس' ) );
+	add_settings_field( 'heading', __( 'عنوان (بعد از «یک API»)', 'uid-theme' ), 'uid_field_text', 'uid_section_cvteam', 'uid_section_cvteam_main', array( 'group' => 'uid_section_cvteam', 'key' => 'heading', 'default' => ' نمی‌فروشیم؛ راه‌اندازی‌اش را تحویل می‌دهیم' ) );
+	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvteam', 'uid_section_cvteam_main', array( 'group' => 'uid_section_cvteam', 'key' => 'text', 'default' => 'این سرویس دقیقاً روی نقطه‌ای می‌نشیند که کارت بانکی وارد سامانه شما می‌شود. به همین دلیل تیم فنی یوآیدی از اولین تماس تا اولین تطبیق موفق روی محیط عملیاتی همراه شماست.' ) );
+	add_settings_field( 'rows', __( 'ردیف‌های اعتمادسازی', 'uid-theme' ), 'uid_field_repeater', 'uid_section_cvteam', 'uid_section_cvteam_main', array(
+		'group' => 'uid_section_cvteam', 'key' => 'rows', 'default' => uid_default_cv_team_rows(), 'add_label' => __( 'افزودن ردیف', 'uid-theme' ),
+		'fields' => array(
+			array( 'key' => 'icon', 'type' => 'select', 'label' => __( 'آیکون', 'uid-theme' ), 'options' => array( 'connect' => __( 'اتصال', 'uid-theme' ), 'monitor' => __( 'مانیتورینگ', 'uid-theme' ), 'doc' => __( 'مستندات', 'uid-theme' ), 'shield' => __( 'امنیت', 'uid-theme' ) ) ),
+			array( 'key' => 'title', 'type' => 'text', 'label' => __( 'عنوان', 'uid-theme' ), 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea', 'label' => __( 'توضیح', 'uid-theme' ) ),
+		),
+	) );
+	add_settings_field( 'pledge_heading', __( 'عنوان کادر تعهدنامه', 'uid-theme' ), 'uid_field_text', 'uid_section_cvteam', 'uid_section_cvteam_main', array( 'group' => 'uid_section_cvteam', 'key' => 'pledge_heading', 'default' => 'تعهد یوآیدی به تیم فنی شما' ) );
+	add_settings_field( 'pledge_items', __( 'موارد تعهدنامه (هر خط یک مورد)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvteam', 'uid_section_cvteam_main', array( 'group' => 'uid_section_cvteam', 'key' => 'pledge_items', 'default' => implode( "\n", uid_default_cv_pledge_items() ), 'rows' => 4 ) );
+	add_settings_field( 'fold_min', __( 'زمان مطالعه', 'uid-theme' ), 'uid_field_text', 'uid_section_cvteam', 'uid_section_cvteam_main', array( 'group' => 'uid_section_cvteam', 'key' => 'fold_min', 'default' => '۲ دقیقه' ) );
+	add_settings_field( 'fold_title', __( 'عنوان فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvteam', 'uid_section_cvteam_main', array( 'group' => 'uid_section_cvteam', 'key' => 'fold_title', 'default' => 'تیم متخصص و پشتیبانی' ) );
+	add_settings_field( 'fold_teaser', __( 'معرفی کوتاه فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvteam', 'uid_section_cvteam_main', array( 'group' => 'uid_section_cvteam', 'key' => 'fold_teaser', 'default' => 'با چه کسانی وصل می‌شوید و چه چیزی تعهد می‌شود' ) );
+
+	/* ---------------- فصل ۷: مستندات فنی ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvdev', array( 'sanitize_callback' => 'uid_sanitize_section_cvdev', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvdev_main', '', '__return_false', 'uid_section_cvdev' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvdev', 'uid_section_cvdev_main', array( 'group' => 'uid_section_cvdev', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvdev', 'uid_section_cvdev_main', array( 'group' => 'uid_section_cvdev', 'key' => 'eyebrow', 'default' => 'برای تیم توسعه شما' ) );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvdev', 'uid_section_cvdev_main', array( 'group' => 'uid_section_cvdev', 'key' => 'heading', 'default' => 'یک فراخوانی، یک تصمیم، تمام' ) );
+	add_settings_field( 'btn1_text', __( 'متن دکمه اول (باز کردن مودال)', 'uid-theme' ), 'uid_field_text', 'uid_section_cvdev', 'uid_section_cvdev_main', array( 'group' => 'uid_section_cvdev', 'key' => 'btn1_text', 'default' => 'دریافت کلید وب‌سرویس' ) );
+	add_settings_field( 'code_notice', '', 'uid_field_notice', 'uid_section_cvdev', 'uid_section_cvdev_main', array( 'text' => __( 'توضیح معرفی، نمونه‌کدهای درخواست/پاسخ و جدول پارامترها، مستندات فنی دقیق‌اند و از این صفحه قابل‌ویرایش نیستند (برای تغییر، به inc/card-validate-page.php مراجعه کنید).', 'uid-theme' ) ) );
+	add_settings_field( 'fold_min', __( 'زمان مطالعه', 'uid-theme' ), 'uid_field_text', 'uid_section_cvdev', 'uid_section_cvdev_main', array( 'group' => 'uid_section_cvdev', 'key' => 'fold_min', 'default' => '۳ دقیقه' ) );
+	add_settings_field( 'fold_title', __( 'عنوان فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvdev', 'uid_section_cvdev_main', array( 'group' => 'uid_section_cvdev', 'key' => 'fold_title', 'default' => 'بخش فنی و نمونه کدها' ) );
+	add_settings_field( 'fold_teaser', __( 'معرفی کوتاه فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvdev', 'uid_section_cvdev_main', array( 'group' => 'uid_section_cvdev', 'key' => 'fold_teaser', 'default' => 'نمونه درخواست، نمونه پاسخ و جدول پارامترها' ) );
+
+	/* ---------------- فصل ۸: سرویس‌های مکمل ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvxsell', array( 'sanitize_callback' => 'uid_sanitize_section_cvxsell', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvxsell_main', '', '__return_false', 'uid_section_cvxsell' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvxsell', 'uid_section_cvxsell_main', array( 'group' => 'uid_section_cvxsell', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvxsell', 'uid_section_cvxsell_main', array( 'group' => 'uid_section_cvxsell', 'key' => 'eyebrow', 'default' => 'در کنار این وب‌سرویس' ) );
+	add_settings_field( 'heading', __( 'عنوان (بعد از «اگر به چیزی بیش از یک true/false»)', 'uid-theme' ), 'uid_field_text', 'uid_section_cvxsell', 'uid_section_cvxsell_main', array( 'group' => 'uid_section_cvxsell', 'key' => 'heading', 'default' => ' نیاز دارید' ) );
+	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvxsell', 'uid_section_cvxsell_main', array( 'group' => 'uid_section_cvxsell', 'key' => 'text', 'default' => 'خروجی این متد یک تصمیم است. اگر لازم است داده دارنده حساب را ببینید، شبای معادل کارت را بگیرید، یا همین تطبیق را روی شبا و شماره موبایل هم اجرا کنید، سرویس‌های زیر مکمل همین فراخوانی هستند.' ) );
+	add_settings_field( 'items', __( 'کارت‌های سرویس', 'uid-theme' ), 'uid_field_repeater', 'uid_section_cvxsell', 'uid_section_cvxsell_main', array(
+		'group' => 'uid_section_cvxsell', 'key' => 'items', 'default' => uid_default_cv_xsell(), 'add_label' => __( 'افزودن سرویس', 'uid-theme' ),
+		'fields' => array(
+			array( 'key' => 'icon', 'type' => 'select', 'label' => __( 'آیکون', 'uid-theme' ), 'options' => array( 'iban' => __( 'شبا', 'uid-theme' ), 'match' => __( 'تطبیق شبا', 'uid-theme' ), 'convert' => __( 'تبدیل کارت به شبا', 'uid-theme' ), 'shahkar' => __( 'شاهکار', 'uid-theme' ) ) ),
+			array( 'key' => 'title', 'type' => 'text', 'label' => __( 'عنوان', 'uid-theme' ), 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea', 'label' => __( 'توضیح', 'uid-theme' ) ),
+			array( 'key' => 'url', 'type' => 'text', 'label' => __( 'لینک', 'uid-theme' ) ),
+		),
+	) );
+	add_settings_field( 'fold_min', __( 'زمان مطالعه', 'uid-theme' ), 'uid_field_text', 'uid_section_cvxsell', 'uid_section_cvxsell_main', array( 'group' => 'uid_section_cvxsell', 'key' => 'fold_min', 'default' => '۱ دقیقه' ) );
+	add_settings_field( 'fold_title', __( 'عنوان فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvxsell', 'uid_section_cvxsell_main', array( 'group' => 'uid_section_cvxsell', 'key' => 'fold_title', 'default' => 'سرویس‌های مکمل و مرتبط' ) );
+	add_settings_field( 'fold_teaser', __( 'معرفی کوتاه فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvxsell', 'uid_section_cvxsell_main', array( 'group' => 'uid_section_cvxsell', 'key' => 'fold_teaser', 'default' => 'استعلام شبا، تطبیق شبا با کد ملی، تبدیل کارت به شبا و شاهکار' ) );
+
+	/* ---------------- فصل ۹: سوالات متداول ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvfaq', array( 'sanitize_callback' => 'uid_sanitize_section_cvfaq', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvfaq_main', '', '__return_false', 'uid_section_cvfaq' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvfaq', 'uid_section_cvfaq_main', array( 'group' => 'uid_section_cvfaq', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvfaq', 'uid_section_cvfaq_main', array( 'group' => 'uid_section_cvfaq', 'key' => 'eyebrow', 'default' => 'پیش از تماس، این‌ها را بخوانید' ) );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvfaq', 'uid_section_cvfaq_main', array( 'group' => 'uid_section_cvfaq', 'key' => 'heading', 'default' => 'سوالات متداول وب‌سرویس تطبیق کارت و کد ملی' ) );
+	add_settings_field( 'items', __( 'سوالات', 'uid-theme' ), 'uid_field_repeater', 'uid_section_cvfaq', 'uid_section_cvfaq_main', array(
+		'group' => 'uid_section_cvfaq', 'key' => 'items', 'default' => uid_default_cv_faq(), 'add_label' => __( 'افزودن سوال', 'uid-theme' ),
+		'fields' => array( array( 'key' => 'question', 'type' => 'text', 'label' => __( 'سوال', 'uid-theme' ), 'required' => true ), array( 'key' => 'answer', 'type' => 'textarea', 'label' => __( 'پاسخ', 'uid-theme' ) ) ),
+	) );
+	add_settings_field( 'fold_min', __( 'زمان مطالعه', 'uid-theme' ), 'uid_field_text', 'uid_section_cvfaq', 'uid_section_cvfaq_main', array( 'group' => 'uid_section_cvfaq', 'key' => 'fold_min', 'default' => '۲ دقیقه' ) );
+	add_settings_field( 'fold_title', __( 'عنوان فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvfaq', 'uid_section_cvfaq_main', array( 'group' => 'uid_section_cvfaq', 'key' => 'fold_title', 'default' => 'سوالات متداول' ) );
+	add_settings_field( 'fold_teaser', __( 'معرفی کوتاه فصل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvfaq', 'uid_section_cvfaq_main', array( 'group' => 'uid_section_cvfaq', 'key' => 'fold_teaser', 'default' => 'پارامترها، محرمانگی، تفاوت با سرویس‌های مشابه و کدهای خطا' ) );
+
+	/* ---------------- مشخصات عملیاتی (پنل تیره) ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvadv', array( 'sanitize_callback' => 'uid_sanitize_section_cvadv', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvadv_main', '', '__return_false', 'uid_section_cvadv' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvadv', 'uid_section_cvadv_main', array( 'group' => 'uid_section_cvadv', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvadv', 'uid_section_cvadv_main', array( 'group' => 'uid_section_cvadv', 'key' => 'eyebrow', 'default' => 'مشخصات عملیاتی وب‌سرویس' ) );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvadv', 'uid_section_cvadv_main', array( 'group' => 'uid_section_cvadv', 'key' => 'heading', 'default' => 'پنج نکته‌ای که در ارزیابی فنی از شما می‌پرسند' ) );
+	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvadv', 'uid_section_cvadv_main', array( 'group' => 'uid_section_cvadv', 'key' => 'text', 'default' => 'هر مورد زیر مستقیماً از شاخص‌های سرویس تطابقی اطلاعات مالی یوآیدی آمده است — نه یک ادعای تبلیغاتی.' ) );
+	add_settings_field( 'items', __( 'آیتم‌های پنل', 'uid-theme' ), 'uid_field_repeater', 'uid_section_cvadv', 'uid_section_cvadv_main', array(
+		'group' => 'uid_section_cvadv', 'key' => 'items', 'default' => uid_default_cv_adv(), 'add_label' => __( 'افزودن مورد', 'uid-theme' ),
+		'fields' => array(
+			array( 'key' => 'icon', 'type' => 'select', 'label' => __( 'آیکون', 'uid-theme' ), 'options' => array( 'sla' => __( 'پایداری (SLA)', 'uid-theme' ), 'fast' => __( 'سرعت', 'uid-theme' ), 'json' => __( 'خروجی JSON', 'uid-theme' ), 'secure' => __( 'امنیت', 'uid-theme' ), 'quick' => __( 'سرعت ادغام', 'uid-theme' ) ) ),
+			array( 'key' => 'value', 'type' => 'text', 'label' => __( 'عنوان کوتاه', 'uid-theme' ), 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea', 'label' => __( 'توضیح', 'uid-theme' ) ),
+			array( 'key' => 'percent', 'type' => 'text', 'label' => __( 'درصد نوار پیشرفت (عدد بین ۰ تا ۱۰۰)', 'uid-theme' ) ),
+			array( 'key' => 'feat', 'type' => 'select', 'label' => __( 'کارت برجسته (بزرگ‌تر)', 'uid-theme' ), 'options' => array( '' => __( 'خیر', 'uid-theme' ), '1' => __( 'بله', 'uid-theme' ) ) ),
+			array( 'key' => 'wide', 'type' => 'select', 'label' => __( 'عرض دوبرابر', 'uid-theme' ), 'options' => array( '' => __( 'خیر', 'uid-theme' ), '1' => __( 'بله', 'uid-theme' ) ) ),
+			array( 'key' => 'numeric', 'type' => 'select', 'label' => __( 'مقدار عددی بزرگ (نه متن)', 'uid-theme' ), 'options' => array( '' => __( 'خیر', 'uid-theme' ), '1' => __( 'بله', 'uid-theme' ) ) ),
+		),
+	) );
+	add_settings_field( 'foot_text', __( 'متن پایین پنل', 'uid-theme' ), 'uid_field_text', 'uid_section_cvadv', 'uid_section_cvadv_main', array( 'group' => 'uid_section_cvadv', 'key' => 'foot_text', 'default' => 'می‌خواهید این سرویس را روی داده واقعی خودتان تست کنید؟' ) );
+	add_settings_field( 'btn_text', __( 'متن دکمه (باز کردن مودال)', 'uid-theme' ), 'uid_field_text', 'uid_section_cvadv', 'uid_section_cvadv_main', array( 'group' => 'uid_section_cvadv', 'key' => 'btn_text', 'default' => 'درخواست دسترسی سندباکس' ) );
+
+	/* ---------------- نحوه اتصال (۳ گام) ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvconnect', array( 'sanitize_callback' => 'uid_sanitize_section_cvconnect', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvconnect_main', '', '__return_false', 'uid_section_cvconnect' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvconnect', 'uid_section_cvconnect_main', array( 'group' => 'uid_section_cvconnect', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvconnect', 'uid_section_cvconnect_main', array( 'group' => 'uid_section_cvconnect', 'key' => 'eyebrow', 'default' => 'نحوه اتصال' ) );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvconnect', 'uid_section_cvconnect_main', array( 'group' => 'uid_section_cvconnect', 'key' => 'heading', 'default' => 'از فرم تا اولین استعلام واقعی، سه مرحله' ) );
+	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvconnect', 'uid_section_cvconnect_main', array( 'group' => 'uid_section_cvconnect', 'key' => 'text', 'default' => 'هیچ‌کدام از این سه مرحله نیاز به جلسه حضوری، قرارداد اولیه یا پیش‌پرداخت ندارد.' ) );
+	add_settings_field( 'steps', __( 'گام‌ها', 'uid-theme' ), 'uid_field_repeater', 'uid_section_cvconnect', 'uid_section_cvconnect_main', array(
+		'group' => 'uid_section_cvconnect', 'key' => 'steps', 'default' => uid_default_cv_connect(), 'add_label' => __( 'افزودن گام', 'uid-theme' ),
+		'fields' => array( array( 'key' => 'title', 'type' => 'text', 'label' => __( 'عنوان گام', 'uid-theme' ), 'required' => true ), array( 'key' => 'text', 'type' => 'textarea', 'label' => __( 'توضیح', 'uid-theme' ) ) ),
+	) );
+
+	/* ---------------- محاسبه‌گر هزینه ماهانه ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvprice', array( 'sanitize_callback' => 'uid_sanitize_section_cvprice', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvprice_main', '', '__return_false', 'uid_section_cvprice' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvprice', 'uid_section_cvprice_main', array( 'group' => 'uid_section_cvprice', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvprice', 'uid_section_cvprice_main', array( 'group' => 'uid_section_cvprice', 'key' => 'eyebrow', 'default' => 'مدل هزینه' ) );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvprice', 'uid_section_cvprice_main', array( 'group' => 'uid_section_cvprice', 'key' => 'heading', 'default' => 'محاسبه هزینه فقط بر اساس استعلام‌های موفق و معتبر' ) );
+	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvprice', 'uid_section_cvprice_main', array( 'group' => 'uid_section_cvprice', 'key' => 'text', 'default' => 'تعداد استعلام تخمینی ماهانه خود را جابه‌جا کنید تا پلن متناسب و پله تخفیف آن را ببینید. تعرفه با افزایش حجم پلکانی می‌شود و برای حجم بالا امکان ارائه تعرفه اختصاصی وجود دارد.' ) );
+	add_settings_field( 'calc_notice', '', 'uid_field_notice', 'uid_section_cvprice', 'uid_section_cvprice_main', array( 'text' => __( 'منطق محاسبه‌گر (پله‌های تخفیف و قیمت پایه) در assets/js/card-validate-page.js تعریف شده و برای انتشار نهایی باید با تعرفه واقعی جایگزین شود؛ از این صفحه قابل‌ویرایش نیست.', 'uid-theme' ) ) );
+
+	/* ---------------- بند تماس میانی ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvlastcall', array( 'sanitize_callback' => 'uid_sanitize_section_cvlastcall', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvlastcall_main', '', '__return_false', 'uid_section_cvlastcall' );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvlastcall', 'uid_section_cvlastcall_main', array( 'group' => 'uid_section_cvlastcall', 'key' => 'heading', 'default' => 'هر روزی که این سرویس فعال نیست، کارت‌های تاییدنشده وارد سامانه شما می‌شود' ) );
+	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvlastcall', 'uid_section_cvlastcall_main', array( 'group' => 'uid_section_cvlastcall', 'key' => 'text', 'default' => 'کارتی که امروز بدون بررسی ثبت شد، فردا با یک پرونده برمی‌گردد. یک تماس کوتاه کافی است تا کارشناس یوآیدی جریان ثبت کارت شما را بررسی و دسترسی سندباکس را فعال کند.' ) );
+	add_settings_field( 'btn_text', __( 'متن دکمه (باز کردن مودال)', 'uid-theme' ), 'uid_field_text', 'uid_section_cvlastcall', 'uid_section_cvlastcall_main', array( 'group' => 'uid_section_cvlastcall', 'key' => 'btn_text', 'default' => 'فرم درخواست سرویس' ) );
+
+	/* ---------------- بنر تماس نهایی ---------------- */
+	register_setting( 'uid_cv_group', 'uid_section_cvlead', array( 'sanitize_callback' => 'uid_sanitize_section_cvlead', 'default' => array() ) );
+	add_settings_section( 'uid_section_cvlead_main', '', '__return_false', 'uid_section_cvlead' );
+	add_settings_field( 'title_tag', __( 'تگ عنوان اصلی', 'uid-theme' ), 'uid_field_select', 'uid_section_cvlead', 'uid_section_cvlead_main', array( 'group' => 'uid_section_cvlead', 'key' => 'title_tag', 'default' => 'h2', 'options' => uid_heading_tag_options() ) );
+	add_settings_field( 'eyebrow', __( 'برچسب کوچک', 'uid-theme' ), 'uid_field_text', 'uid_section_cvlead', 'uid_section_cvlead_main', array( 'group' => 'uid_section_cvlead', 'key' => 'eyebrow', 'default' => 'همین حالا شروع کنید' ) );
+	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_cvlead', 'uid_section_cvlead_main', array( 'group' => 'uid_section_cvlead', 'key' => 'heading', 'default' => 'فرم درخواست فعال‌سازی وب‌سرویس تطبیق شماره کارت با کد ملی' ) );
+	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvlead', 'uid_section_cvlead_main', array( 'group' => 'uid_section_cvlead', 'key' => 'text', 'default' => 'برای دریافت مشاوره رایگان، کلید API و فعال‌سازی وب‌سرویس تطبیق شماره کارت با اطلاعات هویتی، اطلاعات خود را در این فرم وارد کنید. کارشناسان یوآیدی در کوتاه‌ترین زمان ممکن با شما تماس خواهند گرفت.' ) );
+	add_settings_field( 'trust', __( 'نکات اطمینان (هر خط یک مورد)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvlead', 'uid_section_cvlead_main', array( 'group' => 'uid_section_cvlead', 'key' => 'trust', 'default' => "مشاوره رایگان، بدون تعهد\nکلید آزمایشی و سندباکس پیش از قرارداد\nهزینه فقط بابت استعلام موفق\nپشتیبانی اختصاصی سازمانی" ) );
+	add_settings_field( 'form_title', __( 'عنوان فرم', 'uid-theme' ), 'uid_field_text', 'uid_section_cvlead', 'uid_section_cvlead_main', array( 'group' => 'uid_section_cvlead', 'key' => 'form_title', 'default' => 'درخواست وب‌سرویس تطبیق کارت و کد ملی' ) );
+	add_settings_field( 'form_hint', __( 'راهنمای فرم', 'uid-theme' ), 'uid_field_text', 'uid_section_cvlead', 'uid_section_cvlead_main', array( 'group' => 'uid_section_cvlead', 'key' => 'form_hint', 'default' => 'فقط سه فیلد. کارشناس ما در سریع‌ترین زمان ممکن تماس می‌گیرد.' ) );
+	add_settings_field( 'biztype_options', __( 'گزینه‌های نوع کسب‌وکار (هر خط یک گزینه)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_cvlead', 'uid_section_cvlead_main', array( 'group' => 'uid_section_cvlead', 'key' => 'biztype_options', 'default' => "ثبت‌نام و خدمات مالی\nدرگاه و پلتفرم پرداخت\nکیف پول دیجیتال\nصرافی رمزارز\nسامانه اعتباری و لندتک\nمارکت‌پلیس\nکارگزاری بورس\nسایر کسب‌وکارها" ) );
+	add_settings_field( 'submit_text', __( 'متن دکمه ارسال', 'uid-theme' ), 'uid_field_text', 'uid_section_cvlead', 'uid_section_cvlead_main', array( 'group' => 'uid_section_cvlead', 'key' => 'submit_text', 'default' => 'ارسال درخواست و دریافت مشاوره رایگان' ) );
+	add_settings_field( 'note_text', __( 'یادداشت حریم خصوصی', 'uid-theme' ), 'uid_field_text', 'uid_section_cvlead', 'uid_section_cvlead_main', array( 'group' => 'uid_section_cvlead', 'key' => 'note_text', 'default' => 'اطلاعات شما محرمانه می‌ماند و فقط برای همین درخواست استفاده می‌شود.' ) );
+	add_settings_field( 'success_text', __( 'پیام موفقیت (قبل از شماره تلفن)', 'uid-theme' ), 'uid_field_text', 'uid_section_cvlead', 'uid_section_cvlead_main', array( 'group' => 'uid_section_cvlead', 'key' => 'success_text', 'default' => 'تیم یوآیدی به‌زودی با شما تماس می‌گیرد. برای پیگیری فوری: ' ) );
+}
+add_action( 'admin_init', 'uid_register_cv_settings' );
+
+/* =====================================================================
+ * توابع پاک‌سازی — یکی به‌ازای هر سکشن
+ * ===================================================================== */
+function uid_sanitize_section_cvhero( $input ) {
+	return array(
+		'title_tag' => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h1' ),
+		'eyebrow'   => wp_kses( $input['eyebrow'] ?? '', array( 'span' => array( 'class' => array() ) ) ),
+		'heading'   => wp_kses( $input['heading'] ?? '', array( 'mark' => array() ) ),
+		'text'      => sanitize_textarea_field( $input['text'] ?? '' ),
+		'btn1_text' => sanitize_text_field( $input['btn1_text'] ?? '' ),
+		'tags'      => sanitize_textarea_field( $input['tags'] ?? '' ),
+		'vtests'    => array_map( 'sanitize_text_field', wp_parse_args( is_array( $input['vtests'] ?? null ) ? $input['vtests'] : array(), uid_default_cv_vtests() ) ),
+	);
+}
+
+function uid_sanitize_section_cvtrust( $input ) {
+	return array(
+		'items' => uid_sanitize_repeater_rows( $input['items'] ?? '[]', array(
+			array( 'key' => 'value', 'type' => 'text', 'required' => true ),
+			array( 'key' => 'label', 'type' => 'text' ),
+			array( 'key' => 'numeric', 'type' => 'text' ),
+		) ),
+	);
+}
+
+function uid_sanitize_section_cvtldr( $input ) {
+	return array(
+		'heading'    => sanitize_text_field( $input['heading'] ?? '' ),
+		'badge_text' => sanitize_text_field( $input['badge_text'] ?? '' ),
+		'items'      => sanitize_textarea_field( $input['items'] ?? '' ),
+		'btn_text'   => sanitize_text_field( $input['btn_text'] ?? '' ),
+		'more_text'  => sanitize_text_field( $input['more_text'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvloss( $input ) {
+	return array(
+		'title_tag'   => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'     => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'     => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'        => sanitize_textarea_field( $input['text'] ?? '' ),
+		'proof'       => uid_sanitize_repeater_rows( $input['proof'] ?? '[]', array(
+			array( 'key' => 'title', 'type' => 'text', 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea' ),
+		) ),
+		'cta_heading' => sanitize_text_field( $input['cta_heading'] ?? '' ),
+		'cta_text'    => sanitize_textarea_field( $input['cta_text'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvwhat( $input ) {
+	return array(
+		'title_tag'       => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'         => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'         => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'            => sanitize_textarea_field( $input['text'] ?? '' ),
+		'box_heading'     => sanitize_text_field( $input['box_heading'] ?? '' ),
+		'box_text'        => sanitize_textarea_field( $input['box_text'] ?? '' ),
+		'probs'           => uid_sanitize_repeater_rows( $input['probs'] ?? '[]', array(
+			array( 'key' => 'title', 'type' => 'text', 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea' ),
+		) ),
+		'privacy_heading' => sanitize_text_field( $input['privacy_heading'] ?? '' ),
+		'privacy_text'    => sanitize_textarea_field( $input['privacy_text'] ?? '' ),
+		'fold_min'        => sanitize_text_field( $input['fold_min'] ?? '' ),
+		'fold_title'      => sanitize_text_field( $input['fold_title'] ?? '' ),
+		'fold_teaser'     => sanitize_text_field( $input['fold_teaser'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvvs( $input ) {
+	return array(
+		'title_tag'    => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'      => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'      => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'         => sanitize_textarea_field( $input['text'] ?? '' ),
+		'bad_tag'      => sanitize_text_field( $input['bad_tag'] ?? '' ),
+		'bad_title'    => sanitize_text_field( $input['bad_title'] ?? '' ),
+		'bad_text'     => sanitize_textarea_field( $input['bad_text'] ?? '' ),
+		'bad_items'    => sanitize_textarea_field( $input['bad_items'] ?? '' ),
+		'good_tag'     => sanitize_text_field( $input['good_tag'] ?? '' ),
+		'good_title'   => sanitize_text_field( $input['good_title'] ?? '' ),
+		'good_text'    => sanitize_textarea_field( $input['good_text'] ?? '' ),
+		'good_items'   => sanitize_textarea_field( $input['good_items'] ?? '' ),
+		'note_heading' => sanitize_text_field( $input['note_heading'] ?? '' ),
+		'note_text'    => sanitize_textarea_field( $input['note_text'] ?? '' ),
+		'fold_min'     => sanitize_text_field( $input['fold_min'] ?? '' ),
+		'fold_title'   => sanitize_text_field( $input['fold_title'] ?? '' ),
+		'fold_teaser'  => sanitize_text_field( $input['fold_teaser'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvhow( $input ) {
+	return array(
+		'title_tag'   => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'     => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'     => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'        => sanitize_textarea_field( $input['text'] ?? '' ),
+		'fold_min'    => sanitize_text_field( $input['fold_min'] ?? '' ),
+		'fold_title'  => sanitize_text_field( $input['fold_title'] ?? '' ),
+		'fold_teaser' => sanitize_text_field( $input['fold_teaser'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvwho( $input ) {
+	return array(
+		'title_tag'   => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'     => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'     => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'        => sanitize_textarea_field( $input['text'] ?? '' ),
+		'items'       => uid_sanitize_repeater_rows( $input['items'] ?? '[]', array(
+			array( 'key' => 'icon', 'type' => 'text' ),
+			array( 'key' => 'label', 'type' => 'text', 'required' => true ),
+			array( 'key' => 'title', 'type' => 'text', 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea' ),
+			array( 'key' => 'win', 'type' => 'text' ),
+		) ),
+		'fold_min'    => sanitize_text_field( $input['fold_min'] ?? '' ),
+		'fold_title'  => sanitize_text_field( $input['fold_title'] ?? '' ),
+		'fold_teaser' => sanitize_text_field( $input['fold_teaser'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvgain( $input ) {
+	return array(
+		'title_tag'    => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'      => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'      => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'         => sanitize_textarea_field( $input['text'] ?? '' ),
+		'items'        => uid_sanitize_repeater_rows( $input['items'] ?? '[]', array(
+			array( 'key' => 'icon', 'type' => 'text' ),
+			array( 'key' => 'title', 'type' => 'text', 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea' ),
+			array( 'key' => 'tagline', 'type' => 'text' ),
+		) ),
+		'bins_heading' => sanitize_text_field( $input['bins_heading'] ?? '' ),
+		'bins_text'    => sanitize_textarea_field( $input['bins_text'] ?? '' ),
+		'bins'         => uid_sanitize_repeater_rows( $input['bins'] ?? '[]', array(
+			array( 'key' => 'code', 'type' => 'text', 'required' => true ),
+			array( 'key' => 'name', 'type' => 'text', 'required' => true ),
+		) ),
+		'bins_more'    => sanitize_text_field( $input['bins_more'] ?? '' ),
+		'fold_min'     => sanitize_text_field( $input['fold_min'] ?? '' ),
+		'fold_title'   => sanitize_text_field( $input['fold_title'] ?? '' ),
+		'fold_teaser'  => sanitize_text_field( $input['fold_teaser'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvteam( $input ) {
+	return array(
+		'title_tag'      => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'        => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'        => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'           => sanitize_textarea_field( $input['text'] ?? '' ),
+		'rows'           => uid_sanitize_repeater_rows( $input['rows'] ?? '[]', array(
+			array( 'key' => 'icon', 'type' => 'text' ),
+			array( 'key' => 'title', 'type' => 'text', 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea' ),
+		) ),
+		'pledge_heading' => sanitize_text_field( $input['pledge_heading'] ?? '' ),
+		'pledge_items'   => sanitize_textarea_field( $input['pledge_items'] ?? '' ),
+		'fold_min'       => sanitize_text_field( $input['fold_min'] ?? '' ),
+		'fold_title'     => sanitize_text_field( $input['fold_title'] ?? '' ),
+		'fold_teaser'    => sanitize_text_field( $input['fold_teaser'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvdev( $input ) {
+	return array(
+		'title_tag'   => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'     => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'     => sanitize_text_field( $input['heading'] ?? '' ),
+		'btn1_text'   => sanitize_text_field( $input['btn1_text'] ?? '' ),
+		'fold_min'    => sanitize_text_field( $input['fold_min'] ?? '' ),
+		'fold_title'  => sanitize_text_field( $input['fold_title'] ?? '' ),
+		'fold_teaser' => sanitize_text_field( $input['fold_teaser'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvxsell( $input ) {
+	return array(
+		'title_tag'   => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'     => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'     => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'        => sanitize_textarea_field( $input['text'] ?? '' ),
+		'items'       => uid_sanitize_repeater_rows( $input['items'] ?? '[]', array(
+			array( 'key' => 'icon', 'type' => 'text' ),
+			array( 'key' => 'title', 'type' => 'text', 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea' ),
+			array( 'key' => 'url', 'type' => 'text' ),
+		) ),
+		'fold_min'    => sanitize_text_field( $input['fold_min'] ?? '' ),
+		'fold_title'  => sanitize_text_field( $input['fold_title'] ?? '' ),
+		'fold_teaser' => sanitize_text_field( $input['fold_teaser'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvfaq( $input ) {
+	return array(
+		'title_tag'   => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'     => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'     => sanitize_text_field( $input['heading'] ?? '' ),
+		'items'       => uid_sanitize_repeater_rows( $input['items'] ?? '[]', array(
+			array( 'key' => 'question', 'type' => 'text', 'required' => true ),
+			array( 'key' => 'answer', 'type' => 'textarea' ),
+		) ),
+		'fold_min'    => sanitize_text_field( $input['fold_min'] ?? '' ),
+		'fold_title'  => sanitize_text_field( $input['fold_title'] ?? '' ),
+		'fold_teaser' => sanitize_text_field( $input['fold_teaser'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvadv( $input ) {
+	return array(
+		'title_tag' => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'   => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'   => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'      => sanitize_textarea_field( $input['text'] ?? '' ),
+		'items'     => uid_sanitize_repeater_rows( $input['items'] ?? '[]', array(
+			array( 'key' => 'icon', 'type' => 'text' ),
+			array( 'key' => 'value', 'type' => 'text', 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea' ),
+			array( 'key' => 'percent', 'type' => 'text' ),
+			array( 'key' => 'feat', 'type' => 'text' ),
+			array( 'key' => 'wide', 'type' => 'text' ),
+			array( 'key' => 'numeric', 'type' => 'text' ),
+		) ),
+		'foot_text' => sanitize_text_field( $input['foot_text'] ?? '' ),
+		'btn_text'  => sanitize_text_field( $input['btn_text'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvconnect( $input ) {
+	return array(
+		'title_tag' => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'   => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'   => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'      => sanitize_textarea_field( $input['text'] ?? '' ),
+		'steps'     => uid_sanitize_repeater_rows( $input['steps'] ?? '[]', array(
+			array( 'key' => 'title', 'type' => 'text', 'required' => true ),
+			array( 'key' => 'text', 'type' => 'textarea' ),
+		) ),
+	);
+}
+
+function uid_sanitize_section_cvprice( $input ) {
+	return array(
+		'title_tag' => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'   => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'   => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'      => sanitize_textarea_field( $input['text'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvlastcall( $input ) {
+	return array(
+		'heading'  => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'     => sanitize_textarea_field( $input['text'] ?? '' ),
+		'btn_text' => sanitize_text_field( $input['btn_text'] ?? '' ),
+	);
+}
+
+function uid_sanitize_section_cvlead( $input ) {
+	return array(
+		'title_tag'       => uid_sanitize_section_tag( $input['title_tag'] ?? '', 'h2' ),
+		'eyebrow'         => sanitize_text_field( $input['eyebrow'] ?? '' ),
+		'heading'         => sanitize_text_field( $input['heading'] ?? '' ),
+		'text'            => sanitize_textarea_field( $input['text'] ?? '' ),
+		'trust'           => sanitize_textarea_field( $input['trust'] ?? '' ),
+		'form_title'      => sanitize_text_field( $input['form_title'] ?? '' ),
+		'form_hint'       => sanitize_text_field( $input['form_hint'] ?? '' ),
+		'biztype_options' => sanitize_textarea_field( $input['biztype_options'] ?? '' ),
+		'submit_text'     => sanitize_text_field( $input['submit_text'] ?? '' ),
+		'note_text'       => sanitize_text_field( $input['note_text'] ?? '' ),
+		'success_text'    => sanitize_text_field( $input['success_text'] ?? '' ),
+	);
+}
+
+/**
+ * مودال درخواست سریع — همه دکمه‌های [data-open-modal] این صفحه همین را باز می‌کنند
+ */
+function uid_render_cv_quick_modal() {
+	?>
+	<div class="modal" id="modal" data-open="0" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+	  <div class="modal-bg" data-close-modal></div>
+	  <div class="modal-box">
+	    <button class="modal-x" data-close-modal aria-label="<?php esc_attr_e( 'بستن', 'uid-theme' ); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+	    <h3 id="modalTitle"><?php esc_html_e( 'درخواست وب‌سرویس تطبیق کارت و کد ملی', 'uid-theme' ); ?></h3>
+	    <p><?php esc_html_e( 'شماره‌تان را بگذارید تا کارشناس یوآیدی همین امروز تماس بگیرد: کلید آزمایشی، دسترسی سندباکس، مستندات سرویس', 'uid-theme' ); ?> <span class="lat">validate/card/ownership</span> <?php esc_html_e( 'و تعرفه متناسب با حجم استعلام ماهانه شما.', 'uid-theme' ); ?></p>
+	    <form id="modalForm" novalidate>
+	<div class="cta-fields">
+	  <div class="fld"><label for="m_name"><?php esc_html_e( 'نام و نام خانوادگی', 'uid-theme' ); ?></label>
+	    <input id="m_name" name="name" type="text" placeholder="<?php esc_attr_e( 'مثلاً علی رضایی', 'uid-theme' ); ?>" data-req></div>
+	  <div class="fld"><label for="m_biz"><?php esc_html_e( 'نام کسب‌وکار', 'uid-theme' ); ?></label>
+	    <input id="m_biz" name="business" type="text" placeholder="<?php esc_attr_e( 'مثلاً فروشگاه اینترنتی...', 'uid-theme' ); ?>" data-req></div>
+	  <div class="fld"><label for="m_tel"><?php esc_html_e( 'شماره تماس', 'uid-theme' ); ?></label>
+	    <input id="m_tel" name="phone" type="tel" inputmode="numeric" placeholder="09xxxxxxxxx" data-req data-tel>
+	    <span class="err"><?php esc_html_e( 'شماره موبایل معتبر با فرمت ۰۹xxxxxxxxx وارد کنید.', 'uid-theme' ); ?></span></div>
+	  <div class="fld"><label for="m_loc"><?php esc_html_e( 'نوع کسب‌وکار', 'uid-theme' ); ?></label>
+	    <select id="m_loc" name="biztype" data-req>
+	      <option value=""><?php esc_html_e( 'انتخاب کنید…', 'uid-theme' ); ?></option>
+	      <option><?php esc_html_e( 'ثبت‌نام و خدمات مالی', 'uid-theme' ); ?></option><option><?php esc_html_e( 'درگاه و پلتفرم پرداخت', 'uid-theme' ); ?></option>
+	      <option><?php esc_html_e( 'کیف پول دیجیتال', 'uid-theme' ); ?></option><option><?php esc_html_e( 'صرافی رمزارز', 'uid-theme' ); ?></option>
+	      <option><?php esc_html_e( 'سامانه اعتباری و لندتک', 'uid-theme' ); ?></option><option><?php esc_html_e( 'مارکت‌پلیس', 'uid-theme' ); ?></option>
+	      <option><?php esc_html_e( 'کارگزاری بورس', 'uid-theme' ); ?></option><option><?php esc_html_e( 'بانک، نئوبانک یا فین‌تک', 'uid-theme' ); ?></option>
+	      <option><?php esc_html_e( 'سایر کسب‌وکارها', 'uid-theme' ); ?></option>
+	    </select></div>
+	  <button class="btn btn-cta btn-block" type="button" data-submit><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg> <?php esc_html_e( 'ارسال درخواست و مشاوره رایگان', 'uid-theme' ); ?></button>
+	  <p class="tiny" style="margin-top:10px;color:#7D91B4"><?php esc_html_e( 'کارشناس یوآیدی در ساعات پاسخگویی، سریع با شما تماس می‌گیرد.', 'uid-theme' ); ?></p>
+	</div>
+	<div class="form-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg><b><?php esc_html_e( 'درخواست شما ثبت شد', 'uid-theme' ); ?></b>
+	  <span><?php esc_html_e( 'تیم یوآیدی به‌زودی با شما تماس می‌گیرد. برای پیگیری فوری:', 'uid-theme' ); ?> <span class="mono"><?php echo esc_html( uid_phone_display() ); ?></span></span></div></form>
+	    <p class="tiny" style="margin-top:14px;color:#7D91B4;text-align:center">
+	      <?php esc_html_e( 'ترجیح می‌دهید همین حالا صحبت کنید؟', 'uid-theme' ); ?>
+	      <a href="<?php echo esc_attr( uid_phone_href( uid_phone_raw() ) ); ?>" style="color:#7FE0EC;font-weight:700" class="mono"><?php echo esc_html( uid_phone_display() ); ?></a></p>
+	  </div>
+	</div>
+	<?php
+}
