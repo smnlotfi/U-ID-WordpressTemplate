@@ -578,23 +578,30 @@ function uid_field_checkbox( $args ) {
  * (با/بدون المنتور) که بدون ذخیره‌ی تنظیمات، نتیجه را روی سایت واقعی نشان می‌دهند
  */
 function uid_field_elementor_location_toggle( $args ) {
-	$val          = uid_current_value( $args['group'], $args['key'], false );
+	$val             = (bool) uid_current_value( $args['group'], $args['key'], false );
+	$name            = $args['group'] . '[' . $args['key'] . ']';
 	$preview_url_on  = add_query_arg( $args['preview_param'], '1', home_url( '/' ) );
 	$preview_url_off = add_query_arg( $args['preview_param'], '0', home_url( '/' ) );
 	?>
-	<label>
-		<input type="checkbox" name="<?php echo esc_attr( $args['group'] ); ?>[<?php echo esc_attr( $args['key'] ); ?>]" value="1" <?php checked( (bool) $val, true ); ?>>
-		<?php esc_html_e( 'به‌جای طراحی پیش‌فرض قالب، از تمپلیت المنتور (Theme Builder) با شرط «کل سایت» استفاده شود', 'uid-theme' ); ?>
-	</label>
+	<fieldset class="uid-source-switch">
+		<label style="display:block; margin-bottom:8px;">
+			<input type="radio" name="<?php echo esc_attr( $name ); ?>" value="0" <?php checked( $val, false ); ?>>
+			<strong><?php esc_html_e( 'طراحی پیش‌فرض قالب — به‌صورت سراسری روی کل سایت', 'uid-theme' ); ?></strong>
+		</label>
+		<label style="display:block;">
+			<input type="radio" name="<?php echo esc_attr( $name ); ?>" value="1" <?php checked( $val, true ); ?>>
+			<?php esc_html_e( 'تمپلیت المنتور (Theme Builder) با شرط «کل سایت»', 'uid-theme' ); ?>
+		</label>
+	</fieldset>
 	<p class="description">
-		<?php esc_html_e( 'پیش‌نیاز: از پیشخوان ← قالب‌ها ← Theme Builder، یک تمپلیت از همین نوع ساخته و شرط نمایش آن را «کل سایت» (Entire Site) گذاشته باشید.', 'uid-theme' ); ?>
+		<?php esc_html_e( 'این یک سوییچ است — هرکدام را انتخاب و ذخیره کنید، همان روی کل سایت (همه برگه‌ها و نوشته‌ها) اعمال می‌شود. برای گزینه‌ی دوم، پیش‌نیاز این است که از پیشخوان ← قالب‌ها ← Theme Builder یک تمپلیت از همین نوع ساخته و شرط نمایش آن را «کل سایت» (Entire Site) گذاشته باشید.', 'uid-theme' ); ?>
 	</p>
 	<p>
-		<a class="button" target="_blank" href="<?php echo esc_url( $preview_url_on ); ?>"><?php esc_html_e( 'پیش‌نمایش با المنتور', 'uid-theme' ); ?></a>
 		<a class="button" target="_blank" href="<?php echo esc_url( $preview_url_off ); ?>"><?php esc_html_e( 'پیش‌نمایش با طراحی پیش‌فرض قالب', 'uid-theme' ); ?></a>
+		<a class="button" target="_blank" href="<?php echo esc_url( $preview_url_on ); ?>"><?php esc_html_e( 'پیش‌نمایش با المنتور', 'uid-theme' ); ?></a>
 	</p>
 	<p class="description">
-		<?php esc_html_e( 'این دو لینک، صفحه اصلی را در تب جدید با همان حالت باز می‌کنند — بدون اینکه چیزی ذخیره شود؛ فقط برای شما (کاربر لاگین‌شده) فعال است. بعد از بررسی، اگر راضی بودید همین گزینه بالا را تیک بزنید و ذخیره کنید.', 'uid-theme' ); ?>
+		<?php esc_html_e( 'این دو لینک، صفحه اصلی را در تب جدید با همان حالت باز می‌کنند — بدون اینکه چیزی ذخیره شود؛ فقط برای شما (کاربر لاگین‌شده) فعال است. بعد از بررسی، اگر راضی بودید همان گزینه را بالا انتخاب و «ذخیره تغییرات» را بزنید.', 'uid-theme' ); ?>
 	</p>
 	<?php
 }
