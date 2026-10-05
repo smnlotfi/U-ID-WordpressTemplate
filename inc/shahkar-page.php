@@ -759,14 +759,7 @@ function uid_ensure_sk_page() {
 	update_post_meta( $page_id, '_wp_page_template', UID_SHAHKAR_TEMPLATE );
 	update_option( 'uid_sk_page_id', $page_id );
 }
-add_action( 'after_switch_theme', 'uid_ensure_sk_page_once' );
-
-function uid_ensure_sk_page_once() {
-	if ( get_option( 'uid_sk_page_bootstrapped' ) ) return;
-	uid_ensure_sk_page();
-	update_option( 'uid_sk_page_bootstrapped', 1 );
-}
-add_action( 'admin_init', 'uid_ensure_sk_page_once' );
+// ساخت/حذف این برگه فقط دستی از پیشخوان ← تنظیمات قالب ← مدیریت برگه‌ها انجام می‌شود (نه خودکار)
 
 function uid_register_sk_slug_setting() {
 	register_setting( 'uid_sk_group', 'uid_sk_page_slug', array(

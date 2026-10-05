@@ -1114,6 +1114,7 @@ function uid_render_settings_page() {
 
 	$tabs = array(
 		'submissions' => array( 'label' => __( 'درخواست‌های ارسالی', 'uid-theme' ), 'icon' => 'dashicons-email-alt' ),
+		'pages'       => array( 'label' => __( 'مدیریت برگه‌ها', 'uid-theme' ), 'icon' => 'dashicons-admin-page' ),
 		'home'    => array( 'label' => __( 'صفحه اصلی', 'uid-theme' ), 'icon' => 'dashicons-admin-home' ),
 		'pwa'     => array( 'label' => __( 'صفحه یوآیدی‌پلاس', 'uid-theme' ), 'icon' => 'dashicons-smartphone' ),
 		'civil'   => array( 'label' => __( 'صفحه ثبت احوال', 'uid-theme' ), 'icon' => 'dashicons-id-alt' ),
@@ -1310,6 +1311,8 @@ function uid_render_settings_page() {
 			<div class="uid-settings-content">
 				<?php if ( 'submissions' === $active_tab ) :
 					uid_render_form_submissions_tab();
+				elseif ( 'pages' === $active_tab ) :
+					uid_render_page_manager_tab();
 				elseif ( isset( $layout_tabs[ $active_tab ] ) ) :
 					$lt = $layout_tabs[ $active_tab ];
 					?>
