@@ -31,7 +31,9 @@ add_action( 'after_setup_theme', 'uid_theme_setup' );
  * بارگذاری استایل و اسکریپت
  */
 function uid_theme_assets() {
-	wp_enqueue_style( 'uid-google-fonts', 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap', array(), null );
+	// فونت‌ها از خودِ قالب سرو می‌شوند (نه از fonts.googleapis.com) چون دامنه‌های گوگل
+	// برای بخشی از کاربران ایرانی فیلتر/ناپایدار است و باعث لود نشدن فونت می‌شد
+	wp_enqueue_style( 'uid-fonts', UID_THEME_URI . '/assets/css/fonts.css', array(), UID_THEME_VERSION );
 	wp_enqueue_style( 'uid-style', get_stylesheet_uri(), array(), UID_THEME_VERSION );
 	wp_enqueue_script( 'uid-main', UID_THEME_URI . '/assets/js/main.js', array(), UID_THEME_VERSION, true );
 	wp_localize_script( 'uid-main', 'UID_FORM_CFG', array(

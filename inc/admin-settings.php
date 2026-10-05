@@ -1351,7 +1351,7 @@ function uid_render_settings_page() {
 function uid_admin_enqueue( $hook ) {
 	if ( 'toplevel_page_uid-theme-settings' !== $hook ) return;
 
-	wp_enqueue_style( 'uid-admin-font', 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap', array(), null );
+	wp_enqueue_style( 'uid-admin-font', UID_THEME_URI . '/assets/css/fonts.css', array(), UID_THEME_VERSION );
 	wp_enqueue_style( 'uid-admin-settings', UID_THEME_URI . '/assets/css/admin.css', array(), UID_THEME_VERSION );
 
 	wp_enqueue_media();
