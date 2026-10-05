@@ -1375,7 +1375,7 @@ function uid_ensure_ci_page() {
 	update_post_meta( $page_id, '_wp_page_template', UID_CARD_TO_IBAN_TEMPLATE );
 	update_option( 'uid_ci_page_id', $page_id );
 }
-add_action( 'after_switch_theme', 'uid_ensure_ci_page' );
+add_action( 'after_switch_theme', 'uid_ensure_ci_page_once' );
 
 function uid_ensure_ci_page_once() {
 	if ( get_option( 'uid_ci_page_bootstrapped' ) ) return;

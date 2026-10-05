@@ -759,7 +759,7 @@ function uid_ensure_sk_page() {
 	update_post_meta( $page_id, '_wp_page_template', UID_SHAHKAR_TEMPLATE );
 	update_option( 'uid_sk_page_id', $page_id );
 }
-add_action( 'after_switch_theme', 'uid_ensure_sk_page' );
+add_action( 'after_switch_theme', 'uid_ensure_sk_page_once' );
 
 function uid_ensure_sk_page_once() {
 	if ( get_option( 'uid_sk_page_bootstrapped' ) ) return;

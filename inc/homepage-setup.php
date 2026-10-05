@@ -61,7 +61,7 @@ function uid_ensure_homepage_page() {
 		update_option( 'page_on_front', $page_id );
 	}
 }
-add_action( 'after_switch_theme', 'uid_ensure_homepage_page' );
+add_action( 'after_switch_theme', 'uid_ensure_homepage_page_once' );
 
 /**
  * اجرای یک‌باره‌ی ensure برای قالبی که از قبل فعال بوده و همین حالا این قابلیت

@@ -1255,7 +1255,7 @@ function uid_ensure_ib_page() {
 	update_post_meta( $page_id, '_wp_page_template', UID_IBAN_SHEBA_TEMPLATE );
 	update_option( 'uid_ib_page_id', $page_id );
 }
-add_action( 'after_switch_theme', 'uid_ensure_ib_page' );
+add_action( 'after_switch_theme', 'uid_ensure_ib_page_once' );
 
 function uid_ensure_ib_page_once() {
 	if ( get_option( 'uid_ib_page_bootstrapped' ) ) return;
