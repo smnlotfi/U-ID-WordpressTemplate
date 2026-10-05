@@ -629,7 +629,13 @@ function uid_ensure_cu_page() {
 	update_option( 'uid_cu_page_id', $page_id );
 }
 add_action( 'after_switch_theme', 'uid_ensure_cu_page' );
-add_action( 'admin_init', 'uid_ensure_cu_page' );
+
+function uid_ensure_cu_page_once() {
+	if ( get_option( 'uid_cu_page_bootstrapped' ) ) return;
+	uid_ensure_cu_page();
+	update_option( 'uid_cu_page_bootstrapped', 1 );
+}
+add_action( 'admin_init', 'uid_ensure_cu_page_once' );
 
 function uid_register_cu_slug_setting() {
 	register_setting( 'uid_cu_group', 'uid_cu_page_slug', array(

@@ -5,6 +5,7 @@
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
+<?php if ( ! ( uid_use_elementor_footer() && function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'footer' ) ) ) : ?>
 <footer>
   <div class="wrap">
 
@@ -65,6 +66,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
     </div>
   </div>
 </footer>
+<?php endif; ?>
 
 <button class="back-to-top" id="backToTop" aria-label="<?php esc_attr_e( 'بازگشت به بالا', 'uid-theme' ); ?>">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>

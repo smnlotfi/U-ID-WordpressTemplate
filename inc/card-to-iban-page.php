@@ -1376,7 +1376,13 @@ function uid_ensure_ci_page() {
 	update_option( 'uid_ci_page_id', $page_id );
 }
 add_action( 'after_switch_theme', 'uid_ensure_ci_page' );
-add_action( 'admin_init', 'uid_ensure_ci_page' );
+
+function uid_ensure_ci_page_once() {
+	if ( get_option( 'uid_ci_page_bootstrapped' ) ) return;
+	uid_ensure_ci_page();
+	update_option( 'uid_ci_page_bootstrapped', 1 );
+}
+add_action( 'admin_init', 'uid_ensure_ci_page_once' );
 
 function uid_register_ci_slug_setting() {
 	register_setting( 'uid_ci_group', 'uid_ci_page_slug', array(

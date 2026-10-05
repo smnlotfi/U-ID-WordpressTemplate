@@ -62,7 +62,18 @@ function uid_ensure_homepage_page() {
 	}
 }
 add_action( 'after_switch_theme', 'uid_ensure_homepage_page' );
-add_action( 'admin_init', 'uid_ensure_homepage_page' ); // برای قالبی که از قبل فعال بوده و همین حالا این قابلیت به آن اضافه شده
+
+/**
+ * اجرای یک‌باره‌ی ensure برای قالبی که از قبل فعال بوده و همین حالا این قابلیت
+ * به آن اضافه شده — به‌جای اجرا روی هر admin_init (که روی هر بارگذاری پیشخوان و
+ * هر درخواست admin-ajax.php هم اجرا می‌شود و می‌تواند باعث کوئری‌های تکراری/برگه‌های تکراری شود)
+ */
+function uid_ensure_homepage_page_once() {
+	if ( get_option( 'uid_homepage_page_bootstrapped' ) ) return;
+	uid_ensure_homepage_page();
+	update_option( 'uid_homepage_page_bootstrapped', 1 );
+}
+add_action( 'admin_init', 'uid_ensure_homepage_page_once' );
 
 /* ===================== فیلد اسلاگ در تنظیمات قالب ===================== */
 

@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+<?php if ( ! ( uid_use_elementor_header() && function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'header' ) ) ) : ?>
+
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <div class="navwrap">
@@ -45,3 +47,5 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 <div class="msheet" id="msheet">
   <?php uid_render_mobile_sheet(); ?>
 </div>
+
+<?php endif; ?>

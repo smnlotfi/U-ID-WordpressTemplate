@@ -50,6 +50,12 @@ function uid_register_settings() {
 	add_settings_field( 'logo_id', __( 'لوگو', 'uid-theme' ), 'uid_field_logo', 'uid_header_options', 'uid_header_main', array( 'group' => 'uid_header_options', 'key' => 'logo_id', 'desc' => __( 'در صورت خالی بودن، آرم پیش‌فرض SVG سایت نمایش داده می‌شود.', 'uid-theme' ) ) );
 	add_settings_field( 'show_phone', __( 'دکمه تماس تلفنی', 'uid-theme' ), 'uid_field_checkbox', 'uid_header_options', 'uid_header_main', array( 'group' => 'uid_header_options', 'key' => 'show_phone', 'default' => 1, 'label' => __( 'نمایش داده شود (از شماره تنظیم‌شده در تب «اطلاعات تماس» استفاده می‌کند)', 'uid-theme' ) ) );
 
+	/* ---------------- هدر سراسری با المنتور ---------------- */
+	add_settings_section( 'uid_header_elementor', __( 'منبع هدر سایت', 'uid-theme' ), '__return_false', 'uid_header_options' );
+	add_settings_field( 'use_elementor_header', __( 'هدر سراسری', 'uid-theme' ), 'uid_field_elementor_location_toggle', 'uid_header_options', 'uid_header_elementor', array(
+		'group' => 'uid_header_options', 'key' => 'use_elementor_header', 'location' => 'header', 'preview_param' => 'uid_preview_header',
+	) );
+
 	/* ---------------- لینک‌های ساده منوی هدر ---------------- */
 	add_settings_section( 'uid_header_nav', __( 'لینک‌های ساده منو (کنار دکمه مگامنو)', 'uid-theme' ), '__return_false', 'uid_header_options' );
 	add_settings_field( 'nav_links', __( 'لینک‌ها', 'uid-theme' ), 'uid_field_repeater', 'uid_header_options', 'uid_header_nav', array(
@@ -86,6 +92,12 @@ function uid_register_settings() {
 	register_setting( 'uid_footer_group', 'uid_footer_options', array(
 		'sanitize_callback' => 'uid_sanitize_footer_options',
 		'default'           => array(),
+	) );
+
+	/* ---------------- فوتر سراسری با المنتور ---------------- */
+	add_settings_section( 'uid_footer_elementor', __( 'منبع فوتر سایت', 'uid-theme' ), '__return_false', 'uid_footer_options' );
+	add_settings_field( 'use_elementor_footer', __( 'فوتر سراسری', 'uid-theme' ), 'uid_field_elementor_location_toggle', 'uid_footer_options', 'uid_footer_elementor', array(
+		'group' => 'uid_footer_options', 'key' => 'use_elementor_footer', 'location' => 'footer', 'preview_param' => 'uid_preview_footer',
 	) );
 
 	add_settings_section( 'uid_footer_brand', __( 'معرفی و شبکه‌های اجتماعی', 'uid-theme' ), '__return_false', 'uid_footer_options' );
@@ -561,6 +573,32 @@ function uid_field_checkbox( $args ) {
 	);
 }
 
+/**
+ * سوییچ «این بخش را از قالب المنتور (Theme Builder) بگیر» + دو لینک پیش‌نمایش
+ * (با/بدون المنتور) که بدون ذخیره‌ی تنظیمات، نتیجه را روی سایت واقعی نشان می‌دهند
+ */
+function uid_field_elementor_location_toggle( $args ) {
+	$val          = uid_current_value( $args['group'], $args['key'], false );
+	$preview_url_on  = add_query_arg( $args['preview_param'], '1', home_url( '/' ) );
+	$preview_url_off = add_query_arg( $args['preview_param'], '0', home_url( '/' ) );
+	?>
+	<label>
+		<input type="checkbox" name="<?php echo esc_attr( $args['group'] ); ?>[<?php echo esc_attr( $args['key'] ); ?>]" value="1" <?php checked( (bool) $val, true ); ?>>
+		<?php esc_html_e( 'به‌جای طراحی پیش‌فرض قالب، از تمپلیت المنتور (Theme Builder) با شرط «کل سایت» استفاده شود', 'uid-theme' ); ?>
+	</label>
+	<p class="description">
+		<?php esc_html_e( 'پیش‌نیاز: از پیشخوان ← قالب‌ها ← Theme Builder، یک تمپلیت از همین نوع ساخته و شرط نمایش آن را «کل سایت» (Entire Site) گذاشته باشید.', 'uid-theme' ); ?>
+	</p>
+	<p>
+		<a class="button" target="_blank" href="<?php echo esc_url( $preview_url_on ); ?>"><?php esc_html_e( 'پیش‌نمایش با المنتور', 'uid-theme' ); ?></a>
+		<a class="button" target="_blank" href="<?php echo esc_url( $preview_url_off ); ?>"><?php esc_html_e( 'پیش‌نمایش با طراحی پیش‌فرض قالب', 'uid-theme' ); ?></a>
+	</p>
+	<p class="description">
+		<?php esc_html_e( 'این دو لینک، صفحه اصلی را در تب جدید با همان حالت باز می‌کنند — بدون اینکه چیزی ذخیره شود؛ فقط برای شما (کاربر لاگین‌شده) فعال است. بعد از بررسی، اگر راضی بودید همین گزینه بالا را تیک بزنید و ذخیره کنید.', 'uid-theme' ); ?>
+	</p>
+	<?php
+}
+
 function uid_field_notice( $args ) {
 	echo '<p class="description">' . esc_html( $args['text'] ) . '</p>';
 }
@@ -704,6 +742,7 @@ function uid_sanitize_header_options( $input ) {
 	return array(
 		'logo_id'         => absint( $input['logo_id'] ?? 0 ),
 		'show_phone'      => ! empty( $input['show_phone'] ),
+		'use_elementor_header' => ! empty( $input['use_elementor_header'] ),
 		'nav_links'       => uid_sanitize_repeater_rows( $input['nav_links'] ?? '[]', array(
 			array( 'key' => 'text', 'type' => 'text', 'required' => true ),
 			array( 'key' => 'url', 'type' => 'text' ),
@@ -731,6 +770,7 @@ function uid_sanitize_footer_options( $input ) {
 	$url_fields = array( 'instagram', 'linkedin' );
 
 	$out = array();
+	$out['use_elementor_footer'] = ! empty( $input['use_elementor_footer'] );
 	foreach ( $text_fields as $f ) {
 		$out[ $f ] = sanitize_text_field( $input[ $f ] ?? '' );
 	}

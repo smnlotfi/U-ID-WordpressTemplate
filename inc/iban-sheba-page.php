@@ -1256,7 +1256,13 @@ function uid_ensure_ib_page() {
 	update_option( 'uid_ib_page_id', $page_id );
 }
 add_action( 'after_switch_theme', 'uid_ensure_ib_page' );
-add_action( 'admin_init', 'uid_ensure_ib_page' );
+
+function uid_ensure_ib_page_once() {
+	if ( get_option( 'uid_ib_page_bootstrapped' ) ) return;
+	uid_ensure_ib_page();
+	update_option( 'uid_ib_page_bootstrapped', 1 );
+}
+add_action( 'admin_init', 'uid_ensure_ib_page_once' );
 
 function uid_register_ib_slug_setting() {
 	register_setting( 'uid_ib_group', 'uid_ib_page_slug', array(

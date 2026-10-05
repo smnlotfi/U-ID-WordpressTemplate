@@ -71,3 +71,31 @@ function uid_logo_html( $echo = true ) {
 	}
 	return $html;
 }
+
+/**
+ * هدر/فوتر سراسری المنتور (Theme Builder) — به‌جای طراحی پیش‌فرض قالب
+ *
+ * با ‎?uid_preview_header=1‎ یا ‎=0‎ (فقط برای کاربر لاگین‌شده با دسترسی تنظیمات
+ * قالب) می‌توان بدون ذخیره‌ی تنظیمات، نتیجه‌ی هرکدام را از قبل روی سایت دید.
+ */
+function uid_header_preview_override() {
+	if ( ! isset( $_GET['uid_preview_header'] ) || ! current_user_can( 'edit_theme_options' ) ) return null;
+	return (bool) absint( $_GET['uid_preview_header'] );
+}
+
+function uid_footer_preview_override() {
+	if ( ! isset( $_GET['uid_preview_footer'] ) || ! current_user_can( 'edit_theme_options' ) ) return null;
+	return (bool) absint( $_GET['uid_preview_footer'] );
+}
+
+function uid_use_elementor_header() {
+	$override = uid_header_preview_override();
+	if ( null !== $override ) return $override;
+	return (bool) uid_get_option( 'uid_header_options', 'use_elementor_header', false );
+}
+
+function uid_use_elementor_footer() {
+	$override = uid_footer_preview_override();
+	if ( null !== $override ) return $override;
+	return (bool) uid_get_option( 'uid_footer_options', 'use_elementor_footer', false );
+}
