@@ -813,8 +813,8 @@ Text Domain: uid-theme
     transition:background .2s,border-color .2s,transform .18s,box-shadow .2s;
   }
   .f-btn svg{width:17px;height:17px;flex:none}
-  .f-btn.phone{background:#fff;color:var(--navy-900);box-shadow:0 6px 18px rgba(0,0,0,.18)}
-  .f-btn.phone:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.26)}
+  .f-btn.f-btn-tel{background:#fff;color:var(--navy-900);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+  .f-btn.f-btn-tel:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.26)}
   .f-btn.ghost{background:rgba(255,255,255,.06);color:#fff;border-color:rgba(255,255,255,.24)}
   .f-btn.ghost:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.5);transform:translateY(-2px)}
   /* ---------- FOOTER LEAD BAND (bold redesign with inline form) ---------- */
