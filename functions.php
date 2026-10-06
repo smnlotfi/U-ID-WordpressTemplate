@@ -166,6 +166,7 @@ require UID_THEME_DIR . '/inc/section-manager.php';
 require UID_THEME_DIR . '/inc/form-submissions.php';
 require UID_THEME_DIR . '/inc/admin-settings.php';
 require UID_THEME_DIR . '/inc/page-manager.php';
+require UID_THEME_DIR . '/inc/global-chrome.php';
 require UID_THEME_DIR . '/inc/seo.php';
 require UID_THEME_DIR . '/inc/homepage-setup.php';
 require UID_THEME_DIR . '/inc/pwa-page.php';
