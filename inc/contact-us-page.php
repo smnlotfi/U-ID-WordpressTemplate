@@ -620,7 +620,7 @@ function uid_ensure_cu_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'تماس با ما', 'uid-theme' ),
-		'post_name'   => 'contact-us',
+		'post_name'   => 'contact-us-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

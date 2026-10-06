@@ -634,7 +634,7 @@ function uid_ensure_sn_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'احراز هویت ثنا', 'uid-theme' ),
-		'post_name'   => 'sana',
+		'post_name'   => 'sana-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

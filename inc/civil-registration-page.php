@@ -993,7 +993,7 @@ function uid_ensure_cr_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'وب سرویس ثبت احوال', 'uid-theme' ),
-		'post_name'   => 'api-inquiry-person',
+		'post_name'   => 'api-inquiry-person-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

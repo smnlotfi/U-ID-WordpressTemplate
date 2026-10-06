@@ -1129,7 +1129,7 @@ function uid_ensure_pa_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'استعلام کد پستی و آدرس', 'uid-theme' ),
-		'post_name'   => 'address-postcode-docs',
+		'post_name'   => 'address-postcode-docs-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

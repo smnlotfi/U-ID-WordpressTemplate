@@ -231,7 +231,7 @@ function uid_ensure_gx_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'واژه‌نامه اصطلاحات احراز هویت', 'uid-theme' ),
-		'post_name'   => 'glossary',
+		'post_name'   => 'glossary-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

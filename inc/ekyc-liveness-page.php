@@ -1326,7 +1326,7 @@ function uid_ensure_ek_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'وب‌سرویس احراز هویت تصویری', 'uid-theme' ),
-		'post_name'   => 'api',
+		'post_name'   => 'api-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

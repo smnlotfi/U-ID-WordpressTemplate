@@ -751,7 +751,7 @@ function uid_ensure_sk_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'وب‌سرویس شاهکار', 'uid-theme' ),
-		'post_name'   => 'shahkar',
+		'post_name'   => 'shahkar-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

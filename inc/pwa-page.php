@@ -1085,7 +1085,7 @@ function uid_ensure_pwa_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'یوآیدی‌پلاس (PWA)', 'uid-theme' ),
-		'post_name'   => 'uid-plus',
+		'post_name'   => 'uid-plus-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

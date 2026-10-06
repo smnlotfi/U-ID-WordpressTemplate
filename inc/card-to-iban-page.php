@@ -1367,7 +1367,7 @@ function uid_ensure_ci_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'تبدیل شماره کارت به شبا', 'uid-theme' ),
-		'post_name'   => 'api-card-to-iban',
+		'post_name'   => 'api-card-to-iban-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

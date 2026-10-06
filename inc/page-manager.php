@@ -3,32 +3,54 @@
  * مدیریت دستی برگه‌های اختصاصی قالب — پیشخوان ← تنظیمات قالب ← مدیریت برگه‌ها
  *
  * ساخت این برگه‌ها دیگر خودکار (روی فعال‌سازی قالب یا admin_init) انجام نمی‌شود؛
- * فقط با کلیک دستی از همین تب. قبل از ساخت، وجود برگه چک می‌شود؛ اگر از قبل
- * ساخته شده باشد، به‌جای ساخت نسخه‌ی تکراری، پیام می‌دهد که باید اول حذفش کنید.
+ * فقط با کلیک دستی از همین تب. «وجود برگه» یعنی برگه‌ای که تمپلیت این قالب را
+ * داشته باشد؛ برگه‌های دیگر (مثلاً همان برگه‌ی قدیمی بدون تمپلیت) حساب نمی‌شوند.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 function uid_theme_pages_registry() {
 	return array(
-		'homepage' => array( 'label' => __( 'صفحه اصلی', 'uid-theme' ), 'ensure' => 'uid_ensure_homepage_page', 'get_id' => 'uid_get_homepage_page_id', 'id_option' => 'uid_homepage_page_id' ),
-		'pwa'      => array( 'label' => __( 'یوآیدی‌پلاس (PWA)', 'uid-theme' ), 'ensure' => 'uid_ensure_pwa_page', 'get_id' => 'uid_get_pwa_page_id', 'id_option' => 'uid_pwa_page_id' ),
-		'cr'       => array( 'label' => __( 'وب سرویس ثبت احوال', 'uid-theme' ), 'ensure' => 'uid_ensure_cr_page', 'get_id' => 'uid_get_cr_page_id', 'id_option' => 'uid_cr_page_id' ),
-		'ek'       => array( 'label' => __( 'وب‌سرویس احراز هویت تصویری', 'uid-theme' ), 'ensure' => 'uid_ensure_ek_page', 'get_id' => 'uid_get_ek_page_id', 'id_option' => 'uid_ek_page_id' ),
-		'sn'       => array( 'label' => __( 'احراز هویت ثنا', 'uid-theme' ), 'ensure' => 'uid_ensure_sn_page', 'get_id' => 'uid_get_sn_page_id', 'id_option' => 'uid_sn_page_id' ),
-		'sk'       => array( 'label' => __( 'وب‌سرویس شاهکار', 'uid-theme' ), 'ensure' => 'uid_ensure_sk_page', 'get_id' => 'uid_get_sk_page_id', 'id_option' => 'uid_sk_page_id' ),
-		'pa'       => array( 'label' => __( 'استعلام کد پستی و آدرس', 'uid-theme' ), 'ensure' => 'uid_ensure_pa_page', 'get_id' => 'uid_get_pa_page_id', 'id_option' => 'uid_pa_page_id' ),
-		'ib'       => array( 'label' => __( 'استعلام اطلاعات مالی (شبا)', 'uid-theme' ), 'ensure' => 'uid_ensure_ib_page', 'get_id' => 'uid_get_ib_page_id', 'id_option' => 'uid_ib_page_id' ),
-		'ci'       => array( 'label' => __( 'تبدیل شماره کارت به شبا', 'uid-theme' ), 'ensure' => 'uid_ensure_ci_page', 'get_id' => 'uid_get_ci_page_id', 'id_option' => 'uid_ci_page_id' ),
-		'iv'       => array( 'label' => __( 'تطبیق شماره شبا با کد ملی', 'uid-theme' ), 'ensure' => 'uid_ensure_iv_page', 'get_id' => 'uid_get_iv_page_id', 'id_option' => 'uid_iv_page_id' ),
-		'cv'       => array( 'label' => __( 'تطبیق شماره کارت با کد ملی', 'uid-theme' ), 'ensure' => 'uid_ensure_cv_page', 'get_id' => 'uid_get_cv_page_id', 'id_option' => 'uid_cv_page_id' ),
-		'sa'       => array( 'label' => __( 'ثبت‌نام سامانه ثنا ویژه ایرانیان خارج از کشور', 'uid-theme' ), 'ensure' => 'uid_ensure_sa_page', 'get_id' => 'uid_get_sa_page_id', 'id_option' => 'uid_sa_page_id' ),
-		'wsh'      => array( 'label' => __( 'وب‌سرویس‌های احراز هویت', 'uid-theme' ), 'ensure' => 'uid_ensure_wsh_page', 'get_id' => 'uid_get_wsh_page_id', 'id_option' => 'uid_wsh_page_id' ),
-		'gx'       => array( 'label' => __( 'واژه‌نامه اصطلاحات احراز هویت', 'uid-theme' ), 'ensure' => 'uid_ensure_gx_page', 'get_id' => 'uid_get_gx_page_id', 'id_option' => 'uid_gx_page_id' ),
-		'ab'       => array( 'label' => __( 'درباره ما', 'uid-theme' ), 'ensure' => 'uid_ensure_ab_page', 'get_id' => 'uid_get_ab_page_id', 'id_option' => 'uid_ab_page_id' ),
-		'cu'       => array( 'label' => __( 'تماس با ما', 'uid-theme' ), 'ensure' => 'uid_ensure_cu_page', 'get_id' => 'uid_get_cu_page_id', 'id_option' => 'uid_cu_page_id' ),
-		'op'       => array( 'label' => __( 'OCR چیست؟', 'uid-theme' ), 'ensure' => 'uid_ensure_op_page', 'get_id' => 'uid_get_op_page_id', 'id_option' => 'uid_op_page_id' ),
+		'homepage' => array( 'label' => __( 'صفحه اصلی', 'uid-theme' ), 'ensure' => 'uid_ensure_homepage_page', 'template' => UID_HOMEPAGE_TEMPLATE, 'id_option' => 'uid_homepage_page_id' ),
+		'pwa'      => array( 'label' => __( 'یوآیدی‌پلاس (PWA)', 'uid-theme' ), 'ensure' => 'uid_ensure_pwa_page', 'template' => UID_PWA_TEMPLATE, 'id_option' => 'uid_pwa_page_id' ),
+		'cr'       => array( 'label' => __( 'وب سرویس ثبت احوال', 'uid-theme' ), 'ensure' => 'uid_ensure_cr_page', 'template' => UID_CR_TEMPLATE, 'id_option' => 'uid_cr_page_id' ),
+		'ek'       => array( 'label' => __( 'وب‌سرویس احراز هویت تصویری', 'uid-theme' ), 'ensure' => 'uid_ensure_ek_page', 'template' => UID_EKYC_TEMPLATE, 'id_option' => 'uid_ek_page_id' ),
+		'sn'       => array( 'label' => __( 'احراز هویت ثنا', 'uid-theme' ), 'ensure' => 'uid_ensure_sn_page', 'template' => UID_SANA_TEMPLATE, 'id_option' => 'uid_sn_page_id' ),
+		'sk'       => array( 'label' => __( 'وب‌سرویس شاهکار', 'uid-theme' ), 'ensure' => 'uid_ensure_sk_page', 'template' => UID_SHAHKAR_TEMPLATE, 'id_option' => 'uid_sk_page_id' ),
+		'pa'       => array( 'label' => __( 'استعلام کد پستی و آدرس', 'uid-theme' ), 'ensure' => 'uid_ensure_pa_page', 'template' => UID_POSTAL_ADDRESS_TEMPLATE, 'id_option' => 'uid_pa_page_id' ),
+		'ib'       => array( 'label' => __( 'استعلام اطلاعات مالی (شبا)', 'uid-theme' ), 'ensure' => 'uid_ensure_ib_page', 'template' => UID_IBAN_SHEBA_TEMPLATE, 'id_option' => 'uid_ib_page_id' ),
+		'ci'       => array( 'label' => __( 'تبدیل شماره کارت به شبا', 'uid-theme' ), 'ensure' => 'uid_ensure_ci_page', 'template' => UID_CARD_TO_IBAN_TEMPLATE, 'id_option' => 'uid_ci_page_id' ),
+		'iv'       => array( 'label' => __( 'تطبیق شماره شبا با کد ملی', 'uid-theme' ), 'ensure' => 'uid_ensure_iv_page', 'template' => UID_IBAN_VALIDATE_TEMPLATE, 'id_option' => 'uid_iv_page_id' ),
+		'cv'       => array( 'label' => __( 'تطبیق شماره کارت با کد ملی', 'uid-theme' ), 'ensure' => 'uid_ensure_cv_page', 'template' => UID_CARD_VALIDATE_TEMPLATE, 'id_option' => 'uid_cv_page_id' ),
+		'sa'       => array( 'label' => __( 'ثبت‌نام سامانه ثنا ویژه ایرانیان خارج از کشور', 'uid-theme' ), 'ensure' => 'uid_ensure_sa_page', 'template' => UID_SANA_ABROAD_TEMPLATE, 'id_option' => 'uid_sa_page_id' ),
+		'wsh'      => array( 'label' => __( 'وب‌سرویس‌های احراز هویت', 'uid-theme' ), 'ensure' => 'uid_ensure_wsh_page', 'template' => UID_WSH_TEMPLATE, 'id_option' => 'uid_wsh_page_id' ),
+		'gx'       => array( 'label' => __( 'واژه‌نامه اصطلاحات احراز هویت', 'uid-theme' ), 'ensure' => 'uid_ensure_gx_page', 'template' => UID_GLOSSARY_TEMPLATE, 'id_option' => 'uid_gx_page_id' ),
+		'ab'       => array( 'label' => __( 'درباره ما', 'uid-theme' ), 'ensure' => 'uid_ensure_ab_page', 'template' => UID_AB_TEMPLATE, 'id_option' => 'uid_ab_page_id' ),
+		'cu'       => array( 'label' => __( 'تماس با ما', 'uid-theme' ), 'ensure' => 'uid_ensure_cu_page', 'template' => UID_CU_TEMPLATE, 'id_option' => 'uid_cu_page_id' ),
+		'op'       => array( 'label' => __( 'OCR چیست؟', 'uid-theme' ), 'ensure' => 'uid_ensure_op_page', 'template' => UID_OP_TEMPLATE, 'id_option' => 'uid_op_page_id' ),
 	);
+}
+
+/**
+ * برگه‌ی این قالب را پیدا می‌کند: فقط برگه‌ای که تمپلیت همین قالب را داشته باشد.
+ * کش آیدی در آپشن هم فقط در صورتی معتبر است که هنوز این تمپلیت را داشته باشد.
+ */
+function uid_theme_page_find( $entry ) {
+	$cached = (int) get_option( $entry['id_option'] );
+	if ( $cached && get_post( $cached ) && $entry['template'] === get_post_meta( $cached, '_wp_page_template', true ) ) {
+		return $cached;
+	}
+
+	$found = get_posts( array(
+		'post_type'      => 'page',
+		'post_status'    => 'any',
+		'meta_key'       => '_wp_page_template',
+		'meta_value'     => $entry['template'],
+		'posts_per_page' => 1,
+		'fields'         => 'ids',
+	) );
+
+	return $found ? (int) $found[0] : 0;
 }
 
 /**
@@ -49,19 +71,20 @@ function uid_handle_theme_page_action() {
 
 	if ( isset( $registry[ $key ] ) && in_array( $action, array( 'create', 'delete' ), true ) ) {
 		$entry       = $registry[ $key ];
-		$existing_id = call_user_func( $entry['get_id'] );
+		$existing_id = uid_theme_page_find( $entry );
 
 		if ( 'create' === $action ) {
 			if ( $existing_id ) {
 				$notice = 'exists';
 			} else {
+				delete_option( $entry['id_option'] );
 				call_user_func( $entry['ensure'] );
-				$notice = call_user_func( $entry['get_id'] ) ? 'created' : 'failed';
+				$notice = uid_theme_page_find( $entry ) ? 'created' : 'failed';
 			}
 		} elseif ( 'delete' === $action ) {
+			delete_option( $entry['id_option'] );
 			if ( $existing_id ) {
 				wp_delete_post( $existing_id, true );
-				delete_option( $entry['id_option'] );
 				$notice = 'deleted';
 			} else {
 				$notice = 'not_found';
@@ -104,7 +127,7 @@ function uid_render_page_manager_tab() {
 	}
 	?>
 	<p class="description">
-		<?php esc_html_e( 'ساخت و حذف هر برگه فقط با کلیک دستی شما انجام می‌شود — قالب دیگر خودکار (نه روی فعال‌سازی، نه در پس‌زمینه) برگه نمی‌سازد. اگر برگه‌ای از قبل وجود داشته باشد، دکمه «ایجاد» آن را دوباره نمی‌سازد و باید اول حذفش کنید.', 'uid-theme' ); ?>
+		<?php esc_html_e( 'ساخت و حذف هر برگه فقط با کلیک دستی شما انجام می‌شود — قالب دیگر خودکار برگه نمی‌سازد. «موجود است» یعنی برگه‌ای با تمپلیت همین قالب وجود دارد؛ برگه‌ی قدیمی‌ای که فقط محتوایش مانده و تمپلیتش برگشته، اینجا «ساخته نشده» نشان داده می‌شود.', 'uid-theme' ); ?>
 	</p>
 	<table class="widefat striped" style="max-width:900px;">
 		<thead>
@@ -116,7 +139,7 @@ function uid_render_page_manager_tab() {
 		</thead>
 		<tbody>
 			<?php foreach ( $registry as $row_key => $entry ) :
-				$page_id = call_user_func( $entry['get_id'] );
+				$page_id = uid_theme_page_find( $entry );
 				?>
 				<tr>
 					<td><strong><?php echo esc_html( $entry['label'] ); ?></strong></td>

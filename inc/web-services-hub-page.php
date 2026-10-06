@@ -1101,7 +1101,7 @@ function uid_ensure_wsh_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'وب‌سرویس‌های احراز هویت', 'uid-theme' ),
-		'post_name'   => 'web-services',
+		'post_name'   => 'web-services-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

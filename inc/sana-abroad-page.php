@@ -1169,7 +1169,7 @@ function uid_ensure_sa_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'ثبت‌نام سامانه ثنا ویژه ایرانیان خارج از کشور', 'uid-theme' ),
-		'post_name'   => 'sana-register-foreign-form',
+		'post_name'   => 'sana-register-foreign-form-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

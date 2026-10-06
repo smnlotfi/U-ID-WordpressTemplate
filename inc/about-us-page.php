@@ -893,7 +893,7 @@ function uid_ensure_ab_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'درباره ما', 'uid-theme' ),
-		'post_name'   => 'about-us',
+		'post_name'   => 'about-us-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

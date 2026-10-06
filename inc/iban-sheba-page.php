@@ -1247,7 +1247,7 @@ function uid_ensure_ib_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'استعلام اطلاعات مالی (شبا)', 'uid-theme' ),
-		'post_name'   => 'api-inquiry-iban',
+		'post_name'   => 'api-inquiry-iban-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

@@ -46,7 +46,7 @@ function uid_ensure_homepage_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'صفحه اصلی', 'uid-theme' ),
-		'post_name'   => 'home',
+		'post_name'   => 'home-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

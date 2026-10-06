@@ -1534,7 +1534,7 @@ function uid_ensure_cv_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'تطبیق شماره کارت با کد ملی', 'uid-theme' ),
-		'post_name'   => 'api-card-nationalid',
+		'post_name'   => 'api-card-nationalid-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

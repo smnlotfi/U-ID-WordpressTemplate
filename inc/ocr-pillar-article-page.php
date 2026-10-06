@@ -1423,7 +1423,7 @@ function uid_ensure_op_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'OCR چیست؟', 'uid-theme' ),
-		'post_name'   => 'ocr-pillar-article',
+		'post_name'   => 'ocr-pillar-article-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;

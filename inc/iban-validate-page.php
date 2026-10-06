@@ -1468,7 +1468,7 @@ function uid_ensure_iv_page() {
 		'post_type'   => 'page',
 		'post_status' => 'publish',
 		'post_title'  => __( 'تطبیق شماره شبا با کد ملی', 'uid-theme' ),
-		'post_name'   => 'api-iban-nationalid',
+		'post_name'   => 'api-iban-nationalid-new',
 	), true );
 
 	if ( is_wp_error( $page_id ) || ! $page_id ) return;
