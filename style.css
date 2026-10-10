@@ -1111,7 +1111,10 @@ Text Domain: uid-theme
 
   /* ---------- LEAD MODAL ---------- */
   .lead-modal-overlay{
-    position:fixed; inset:0; background:rgba(11,18,32,.6); backdrop-filter:blur(4px); z-index:300;
+    /* z-index must beat every other fixed overlay (msheet 1090, cfab-panel 1221,
+       csheet 1256, mobile-navbar 1260) — this modal can be opened from inside any
+       of them, and at the old z-index:300 it rendered invisibly underneath */
+    position:fixed; inset:0; background:rgba(11,18,32,.6); backdrop-filter:blur(4px); z-index:1300;
     display:none; align-items:center; justify-content:center; padding:20px;
   }
   .lead-modal-overlay.open{display:flex;}
@@ -1137,6 +1140,12 @@ Text Domain: uid-theme
   .mobile-navbar{display:none}
   @media (max-width:760px){
     body{padding-block-end:calc(var(--mbar) + env(safe-area-inset-bottom))}
+
+    /* the hamburger menu (.msheet) is a full-screen fixed sheet with its own
+       scroll; without this its bottom row (consult button + phone link) ends
+       up underneath the always-on-top .mobile-navbar (z-index 1260) and is
+       both visually hidden and unclickable */
+    .msheet{padding-block-end:calc(var(--mbar) + 40px + env(safe-area-inset-bottom))}
 
     .mobile-navbar{
       display:flex;position:fixed;inset-block-end:0;inset-inline:0;

@@ -151,27 +151,7 @@ body.mopen .burger span{background:transparent}
 body.mopen .burger span::before{inset-block-start:0;transform:rotate(45deg)}
 body.mopen .burger span::after{inset-block-start:0;transform:rotate(-45deg)}
 
-/* mega menu */
-.mega{
-  position:absolute;inset-block-start:calc(100% + 12px);left:50%;
-  transform:translateX(-50%) translateY(-8px);width:min(880px,calc(100vw - 32px));
-  background:#fff;border:1px solid var(--n200);border-radius:var(--r-l);
-  box-shadow:var(--sh-3);padding:26px;opacity:0;visibility:hidden;
-  transition:opacity .22s,transform .22s,visibility .22s;z-index:20;
-}
-.mega[data-open="1"]{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
-.mega-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.mega-col h4{font-size:12px;font-weight:700;color:var(--n400);letter-spacing:.04em;margin-bottom:12px}
-.mega-link{display:flex;gap:11px;padding:9px 10px;border-radius:var(--r);transition:background .18s}
-.mega-link:hover{background:var(--n50)}
-.mega-link .ic{width:32px;height:32px;border-radius:var(--r);background:var(--teal-l);color:var(--teal-d);
-  display:grid;place-items:center;flex:none}
-.mega-link .ic svg{width:16px;height:16px}
-.mega-link.hot .ic{background:var(--orange-l);color:var(--orange-d)}
-.mega-link b{display:block;font-size:14px;font-weight:600;color:var(--ink);line-height:1.5}
-.mega-link span{display:block;font-size:12px;color:var(--n400);line-height:1.5}
-.mega-foot{margin-block-start:20px;padding-block-start:18px;border-block-start:1px solid var(--n200);
-  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+/* mega menu: shared definition lives in style.css so it stays in sync with the global header */
 
 /* mobile menu */
 .msheet{

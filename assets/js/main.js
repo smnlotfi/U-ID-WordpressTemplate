@@ -163,7 +163,7 @@
       bg.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
     bg.addEventListener('click', mToggle);
-    document.querySelectorAll('#msheet a').forEach(function(a){
+    document.querySelectorAll('#msheet a, #msheet button').forEach(function(a){
       a.addEventListener('click', function(){
         document.body.classList.remove('mopen');
         bg.setAttribute('aria-expanded', 'false');
