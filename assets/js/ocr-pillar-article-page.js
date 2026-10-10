@@ -91,9 +91,13 @@
 	var revealIo = 'IntersectionObserver' in w ? new IntersectionObserver(function (es) {
 		es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('is-in'); revealIo.unobserve(en.target); } });
 	}, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 }) : null;
-	$$('.rv', root).forEach(function (el) {
-		if (revealIo) revealIo.observe(el); else el.classList.add('is-in');
+	var revealEls = $$('.rv', root);
+	revealEls.forEach(function (el) {
+		if (!revealIo) { el.classList.add('is-in'); return; }
+		var rect = el.getBoundingClientRect();
+		if (rect.top < w.innerHeight && rect.bottom > 0) { el.classList.add('is-in'); } else { revealIo.observe(el); }
 	});
+	if (revealIo) { setTimeout(function () { revealIo.disconnect(); revealEls.forEach(function (el) { el.classList.add('is-in'); }); }, 1200); }
 
 	/* ══════════════════════════════════════════════════════════════════════
 	 * پرش نرم به لنگرهای داخل صفحه (jumpbar/toc/tldr) — اگر لنگر داخل فصل

@@ -271,7 +271,20 @@
         }
       });
     }, {threshold:.15, rootMargin:'0px 0px -40px 0px'});
-    revealEls.forEach(function(el){ io.observe(el); });
+    revealEls.forEach(function(el){
+      var rect = el.getBoundingClientRect();
+      if(rect.top < window.innerHeight && rect.bottom > 0){
+        el.classList.add('in');
+      } else {
+        io.observe(el);
+      }
+    });
+    // Safety net: some browsers can stall the first IntersectionObserver
+    // callback on an otherwise idle page. Never leave content hidden forever.
+    setTimeout(function(){
+      io.disconnect();
+      revealEls.forEach(function(el){ el.classList.add('in'); });
+    }, 1200);
   } else {
     revealEls.forEach(function(el){ el.classList.add('in'); });
   }

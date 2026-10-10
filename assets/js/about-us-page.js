@@ -50,9 +50,13 @@
   var io = 'IntersectionObserver' in w ? new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
   }, { threshold: .12, rootMargin: '0px 0px -8% 0px' }) : null;
-  d.querySelectorAll('.uid-about-us-page .rv').forEach(function (el) {
-    if (io) io.observe(el); else el.classList.add('is-in');
+  var revealEls = d.querySelectorAll('.uid-about-us-page .rv');
+  revealEls.forEach(function (el) {
+    if (!io) { el.classList.add('is-in'); return; }
+    var rect = el.getBoundingClientRect();
+    if (rect.top < w.innerHeight && rect.bottom > 0) { el.classList.add('is-in'); } else { io.observe(el); }
   });
+  if (io) { setTimeout(function () { io.disconnect(); revealEls.forEach(function (el) { el.classList.add('is-in'); }); }, 1200); }
 
   /* ═══════════════════════════════════════════════════════════════════════
    * کارت‌های دسته (values) — روی موبایل، شبکه کارت‌ها به یک استک فیزیکی تبدیل

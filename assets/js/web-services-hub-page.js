@@ -54,9 +54,15 @@
   var io = 'IntersectionObserver' in w ? new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
   }, { threshold: .12, rootMargin: '0px 0px -8% 0px' }) : null;
-  d.querySelectorAll('.uid-web-services-hub-page .rv, .uid-web-services-hub-page .fnl, .uid-web-services-hub-page [data-count]').forEach(function (el) {
-    if (io) io.observe(el); else el.classList.add('is-in');
+  var revealEls = d.querySelectorAll('.uid-web-services-hub-page .rv, .uid-web-services-hub-page .fnl, .uid-web-services-hub-page [data-count]');
+  revealEls.forEach(function (el) {
+    if (!io) { el.classList.add('is-in'); return; }
+    var rect = el.getBoundingClientRect();
+    if (rect.top < w.innerHeight && rect.bottom > 0) { el.classList.add('is-in'); } else { io.observe(el); }
   });
+  // Safety net: never leave content hidden forever if the browser stalls
+  // the first IntersectionObserver callback on an idle page.
+  if (io) { setTimeout(function () { io.disconnect(); revealEls.forEach(function (el) { el.classList.add('is-in'); }); }, 1200); }
 
   /* ---- شمارش صعودی اعداد ---- */
   function fa(s) { return String(s).replace(/[0-9]/g, function (x) { return '۰۱۲۳۴۵۶۷۸۹'[x]; }); }
@@ -77,7 +83,17 @@
       requestAnimationFrame(step);
     });
   }, { threshold: .4 }) : null;
-  d.querySelectorAll('.uid-web-services-hub-page [data-count]').forEach(function (el) { if (cio) cio.observe(el); else el.textContent = fa(grp(el.dataset.count)); });
+  var countEls = d.querySelectorAll('.uid-web-services-hub-page [data-count]');
+  countEls.forEach(function (el) { if (cio) cio.observe(el); else el.textContent = fa(grp(el.dataset.count)); });
+  if (cio) {
+    setTimeout(function () {
+      cio.disconnect();
+      countEls.forEach(function (el) {
+        var to = parseFloat(el.dataset.count), dec = parseInt(el.dataset.dec || '0', 10);
+        el.textContent = fa(dec ? to.toFixed(dec) : grp(to));
+      });
+    }, 1200);
+  }
 
   /* ---- آکاردئون سوالات متداول ---- */
   d.querySelectorAll('.uid-web-services-hub-page .faq-q').forEach(function (q) {

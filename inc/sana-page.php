@@ -148,7 +148,7 @@ function uid_render_section_snhero() {
 	        <?php echo '<' . $tag . ' class="h-hero">'; ?><?php echo wp_kses( uid_section_val( 'snhero', 'heading', __( 'تا وقتی کد ثنا نگیرید،<mark>ابلاغیه قضایی‌تان دیده نمی‌شود</mark>.', 'uid-theme' ) ), array( 'mark' => array() ) ); ?><?php echo '</' . $tag . '>'; ?>
 	        <p class="lede on-dark"><?php echo esc_html( uid_section_val( 'snhero', 'text', __( 'سامانه ثنا تنها دروازه ورود به خدمات غیرحضوری قوه قضاییه است. یوآیدی، ثبت‌نام و احراز هویت ثنای شما را در کمتر از ۵ دقیقه، با نصف هزینه‌ی حضوری و همراه با تیم متخصص انجام می‌دهد — بدون صف، بدون رفت‌وآمد.', 'uid-theme' ) ) ); ?></p>
 	        <div class="btn-row">
-	          <button class="sn-btn btn-cta" data-open-modal><?php echo uid_sn_submit_icon(); ?> <?php echo esc_html( uid_section_val( 'snhero', 'btn1_text', __( 'ثبت‌نام و احراز هویت ثنا', 'uid-theme' ) ) ); ?></button>
+	          <a class="sn-btn btn-cta" href="<?php echo esc_url( uid_section_val( 'snhero', 'btn1_url', '#' ) ); ?>"><?php echo uid_sn_submit_icon(); ?> <?php echo esc_html( uid_section_val( 'snhero', 'btn1_text', __( 'ثبت‌نام و احراز هویت ثنا', 'uid-theme' ) ) ); ?></a>
 	          <a class="sn-btn btn-call" href="<?php echo esc_attr( uid_phone_href( uid_phone_raw() ) ); ?>"><?php echo uid_sn_phone_icon(); ?>
 	            <span class="num"><?php echo esc_html( uid_phone_display() ); ?></span></a>
 	        </div>
@@ -211,7 +211,7 @@ function uid_render_section_snurgency() {
 	      <div class="tx"><b><?php echo esc_html( uid_section_val( 'snurgency', 'heading', __( 'ثبت‌نام را عقب نیندازید', 'uid-theme' ) ) ); ?></b>
 	        <p><?php echo esc_html( uid_section_val( 'snurgency', 'text', __( 'بدون کد ثنا نه ابلاغیه قضایی می‌بینید، نه می‌توانید شکایت یا دادخواست ثبت کنید — و رسیدگی به پرونده‌تان معطل می‌ماند. پشتیبانی تیم متخصص یوآیدی فقط شنبه تا چهارشنبه، ۹ صبح تا ۶ عصر پاسخگوست؛ همین حالا وقت بگیرید.', 'uid-theme' ) ) ); ?></p></div>
 	      <div class="acts">
-	        <button class="sn-btn btn-cta sn-btn-sm" data-open-modal><?php echo esc_html( uid_section_val( 'snurgency', 'btn1_text', __( 'ثبت‌نام همین حالا', 'uid-theme' ) ) ); ?></button>
+	        <a class="sn-btn btn-cta sn-btn-sm" href="<?php echo esc_url( uid_section_val( 'snurgency', 'btn1_url', '#' ) ); ?>"><?php echo esc_html( uid_section_val( 'snurgency', 'btn1_text', __( 'ثبت‌نام همین حالا', 'uid-theme' ) ) ); ?></a>
 	        <a class="sn-btn btn-ghost-d sn-btn-sm" href="<?php echo esc_attr( uid_phone_href( uid_phone_raw() ) ); ?>"><?php echo esc_html( uid_section_val( 'snurgency', 'btn2_text', __( 'تماس با پشتیبانی', 'uid-theme' ) ) ); ?></a>
 	      </div>
 	    </div>
@@ -709,7 +709,8 @@ function uid_register_sn_settings() {
 	add_settings_field( 'eyebrow', __( 'برچسب کوچک بالای عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_snhero', 'uid_section_snhero_main', array( 'group' => 'uid_section_snhero', 'key' => 'eyebrow', 'default' => 'احراز هویت سامانه ثنا · غیرحضوری با یوآیدی' ) );
 	add_settings_field( 'heading', __( 'عنوان اصلی (تگ mark مجاز است)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_snhero', 'uid_section_snhero_main', array( 'group' => 'uid_section_snhero', 'key' => 'heading', 'default' => 'تا وقتی کد ثنا نگیرید،<mark>ابلاغیه قضایی‌تان دیده نمی‌شود</mark>.' ) );
 	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_snhero', 'uid_section_snhero_main', array( 'group' => 'uid_section_snhero', 'key' => 'text', 'default' => 'سامانه ثنا تنها دروازه ورود به خدمات غیرحضوری قوه قضاییه است. یوآیدی، ثبت‌نام و احراز هویت ثنای شما را در کمتر از ۵ دقیقه، با نصف هزینه‌ی حضوری و همراه با تیم متخصص انجام می‌دهد — بدون صف، بدون رفت‌وآمد.' ) );
-	add_settings_field( 'btn1_text', __( 'متن دکمه اول (باز کردن مودال)', 'uid-theme' ), 'uid_field_text', 'uid_section_snhero', 'uid_section_snhero_main', array( 'group' => 'uid_section_snhero', 'key' => 'btn1_text', 'default' => 'ثبت‌نام و احراز هویت ثنا' ) );
+	add_settings_field( 'btn1_text', __( 'متن دکمه اول', 'uid-theme' ), 'uid_field_text', 'uid_section_snhero', 'uid_section_snhero_main', array( 'group' => 'uid_section_snhero', 'key' => 'btn1_text', 'default' => 'ثبت‌نام و احراز هویت ثنا' ) );
+	add_settings_field( 'btn1_url', __( 'لینک دکمه اول (لینک ثبت‌نام)', 'uid-theme' ), 'uid_field_text', 'uid_section_snhero', 'uid_section_snhero_main', array( 'group' => 'uid_section_snhero', 'key' => 'btn1_url', 'default' => '' ) );
 	add_settings_field( 'tags', __( 'برچسب‌های اطمینان زیر دکمه‌ها (هر خط یک مورد)', 'uid-theme' ), 'uid_field_textarea', 'uid_section_snhero', 'uid_section_snhero_main', array( 'group' => 'uid_section_snhero', 'key' => 'tags', 'default' => "صدور کد ثنا در کمتر از ۳ دقیقه\nهمراه با تیم متخصص، نه تنها یک راهنما\nکارگزار مورد تایید سامانه ثنا" ) );
 	add_settings_field( 'checklist_title', __( 'عنوان چک‌لیست آمادگی', 'uid-theme' ), 'uid_field_text', 'uid_section_snhero', 'uid_section_snhero_main', array( 'group' => 'uid_section_snhero', 'key' => 'checklist_title', 'default' => 'چک‌لیست آمادگی ۵ دقیقه‌ای' ) );
 	add_settings_field( 'ready_items', __( 'موارد چک‌لیست آمادگی', 'uid-theme' ), 'uid_field_repeater', 'uid_section_snhero', 'uid_section_snhero_main', array(
@@ -723,7 +724,8 @@ function uid_register_sn_settings() {
 	add_settings_section( 'uid_section_snurgency_main', '', '__return_false', 'uid_section_snurgency' );
 	add_settings_field( 'heading', __( 'عنوان', 'uid-theme' ), 'uid_field_text', 'uid_section_snurgency', 'uid_section_snurgency_main', array( 'group' => 'uid_section_snurgency', 'key' => 'heading', 'default' => 'ثبت‌نام را عقب نیندازید' ) );
 	add_settings_field( 'text', __( 'توضیح', 'uid-theme' ), 'uid_field_textarea', 'uid_section_snurgency', 'uid_section_snurgency_main', array( 'group' => 'uid_section_snurgency', 'key' => 'text', 'default' => 'بدون کد ثنا نه ابلاغیه قضایی می‌بینید، نه می‌توانید شکایت یا دادخواست ثبت کنید — و رسیدگی به پرونده‌تان معطل می‌ماند. پشتیبانی تیم متخصص یوآیدی فقط شنبه تا چهارشنبه، ۹ صبح تا ۶ عصر پاسخگوست؛ همین حالا وقت بگیرید.' ) );
-	add_settings_field( 'btn1_text', __( 'متن دکمه اول (باز کردن مودال)', 'uid-theme' ), 'uid_field_text', 'uid_section_snurgency', 'uid_section_snurgency_main', array( 'group' => 'uid_section_snurgency', 'key' => 'btn1_text', 'default' => 'ثبت‌نام همین حالا' ) );
+	add_settings_field( 'btn1_text', __( 'متن دکمه اول', 'uid-theme' ), 'uid_field_text', 'uid_section_snurgency', 'uid_section_snurgency_main', array( 'group' => 'uid_section_snurgency', 'key' => 'btn1_text', 'default' => 'ثبت‌نام همین حالا' ) );
+	add_settings_field( 'btn1_url', __( 'لینک دکمه اول (لینک ثبت‌نام)', 'uid-theme' ), 'uid_field_text', 'uid_section_snurgency', 'uid_section_snurgency_main', array( 'group' => 'uid_section_snurgency', 'key' => 'btn1_url', 'default' => '' ) );
 	add_settings_field( 'btn2_text', __( 'متن دکمه دوم (تماس تلفنی)', 'uid-theme' ), 'uid_field_text', 'uid_section_snurgency', 'uid_section_snurgency_main', array( 'group' => 'uid_section_snurgency', 'key' => 'btn2_text', 'default' => 'تماس با پشتیبانی' ) );
 
 	/* ---------------- مزایای غیرحضوری بودن ---------------- */
@@ -862,6 +864,7 @@ function uid_sanitize_section_snhero( $input ) {
 		'heading'         => wp_kses( $input['heading'] ?? '', array( 'mark' => array() ) ),
 		'text'            => sanitize_textarea_field( $input['text'] ?? '' ),
 		'btn1_text'       => sanitize_text_field( $input['btn1_text'] ?? '' ),
+		'btn1_url'        => esc_url_raw( $input['btn1_url'] ?? '' ),
 		'tags'            => sanitize_textarea_field( $input['tags'] ?? '' ),
 		'checklist_title' => sanitize_text_field( $input['checklist_title'] ?? '' ),
 		'ready_items'     => uid_sanitize_repeater_rows( $input['ready_items'] ?? '[]', array(
@@ -876,6 +879,7 @@ function uid_sanitize_section_snurgency( $input ) {
 		'heading'   => sanitize_text_field( $input['heading'] ?? '' ),
 		'text'      => sanitize_textarea_field( $input['text'] ?? '' ),
 		'btn1_text' => sanitize_text_field( $input['btn1_text'] ?? '' ),
+		'btn1_url'  => esc_url_raw( $input['btn1_url'] ?? '' ),
 		'btn2_text' => sanitize_text_field( $input['btn2_text'] ?? '' ),
 	);
 }

@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'UID_THEME_VERSION', '0.3.0' );
+define( 'UID_THEME_VERSION', '0.3.1' );
 define( 'UID_THEME_DIR', get_template_directory() );
 define( 'UID_THEME_URI', get_template_directory_uri() );
 
