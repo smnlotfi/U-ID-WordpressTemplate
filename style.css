@@ -47,7 +47,12 @@ Text Domain: uid-theme
   }
   .mono{font-family:var(--mono);direction:ltr;unicode-bidi:isolate;font-variant-ligatures:none}
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
+  /* overflow-x must be hidden on html (the actual scrolling box per spec), not just
+     body — otherwise one unconstrained wide element in page content (e.g. an old
+     Elementor page's data table) can inflate the whole layout viewport past the
+     device width, pushing every position:fixed element (header, bottom nav) off
+     to the side instead of clipping the offending element */
+  html{scroll-behavior:smooth;overflow-x:hidden;}
   body{
     font-family:'Vazirmatn','IBM Plex Sans',sans-serif;
     color:var(--neutral-950);

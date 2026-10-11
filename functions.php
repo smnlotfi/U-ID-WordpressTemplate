@@ -187,6 +187,19 @@ require UID_THEME_DIR . '/inc/contact-us-page.php';
 require UID_THEME_DIR . '/inc/ocr-pillar-article-page.php';
 
 /**
+ * جلوگیری از اعمال «Delay JavaScript Execution» افزونه WP Rocket روی اسکریپت‌های
+ * این قالب. این ویژگی اجرای اسکریپت را تا اولین تعامل کاربر (حرکت ماوس، اسکرول،
+ * لمس و...) عقب می‌اندازد؛ چون سکشن‌های صفحه با کلاس rv به‌صورت پیش‌فرض
+ * opacity:0 هستند و فقط با اجرای main.js / فایل جاوااسکریپت هر صفحه نمایان
+ * می‌شوند، تاخیر افزونه باعث می‌شد صفحه تا حرکت ماوس «لود نشده» به‌نظر برسد.
+ */
+function uid_theme_exclude_from_rocket_delay_js( $exclusions ) {
+	$exclusions[] = UID_THEME_URI . '/assets/js/';
+	return $exclusions;
+}
+add_filter( 'rocket_delay_js_exclusions', 'uid_theme_exclude_from_rocket_delay_js' );
+
+/**
  * ویجت‌های فوتر ستون‌دار (اختیاری برای آینده — فعلاً از منو استفاده می‌کنیم)
  */
 function uid_theme_content_width() {
