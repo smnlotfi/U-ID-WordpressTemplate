@@ -162,6 +162,7 @@ body.mopen .burger span::after{inset-block-start:0;transform:rotate(-45deg)}
 /* mobile menu */
 .msheet{
   position:fixed;inset:0;z-index:1090;background:#fff;padding:96px var(--pad) 40px;
+  padding-block-end:calc(var(--mbar, 68px) + 40px + env(safe-area-inset-bottom));
   overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(-12px);
   transition:opacity .3s,transform .3s,visibility .3s;
 }
