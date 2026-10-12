@@ -702,7 +702,7 @@ function uid_render_section_sklead() {
 	            </div>
 	            <div class="fld"><input name="business" type="text" placeholder="<?php esc_attr_e( 'نام کسب‌وکار', 'uid-theme' ); ?>" data-req>
 	              <span class="err"><?php esc_html_e( 'نام کسب‌وکار را وارد کنید.', 'uid-theme' ); ?></span></div>
-	            <div class="fld"><select name="biztype" data-req>
+	            <div class="fld"><select name="biztype">
 	                <option value=""><?php esc_html_e( 'نوع کسب‌وکار…', 'uid-theme' ); ?></option>
 	                <?php foreach ( $biztypes as $b ) : ?>
 	                <option><?php echo esc_html( $b ); ?></option>
@@ -1185,7 +1185,7 @@ function uid_render_sk_quick_modal() {
 	    <input id="m_tel" name="phone" type="tel" inputmode="numeric" placeholder="09xxxxxxxxx" data-req data-tel>
 	    <span class="err"><?php esc_html_e( 'شماره موبایل معتبر با فرمت ۰۹xxxxxxxxx وارد کنید.', 'uid-theme' ); ?></span></div>
 	  <div class="fld"><label for="m_loc"><?php esc_html_e( 'نوع کسب‌وکار', 'uid-theme' ); ?></label>
-	    <select id="m_loc" name="biztype" data-req>
+	    <select id="m_loc" name="biztype">
 	      <option value=""><?php esc_html_e( 'انتخاب کنید…', 'uid-theme' ); ?></option>
 	      <option><?php esc_html_e( 'فین‌تک / پرداخت‌یار', 'uid-theme' ); ?></option><option><?php esc_html_e( 'صرافی ارز دیجیتال', 'uid-theme' ); ?></option>
 	      <option><?php esc_html_e( 'فروشگاه اینترنتی', 'uid-theme' ); ?></option><option><?php esc_html_e( 'سرویس اشتراکی / پنل کاربری', 'uid-theme' ); ?></option>

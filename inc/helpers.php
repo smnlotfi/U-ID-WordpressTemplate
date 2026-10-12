@@ -27,6 +27,53 @@ function uid_fa_digits( $string ) {
 }
 
 /**
+ * تبدیل تاریخ میلادی به شمسی (الگوریتم استاندارد و رایج در پروژه‌های فارسی)
+ */
+function uid_gregorian_to_jalali( $gy, $gm, $gd ) {
+	$g_days_in_month = array( 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 );
+	$jy = ( $gy <= 1600 ) ? 0 : 979;
+	$gy -= ( $gy <= 1600 ) ? 621 : 1600;
+	$gy2 = ( $gm > 2 ) ? ( $gy + 1 ) : $gy;
+	$days = ( 365 * $gy ) + (int) ( ( $gy2 + 3 ) / 4 ) - (int) ( ( $gy2 + 99 ) / 100 ) + (int) ( ( $gy2 + 399 ) / 400 ) - 80 + $gd + $g_days_in_month[ $gm - 1 ];
+	$jy  += 33 * (int) ( $days / 12053 );
+	$days = $days % 12053;
+	$jy  += 4 * (int) ( $days / 1461 );
+	$days = $days % 1461;
+	if ( $days > 365 ) {
+		$jy  += (int) ( ( $days - 1 ) / 365 );
+		$days = ( $days - 1 ) % 365;
+	}
+	if ( $days < 186 ) {
+		$jm = 1 + (int) ( $days / 31 );
+		$jd = 1 + ( $days % 31 );
+	} else {
+		$jm = 7 + (int) ( ( $days - 186 ) / 30 );
+		$jd = 1 + ( ( $days - 186 ) % 30 );
+	}
+	return array( $jy, $jm, $jd );
+}
+
+/**
+ * نمایش یک تاریخ‌-ساعت ذخیره‌شده با current_time('mysql') به‌صورت شمسی با ارقام فارسی.
+ * توجه: از mysql2date() با $translate=false استفاده می‌شود چون مقدار ورودی از قبل
+ * به وقت محلی سایت تبدیل شده؛ حالت translate=true دوباره افست منطقه زمانی را اعمال
+ * می‌کند و ساعت/تاریخ نمایشی را اشتباه می‌کند (افست دوبار اعمال می‌شود).
+ */
+function uid_fa_datetime( $mysql_datetime ) {
+	if ( empty( $mysql_datetime ) ) {
+		return '';
+	}
+	$local = mysql2date( 'Y-m-d H:i', $mysql_datetime, false );
+	if ( ! $local ) {
+		return '';
+	}
+	list( $date_part, $time_part ) = explode( ' ', $local );
+	list( $gy, $gm, $gd )          = array_map( 'intval', explode( '-', $date_part ) );
+	list( $jy, $jm, $jd )          = uid_gregorian_to_jalali( $gy, $gm, $gd );
+	return uid_fa_digits( sprintf( '%04d/%02d/%02d %s', $jy, $jm, $jd, $time_part ) );
+}
+
+/**
  * ساخت لینک tel: از روی شماره ذخیره‌شده در تنظیمات (فقط ارقام و + مجاز است)
  */
 function uid_phone_href( $phone ) {

@@ -513,3 +513,38 @@
       .then(function(res){ done(!!(res && res.success)); })
       .catch(function(){ done(false); });
   };
+
+  // Homepage lead forms ("درخواست خدمت" contact section + pre-footer
+  // "آماده شروع همکاری هستید؟" band) — both used to be static demo markup
+  // with onsubmit="alert(...)"; now they submit for real like every other
+  // page's lead form (validate [data-req] fields, then uidSubmitForm).
+  function uidWireHomeForm(form){
+    if(!form) return;
+    var btn = form.querySelector('[data-submit]');
+    if(!btn) return;
+    function validate(){
+      var ok = true;
+      form.querySelectorAll('[data-req]').forEach(function(f){
+        var bad = !f.value.trim();
+        if(!bad && f.hasAttribute('data-tel')) bad = !/^09\d{9}$/.test(f.value.replace(/[^0-9]/g,''));
+        f.style.outline = bad ? '2px solid #e5484d' : '';
+        if(bad) ok = false;
+      });
+      return ok;
+    }
+    form.querySelectorAll('[data-req]').forEach(function(f){
+      f.addEventListener('input', function(){ f.style.outline = ''; });
+      f.addEventListener('change', function(){ f.style.outline = ''; });
+    });
+    btn.addEventListener('click', function(){
+      if(!validate()) return;
+      window.uidSubmitForm(form, btn, function(){
+        var fields = form.querySelector('.contact-form-fields, .lead-band-form-fields');
+        var ok = form.querySelector('.contact-form-ok, .lead-band-form-ok');
+        if(fields) fields.style.display = 'none';
+        if(ok) ok.style.display = '';
+      });
+    });
+  }
+  uidWireHomeForm(document.getElementById('contactForm'));
+  uidWireHomeForm(document.getElementById('leadBandForm'));

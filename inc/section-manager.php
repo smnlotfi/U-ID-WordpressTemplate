@@ -1192,19 +1192,20 @@ function uid_render_section_contact() {
 	          </div>
 	        </div>
 	      </div>
-	      <form class="contact-form" onsubmit="event.preventDefault(); alert('این یک نمونه فرم است.');">
+	      <form class="contact-form" id="contactForm" novalidate>
+	        <div class="contact-form-fields">
 	        <div class="form-row">
-	          <div class="field"><label><?php echo esc_html( uid_section_val( 'contact', 'label_name', __( 'نام و نام خانوادگی', 'uid-theme' ) ) ); ?></label><input type="text" placeholder="<?php echo esc_attr( uid_section_val( 'contact', 'ph_name', __( 'مثلاً علی رضایی', 'uid-theme' ) ) ); ?>" required></div>
-	          <div class="field"><label><?php echo esc_html( uid_section_val( 'contact', 'label_company', __( 'نام شرکت', 'uid-theme' ) ) ); ?></label><input type="text" placeholder="<?php echo esc_attr( uid_section_val( 'contact', 'ph_company', __( 'نام سازمان شما', 'uid-theme' ) ) ); ?>"></div>
+	          <div class="field"><label><?php echo esc_html( uid_section_val( 'contact', 'label_name', __( 'نام و نام خانوادگی', 'uid-theme' ) ) ); ?></label><input type="text" name="name" placeholder="<?php echo esc_attr( uid_section_val( 'contact', 'ph_name', __( 'مثلاً علی رضایی', 'uid-theme' ) ) ); ?>" data-req></div>
+	          <div class="field"><label><?php echo esc_html( uid_section_val( 'contact', 'label_company', __( 'نام شرکت', 'uid-theme' ) ) ); ?></label><input type="text" name="company" placeholder="<?php echo esc_attr( uid_section_val( 'contact', 'ph_company', __( 'نام سازمان شما', 'uid-theme' ) ) ); ?>" data-req></div>
 	        </div>
 	        <div class="form-row">
-	          <div class="field"><label><?php echo esc_html( uid_section_val( 'contact', 'label_email', __( 'ایمیل', 'uid-theme' ) ) ); ?></label><input type="email" placeholder="you@company.com" required></div>
-	          <div class="field"><label><?php echo esc_html( uid_section_val( 'contact', 'label_phone', __( 'شماره تماس', 'uid-theme' ) ) ); ?></label><input type="tel" placeholder="09xxxxxxxxx"></div>
+	          <div class="field"><label><?php echo esc_html( uid_section_val( 'contact', 'label_email', __( 'ایمیل', 'uid-theme' ) ) ); ?></label><input type="email" name="email" placeholder="you@company.com"></div>
+	          <div class="field"><label><?php echo esc_html( uid_section_val( 'contact', 'label_phone', __( 'شماره تماس', 'uid-theme' ) ) ); ?></label><input type="tel" name="phone" placeholder="09xxxxxxxxx" data-req data-tel></div>
 	        </div>
 	        <div class="form-row">
 	          <div class="field full">
 	            <label><?php echo esc_html( uid_section_val( 'contact', 'label_service', __( 'نوع خدمت مورد نیاز', 'uid-theme' ) ) ); ?></label>
-	            <select>
+	            <select name="service">
 	              <?php foreach ( $services as $s ) : ?>
 	              	<option><?php echo esc_html( $s ); ?></option>
 	              <?php endforeach; ?>
@@ -1212,9 +1213,11 @@ function uid_render_section_contact() {
 	          </div>
 	        </div>
 	        <div class="form-row">
-	          <div class="field full"><label><?php echo esc_html( uid_section_val( 'contact', 'label_message', __( 'توضیحات', 'uid-theme' ) ) ); ?></label><textarea rows="3" placeholder="<?php echo esc_attr( uid_section_val( 'contact', 'ph_message', __( 'نیاز خود را کوتاه شرح دهید', 'uid-theme' ) ) ); ?>"></textarea></div>
+	          <div class="field full"><label><?php echo esc_html( uid_section_val( 'contact', 'label_message', __( 'توضیحات', 'uid-theme' ) ) ); ?></label><textarea rows="3" name="message" placeholder="<?php echo esc_attr( uid_section_val( 'contact', 'ph_message', __( 'نیاز خود را کوتاه شرح دهید', 'uid-theme' ) ) ); ?>"></textarea></div>
 	        </div>
-	        <button type="submit" class="btn btn-primary"><?php echo esc_html( uid_section_val( 'contact', 'submit_text', __( 'ارسال درخواست', 'uid-theme' ) ) ); ?></button>
+	        <button type="button" class="btn btn-primary" data-submit><?php echo esc_html( uid_section_val( 'contact', 'submit_text', __( 'ارسال درخواست', 'uid-theme' ) ) ); ?></button>
+	        </div>
+	        <div class="contact-form-ok" style="display:none;text-align:center;padding:24px 0;font-weight:700;color:var(--success,#1a9e5c)"><?php esc_html_e( 'درخواست شما ثبت شد. تیم یوآیدی به‌زودی با شما تماس می‌گیرد.', 'uid-theme' ); ?></div>
 	      </form>
 	    </div>
 	  </div>
@@ -1246,20 +1249,23 @@ function uid_render_section_leadband() {
 	        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><?php echo esc_html( uid_section_val( 'leadband', 'trust2', __( 'مشاوره رایگان یکپارچه‌سازی', 'uid-theme' ) ) ); ?></span>
 	      </div>
 	    </div>
-	    <form class="lead-band-form" onsubmit="event.preventDefault(); alert('این یک نمونه فرم است.');">
+	    <form class="lead-band-form" id="leadBandForm" novalidate>
+	      <div class="lead-band-form-fields">
 	      <div class="frow">
-	        <input type="text" placeholder="<?php esc_attr_e( 'نام و نام خانوادگی', 'uid-theme' ); ?>" required>
-	        <input type="tel" placeholder="<?php esc_attr_e( 'شماره تماس', 'uid-theme' ); ?>" required>
+	        <input type="text" name="name" placeholder="<?php esc_attr_e( 'نام و نام خانوادگی', 'uid-theme' ); ?>" data-req>
+	        <input type="tel" name="phone" placeholder="<?php esc_attr_e( 'شماره تماس', 'uid-theme' ); ?>" data-req data-tel>
 	      </div>
 	      <div class="frow" style="grid-template-columns:1fr; margin-bottom:14px;">
-	        <select>
+	        <select name="service">
 	          <option><?php echo esc_html( uid_section_val( 'leadband', 'select_placeholder', __( 'نوع خدمت مورد نیاز', 'uid-theme' ) ) ); ?></option>
 	          <?php foreach ( $services as $s ) : ?>
 	          <option><?php echo esc_html( $s ); ?></option>
 	          <?php endforeach; ?>
 	        </select>
 	      </div>
-	      <button type="submit" class="btn btn-primary"><?php echo esc_html( uid_section_val( 'leadband', 'button_text', __( 'درخواست تماس', 'uid-theme' ) ) ); ?></button>
+	      <button type="button" class="btn btn-primary" data-submit><?php echo esc_html( uid_section_val( 'leadband', 'button_text', __( 'درخواست تماس', 'uid-theme' ) ) ); ?></button>
+	      </div>
+	      <div class="lead-band-form-ok" style="display:none;text-align:center;padding:20px 0;font-weight:700"><?php esc_html_e( 'درخواست شما ثبت شد. تیم یوآیدی به‌زودی با شما تماس می‌گیرد.', 'uid-theme' ); ?></div>
 	    </form>
 	  </div>
 	</div>

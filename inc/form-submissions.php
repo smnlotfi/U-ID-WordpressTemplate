@@ -249,7 +249,7 @@ function uid_render_form_submissions_tab() {
 				$path = wp_parse_url( $row->page_url, PHP_URL_PATH );
 				?>
 				<tr>
-					<td><?php echo esc_html( mysql2date( 'Y/m/d H:i', $row->created_at ) ); ?></td>
+					<td><?php echo esc_html( uid_fa_datetime( $row->created_at ) ); ?></td>
 					<td>
 						<?php echo esc_html( $row->page_title ); ?>
 						<?php if ( $row->page_url ) : ?>
