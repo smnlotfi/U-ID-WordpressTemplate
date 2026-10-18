@@ -51,6 +51,49 @@ function uid_fs_maybe_install() {
 add_action( 'admin_init', 'uid_fs_maybe_install' );
 
 /**
+ * اعتبارسنجی و پاک‌سازی لیست ایمیل جداشده با کاما؛ ایمیل‌های نامعتبر حذف می‌شوند
+ */
+function uid_sanitize_email_list( $raw ) {
+	$emails = array();
+	foreach ( explode( ',', (string) $raw ) as $email ) {
+		$email = sanitize_email( trim( $email ) );
+		if ( $email && is_email( $email ) ) {
+			$emails[] = $email;
+		}
+	}
+	return implode( ',', $emails );
+}
+
+/**
+ * تعیین ایمیل گیرنده اعلان فرم:
+ * ۱) ایمیل اختصاصی همان صفحه (تنظیم‌شده در تب مخصوص آن صفحه، کنار اسلاگ)
+ * ۲) ایمیل سراسری تب «اطلاعات تماس»
+ * ۳) ایمیل مدیر سایت (admin_email) به‌عنوان آخرین راه‌حل
+ */
+function uid_fs_resolve_notify_email( $page_url ) {
+	$page_id = $page_url ? url_to_postid( $page_url ) : 0;
+
+	if ( $page_id && function_exists( 'uid_page_notify_registry' ) ) {
+		foreach ( uid_page_notify_registry() as $entry ) {
+			if ( $page_id === (int) get_option( $entry['id_option'] ) ) {
+				$page_email = get_option( $entry['notify_option'] );
+				if ( $page_email ) {
+					return $page_email;
+				}
+				break;
+			}
+		}
+	}
+
+	$contact_options = get_option( 'uid_contact_options', array() );
+	if ( ! empty( $contact_options['notify_email'] ) ) {
+		return $contact_options['notify_email'];
+	}
+
+	return get_option( 'admin_email' );
+}
+
+/**
  * گرفتن IP کاربر (با در نظر گرفتن پراکسی/CDN احتمالی)
  */
 function uid_fs_client_ip() {
@@ -116,7 +159,7 @@ function uid_fs_handle_submit() {
 		array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
 	);
 
-	$notify_email = get_option( 'admin_email' );
+	$notify_email = uid_fs_resolve_notify_email( $page_url );
 	if ( $notify_email ) {
 		$subject = sprintf(
 			/* translators: %s: page title */

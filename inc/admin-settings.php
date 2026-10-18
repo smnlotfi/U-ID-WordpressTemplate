@@ -38,6 +38,12 @@ function uid_register_settings() {
 	add_settings_field( 'phone', __( 'شماره تلفن (فقط ارقام انگلیسی، بدون فاصله)', 'uid-theme' ), 'uid_field_text', 'uid_contact_options', 'uid_contact_main', array( 'group' => 'uid_contact_options', 'key' => 'phone', 'default' => '02166123290', 'desc' => __( 'در هدر، فوتر، دکمه‌های شناور و پنجره گفتگو استفاده می‌شود.', 'uid-theme' ) ) );
 	add_settings_field( 'whatsapp', __( 'لینک واتساپ', 'uid-theme' ), 'uid_field_text', 'uid_contact_options', 'uid_contact_main', array( 'group' => 'uid_contact_options', 'key' => 'whatsapp', 'default' => 'https://wa.me/989120000000' ) );
 	add_settings_field( 'telegram', __( 'لینک تلگرام', 'uid-theme' ), 'uid_field_text', 'uid_contact_options', 'uid_contact_main', array( 'group' => 'uid_contact_options', 'key' => 'telegram', 'default' => 'https://t.me/uid_support' ) );
+	add_settings_field( 'notify_email', __( 'ایمیل دریافت فرم‌ها (پیش‌فرض سراسری)', 'uid-theme' ), 'uid_field_text', 'uid_contact_options', 'uid_contact_main', array(
+		'group'   => 'uid_contact_options',
+		'key'     => 'notify_email',
+		'default' => '',
+		'desc'    => __( 'هر بار یکی از فرم‌های سایت ارسال شود، جزئیات به این ایمیل فرستاده می‌شود. اگر خالی بماند، ایمیل مدیر سایت (تنظیمات > عمومی وردپرس) استفاده می‌شود. برای چند گیرنده، ایمیل‌ها را با کاما (,) جدا کنید. اگر برای یک برگه خاص در کادر ویرایش آن، «ایمیل دریافت فرم‌های این صفحه» تنظیم شده باشد، همان ایمیل برای فرم‌های آن صفحه در اولویت است.', 'uid-theme' ),
+	) );
 
 	/* ---------------- هدر ---------------- */
 	register_setting( 'uid_header_group', 'uid_header_options', array(
@@ -498,6 +504,61 @@ function uid_register_settings() {
 }
 add_action( 'admin_init', 'uid_register_settings' );
 
+/**
+ * فهرست صفحات اختصاصی قالب برای تنظیم «ایمیل دریافت فرم» مخصوص هر صفحه —
+ * کلیدها دقیقاً مطابق کلیدهای $layout_tabs در uid_render_settings_page() است.
+ */
+function uid_page_notify_registry() {
+	return array(
+		'home'         => array( 'group' => 'uid_home_group', 'layout_page' => 'uid_home_layout', 'notify_option' => 'uid_home_notify_email', 'id_option' => 'uid_homepage_page_id' ),
+		'pwa'          => array( 'group' => 'uid_pwa_group', 'layout_page' => 'uid_pwa_layout', 'notify_option' => 'uid_pwa_notify_email', 'id_option' => 'uid_pwa_page_id' ),
+		'civil'        => array( 'group' => 'uid_cr_group', 'layout_page' => 'uid_cr_layout', 'notify_option' => 'uid_cr_notify_email', 'id_option' => 'uid_cr_page_id' ),
+		'ekyc'         => array( 'group' => 'uid_ek_group', 'layout_page' => 'uid_ek_layout', 'notify_option' => 'uid_ek_notify_email', 'id_option' => 'uid_ek_page_id' ),
+		'sana'         => array( 'group' => 'uid_sn_group', 'layout_page' => 'uid_sn_layout', 'notify_option' => 'uid_sn_notify_email', 'id_option' => 'uid_sn_page_id' ),
+		'shahkar'      => array( 'group' => 'uid_sk_group', 'layout_page' => 'uid_sk_layout', 'notify_option' => 'uid_sk_notify_email', 'id_option' => 'uid_sk_page_id' ),
+		'postal'       => array( 'group' => 'uid_pa_group', 'layout_page' => 'uid_pa_layout', 'notify_option' => 'uid_pa_notify_email', 'id_option' => 'uid_pa_page_id' ),
+		'iban'         => array( 'group' => 'uid_ib_group', 'layout_page' => 'uid_ib_layout', 'notify_option' => 'uid_ib_notify_email', 'id_option' => 'uid_ib_page_id' ),
+		'cardiban'     => array( 'group' => 'uid_ci_group', 'layout_page' => 'uid_ci_layout', 'notify_option' => 'uid_ci_notify_email', 'id_option' => 'uid_ci_page_id' ),
+		'ibanvalidate' => array( 'group' => 'uid_iv_group', 'layout_page' => 'uid_iv_layout', 'notify_option' => 'uid_iv_notify_email', 'id_option' => 'uid_iv_page_id' ),
+		'cardvalidate' => array( 'group' => 'uid_cv_group', 'layout_page' => 'uid_cv_layout', 'notify_option' => 'uid_cv_notify_email', 'id_option' => 'uid_cv_page_id' ),
+		'sanaabroad'   => array( 'group' => 'uid_sa_group', 'layout_page' => 'uid_sa_layout', 'notify_option' => 'uid_sa_notify_email', 'id_option' => 'uid_sa_page_id' ),
+		'webservices'  => array( 'group' => 'uid_wsh_group', 'layout_page' => 'uid_wsh_layout', 'notify_option' => 'uid_wsh_notify_email', 'id_option' => 'uid_wsh_page_id' ),
+		'glossary'     => array( 'group' => 'uid_gx_group', 'layout_page' => 'uid_gx_layout', 'notify_option' => 'uid_gx_notify_email', 'id_option' => 'uid_gx_page_id' ),
+		'aboutus'      => array( 'group' => 'uid_ab_group', 'layout_page' => 'uid_ab_layout', 'notify_option' => 'uid_ab_notify_email', 'id_option' => 'uid_ab_page_id' ),
+		'contactus'    => array( 'group' => 'uid_cu_group', 'layout_page' => 'uid_cu_layout', 'notify_option' => 'uid_cu_notify_email', 'id_option' => 'uid_cu_page_id' ),
+		'ocrarticle'   => array( 'group' => 'uid_op_group', 'layout_page' => 'uid_op_layout', 'notify_option' => 'uid_op_notify_email', 'id_option' => 'uid_op_page_id' ),
+	);
+}
+
+/**
+ * ثبت فیلد «ایمیل دریافت فرم‌های این صفحه» برای تمام صفحات اختصاصی قالب —
+ * هر صفحه در تب تنظیمات خودش (کنار آدرس/اسلاگ) این فیلد را نمایش می‌دهد.
+ */
+function uid_register_page_notify_settings() {
+	foreach ( uid_page_notify_registry() as $entry ) {
+		register_setting( $entry['group'], $entry['notify_option'], array(
+			'sanitize_callback' => 'uid_sanitize_email_list',
+			'default'           => '',
+		) );
+		add_settings_section( 'uid_page_notify_section', '', '__return_false', $entry['layout_page'] );
+		add_settings_field( $entry['notify_option'], __( 'ایمیل دریافت فرم‌های این صفحه', 'uid-theme' ), 'uid_field_page_notify_email', $entry['layout_page'], 'uid_page_notify_section', array(
+			'option' => $entry['notify_option'],
+		) );
+	}
+}
+add_action( 'admin_init', 'uid_register_page_notify_settings' );
+
+function uid_field_page_notify_email( $args ) {
+	$val = get_option( $args['option'], '' );
+	printf(
+		'<input type="text" class="regular-text" dir="ltr" name="%1$s" value="%2$s" placeholder="%3$s">',
+		esc_attr( $args['option'] ),
+		esc_attr( $val ),
+		esc_attr__( 'خالی = استفاده از ایمیل پیش‌فرض سراسری', 'uid-theme' )
+	);
+	echo '<p class="description">' . esc_html__( 'وقتی فرم‌های موجود در این صفحه ارسال شوند، نتیجه به این ایمیل فرستاده می‌شود؛ در صورت خالی بودن، ایمیل پیش‌فرض تب «اطلاعات تماس» (و در نهایت ایمیل مدیر سایت) استفاده می‌شود. برای چند گیرنده، ایمیل‌ها را با کاما (,) جدا کنید.', 'uid-theme' ) . '</p>';
+}
+
 function uid_heading_tag_options() {
 	$opts = array();
 	foreach ( UID_HEADING_TAGS as $t ) {
@@ -697,9 +758,10 @@ function uid_field_repeater( $args ) {
 
 function uid_sanitize_contact_options( $input ) {
 	return array(
-		'phone'    => sanitize_text_field( $input['phone'] ?? '' ),
-		'whatsapp' => esc_url_raw( $input['whatsapp'] ?? '' ),
-		'telegram' => esc_url_raw( $input['telegram'] ?? '' ),
+		'phone'        => sanitize_text_field( $input['phone'] ?? '' ),
+		'whatsapp'     => esc_url_raw( $input['whatsapp'] ?? '' ),
+		'telegram'     => esc_url_raw( $input['telegram'] ?? '' ),
+		'notify_email' => uid_sanitize_email_list( $input['notify_email'] ?? '' ),
 	);
 }
 
@@ -1288,6 +1350,11 @@ function uid_render_settings_page() {
 						<h2><?php echo esc_html( $lt['slug_heading'] ); ?></h2>
 						<table class="form-table" role="presentation"><tbody>
 							<?php do_settings_fields( $lt['layout_page'], $lt['slug_section'] ); ?>
+						</tbody></table>
+
+						<h2><?php esc_html_e( 'ایمیل دریافت فرم‌های این صفحه', 'uid-theme' ); ?></h2>
+						<table class="form-table" role="presentation"><tbody>
+							<?php do_settings_fields( $lt['layout_page'], 'uid_page_notify_section' ); ?>
 						</tbody></table>
 
 						<h2><?php echo esc_html( $lt['sections_heading'] ); ?></h2>
