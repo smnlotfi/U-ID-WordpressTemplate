@@ -296,6 +296,44 @@
   });
   backToTop.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
 
+  // Raychat bridge — Raychat has no public open()/API. Their embed script builds
+  // #raychat_widget by calling iframe.contentDocument.write() on a blank (src-less)
+  // frame, which keeps that document same-origin with the page, so we can reach
+  // its own launcher button directly instead of duplicating it with our own bubble.
+  // Internal class name (.sc_launcher_hitbox), so this can break on a Raychat
+  // redesign — degrades to the lead modal if the selector ever stops matching.
+  (function(){
+    var HIDE_CSS = '.sc_launcher_hitbox{display:none!important}';
+    var styleInjected = false;
+
+    function raychatDoc(){
+      var frame = document.getElementById('raychat_widget');
+      if(!frame) return null;
+      try { return frame.contentDocument || (frame.contentWindow && frame.contentWindow.document) || null; }
+      catch(e){ return null; }
+    }
+
+    var poll = setInterval(function(){
+      var doc = raychatDoc();
+      if(!doc || !doc.head || styleInjected) return;
+      var style = doc.createElement('style');
+      style.textContent = HIDE_CSS;
+      doc.head.appendChild(style);
+      styleInjected = true;
+    }, 500);
+    setTimeout(function(){ clearInterval(poll); }, 30000);
+
+    window.uidRaychatBridge = {
+      open: function(){
+        var doc = raychatDoc();
+        var launcher = doc && doc.querySelector('.sc_launcher_hitbox');
+        if(!launcher) return false;
+        launcher.click();
+        return true;
+      }
+    };
+  })();
+
   // Lead / consult / demo modal open/close (shared, title+desc swap by trigger)
   (function(){
     var overlay = document.getElementById('leadModalOverlay');
@@ -336,17 +374,13 @@
       b.addEventListener('click', function(){ openModal(); });
     });
 
-    // Raychat trigger — opens the live-chat widget once its embed script (added in
-    // theme settings) has loaded; falls back to the lead modal until then.
+    // Raychat trigger — Raychat has no public JS API, so this reaches into its
+    // (same-origin, document.write()-built) #raychat_widget iframe and clicks its
+    // own launcher element directly; see uidRaychatBridge() below. Falls back to
+    // the lead modal if the widget hasn't finished loading yet.
     document.querySelectorAll('[data-open-raychat]').forEach(function(b){
       b.addEventListener('click', function(){
-        if (window.Raychat && typeof window.Raychat === 'function') {
-          window.Raychat('open');
-        } else if (window.RaychatWidget && typeof window.RaychatWidget.open === 'function') {
-          window.RaychatWidget.open();
-        } else {
-          openModal();
-        }
+        if (!window.uidRaychatBridge || !window.uidRaychatBridge.open()) openModal();
       });
     });
 

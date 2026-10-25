@@ -43,10 +43,10 @@
 .iv-eyebrow.warm{background:var(--orange-l);color:var(--orange-d);border-color:rgba(248,148,40,.3)}
 .iv-eyebrow i{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
 
-.h-hero{font-size:clamp(30px,4.6vw,54px);font-weight:600;line-height:1.28;letter-spacing:-.02em}
-.h-sec{font-size:clamp(25px,3.2vw,38px);font-weight:600;line-height:1.32;letter-spacing:-.015em}
-.h-sub{font-size:clamp(19px,2.1vw,25px);font-weight:600;line-height:1.4}
-.h-card{font-size:18px;font-weight:600;line-height:1.45}
+.h-hero{font-size:var(--fs-h1);font-weight:600;line-height:1.28;letter-spacing:-.02em}
+.h-sec{font-size:var(--fs-h2);font-weight:600;line-height:1.32;letter-spacing:-.015em}
+.h-sub{font-size:var(--fs-h3);font-weight:600;line-height:1.4}
+.h-card{font-size:var(--fs-h4);font-weight:600;line-height:1.45}
 .lede{font-size:clamp(15.5px,1.6vw,18.5px);line-height:1.85;color:var(--n600);font-weight:400}
 .lede.on-dark{color:#B9C6E0}
 .small{font-size:13.5px;line-height:1.7;color:var(--n600)}
