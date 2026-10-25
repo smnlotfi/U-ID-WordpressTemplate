@@ -99,6 +99,16 @@ function uid_telegram_url() {
 	return uid_get_option( 'uid_contact_options', 'telegram', 'https://t.me/uid_support' );
 }
 
+function uid_raychat_embed_code() {
+	return uid_get_option( 'uid_contact_options', 'raychat_embed', '' );
+}
+
+function uid_lead_modal_service_options() {
+	$default = "وب‌سرویس شاهکار\nوب‌سرویس ثبت احوال\nاستعلام آدرس با کد پستی\nوب‌سرویس استعلام شبا\nتطبیق شماره کارت با کد ملی\nتطبیق شماره شبا با کد ملی\nوب‌سرویس تبدیل شماره کارت به شبا\nاحراز هویت تصویری\nیوآیدی‌پلاس";
+	$raw     = uid_get_option( 'uid_contact_options', 'lead_service_options', $default );
+	return array_filter( array_map( 'trim', explode( "\n", $raw ) ) );
+}
+
 /**
  * لوگو — از تنظیمات قالب (آپلود مستقیم در صفحه تنظیمات هدر) با بازگشت به آرم SVG پیش‌فرض
  */

@@ -44,7 +44,25 @@ Text Domain: uid-theme
     --pad:clamp(20px,5vw,40px);
     --maxw:var(--container);
     --mbar:68px; /* bottom mobile-nav height — also drives body's bottom padding so it can never overlap content */
+
+    /* unified type scale — desktop sizes; see the tablet/mobile overrides below.
+       every heading-bearing selector in this file and in assets/css/*-page.css
+       is pinned to these six levels so h1..h6 (and body text) read the same
+       size everywhere on the site, regardless of section or page. */
+    --fs-h1:38px; --fs-h2:32px; --fs-h3:26px; --fs-h4:20px; --fs-h5:18px; --fs-h6:17px; --fs-text:16px;
   }
+  @media (max-width:1024px){
+    :root{ --fs-h1:32px; --fs-h2:28px; --fs-h3:24px; --fs-h4:18px; --fs-h5:16px; --fs-h6:16px; --fs-text:14px; }
+  }
+  @media (max-width:760px){
+    :root{ --fs-h1:28px; --fs-h2:24px; --fs-h3:20px; --fs-h4:16px; --fs-h5:16px; --fs-h6:16px; --fs-text:14px; }
+  }
+  h1{font-size:var(--fs-h1);}
+  h2{font-size:var(--fs-h2);}
+  h3{font-size:var(--fs-h3);}
+  h4{font-size:var(--fs-h4);}
+  h5{font-size:var(--fs-h5);}
+  h6{font-size:var(--fs-h6);}
   .mono{font-family:var(--mono);direction:ltr;unicode-bidi:isolate;font-variant-ligatures:none}
   *{box-sizing:border-box; margin:0; padding:0;}
   /* overflow-x must be hidden on html (the actual scrolling box per spec), not just
@@ -58,7 +76,7 @@ Text Domain: uid-theme
     color:var(--neutral-950);
     background:var(--white);
     line-height:1.7;
-    font-size:16px;
+    font-size:var(--fs-text);
     overflow-x:hidden;
   }
   img{max-width:100%; display:block;}
@@ -78,8 +96,8 @@ Text Domain: uid-theme
   .eyebrow .dot{width:6px;height:6px;border-radius:50%; background:var(--orange-500);}
   .section-head{max-width:640px; margin-bottom:56px;}
   .section-head.center{margin-inline:auto; text-align:center;}
-  .section-head h2{font-size:34px; color:var(--neutral-950); margin-bottom:14px;}
-  .section-head p{color:var(--neutral-600); font-size:16.5px;}
+  .section-head h2{font-size:var(--fs-h2); color:var(--neutral-950); margin-bottom:14px;}
+  .section-head p{color:var(--neutral-600); font-size:var(--fs-text);}
 
   .btn{
     display:inline-flex; align-items:center; gap:8px;
@@ -289,9 +307,9 @@ Text Domain: uid-theme
   }
   .hero .wrap{position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;}
   .hero-copy .eyebrow{margin-bottom:20px;}
-  .hero-copy h1{font-size:46px; line-height:1.28; color:var(--neutral-950); margin-bottom:20px; font-weight:500;}
+  .hero-copy h1{font-size:var(--fs-h1); line-height:1.28; color:var(--neutral-950); margin-bottom:20px; font-weight:500;}
   .hero-copy h1 span{color:var(--navy-900); font-weight:600;}
-  .hero-copy p{font-size:17.5px; color:var(--neutral-600); max-width:480px; margin-bottom:32px;}
+  .hero-copy p{font-size:var(--fs-text); color:var(--neutral-600); max-width:480px; margin-bottom:32px;}
   .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
   .hero-art{position:relative; height:460px;}
   .hero-art .uid-visual-img{width:100%; height:100%; object-fit:contain; border-radius:16px;}
@@ -382,7 +400,7 @@ Text Domain: uid-theme
   .audience-card.biz .icon-plate{background:var(--navy-900);}
   .audience-card.person .icon-plate{background:var(--orange-500);}
   .audience-card .icon-plate svg{width:28px; height:28px; color:var(--white);}
-  .audience-card h3{font-size:23px; margin-bottom:10px;}
+  .audience-card h3{font-size:var(--fs-h3); margin-bottom:10px;}
   .audience-card p{color:var(--neutral-600); margin-bottom:22px; font-size:15.5px;}
   .audience-card ul{margin-bottom:26px;}
   .audience-card ul li{display:flex; align-items:center; gap:10px; font-size:14.5px; color:var(--neutral-950); margin-bottom:10px;}
@@ -404,7 +422,7 @@ Text Domain: uid-theme
   .service-card.c3 .chip{background:var(--orange-500);}
   .service-card.c4 .chip{background:var(--navy-700);}
   .service-card .tag{display:inline-block; font-size:11.5px; font-weight:700; color:var(--orange-500); background:var(--orange-050); padding:3px 10px; border-radius:4px; margin-bottom:10px;}
-  .service-card h4{font-size:18px; margin-bottom:8px;}
+  .service-card h4{font-size:var(--fs-h4); margin-bottom:8px;}
   .service-card p{font-size:14px; color:var(--neutral-600); margin-bottom:16px; min-height:64px;}
   .service-card .link{font-size:14px; font-weight:600; color:var(--navy-900); display:inline-flex; align-items:center; gap:6px;}
   .service-card .link svg{width:14px; height:14px;}
@@ -420,7 +438,7 @@ Text Domain: uid-theme
   .spotlight-head svg{width:34px; height:34px; opacity:.9;}
   .spotlight-tag{font-size:11.5px; font-weight:700; color:var(--navy-900); background:rgba(255,255,255,.85); padding:5px 12px; border-radius:999px;}
   .spotlight-body{padding:24px;}
-  .spotlight-body h4{font-size:19px; margin-bottom:8px;}
+  .spotlight-body h4{font-size:var(--fs-h4); margin-bottom:8px;}
   .spotlight-body p{font-size:14px; color:var(--neutral-600); margin-bottom:16px; min-height:60px;}
   .spotlight-body ul{margin-bottom:18px;}
   .spotlight-body ul li{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--neutral-950); margin-bottom:9px;}
@@ -445,7 +463,7 @@ Text Domain: uid-theme
   .service-card.is-primary{padding:38px 34px;}
   .service-card.is-primary .chip{width:58px; height:58px; border-radius:12px;}
   .service-card.is-primary .chip svg{width:28px; height:28px;}
-  .service-card.is-primary h4{font-size:23px;}
+  .service-card.is-primary h4{font-size:var(--fs-h4);}
   .service-card.is-primary p{font-size:15px; min-height:auto; margin-bottom:20px;}
   .reseller-line{display:flex; align-items:center; gap:18px; flex-wrap:wrap; padding:20px 26px; background:var(--neutral-050); border-radius:12px; border:1px solid var(--neutral-200);}
   .reseller-line .rl-label{font-size:13px; font-weight:700; color:var(--neutral-600); flex-shrink:0;}
@@ -495,8 +513,8 @@ Text Domain: uid-theme
   .why-art .float-card b{font-size:22px; display:block; font-family:'IBM Plex Sans';}
   .why-art .float-card span{font-size:12.5px; opacity:.8;}
   .why-copy .eyebrow{margin-bottom:16px;}
-  .why-copy h2{font-size:32px; margin-bottom:16px;}
-  .why-copy > p{color:var(--neutral-600); margin-bottom:32px; font-size:16px;}
+  .why-copy h2{font-size:var(--fs-h2); margin-bottom:16px;}
+  .why-copy > p{color:var(--neutral-600); margin-bottom:32px; font-size:var(--fs-text);}
   @media (max-width:900px){ .why .wrap{grid-template-columns:1fr;} .why-art{margin-bottom:20px;} }
 
   /* ---------- FEATURE ROWS (product) ---------- */
@@ -505,7 +523,7 @@ Text Domain: uid-theme
   .feature-row.reverse .feature-visual{order:2;}
   .feature-row.reverse .feature-copy{order:1;}
   .feature-copy .eyebrow{margin-bottom:14px;}
-  .feature-copy h3{font-size:25px; margin-bottom:12px;}
+  .feature-copy h3{font-size:var(--fs-h3); margin-bottom:12px;}
   .feature-copy p{color:var(--neutral-600); margin-bottom:20px;}
   .feature-visual{
     background:var(--neutral-050); border-radius:14px; padding:28px; min-height:280px;
@@ -546,7 +564,7 @@ Text Domain: uid-theme
   .cta-banner::before{content:''; position:absolute; width:280px; height:280px; border-radius:50%; background:var(--orange-500); opacity:.9; top:-90px; left:-60px;}
   .cta-banner::after{content:''; position:absolute; width:180px; height:180px; background:var(--teal-500); opacity:.5; bottom:-70px; right:8%; clip-path:polygon(50% 0,100% 100%,0 100%);}
   .cta-banner-inner{position:relative; z-index:2; max-width:560px;}
-  .cta-banner h2{color:var(--white); font-size:30px; margin-bottom:24px;}
+  .cta-banner h2{color:var(--white); font-size:var(--fs-h2); margin-bottom:24px;}
   .cta-banner .hero-actions{gap:14px;}
 
   /* ---------- PROCESS (interactive carousel) ---------- */
@@ -561,7 +579,7 @@ Text Domain: uid-theme
   @keyframes fadeIn{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
   .process-text{display:flex; align-items:center; gap:28px; max-width:540px;}
   .process-slide .num-shape{width:76px; height:76px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; flex-shrink:0; font-family:'IBM Plex Sans'; color:var(--teal-500);}
-  .process-slide h4{font-size:23px; margin-bottom:10px;}
+  .process-slide h4{font-size:var(--fs-h4); margin-bottom:10px;}
   .process-slide p{color:rgba(255,255,255,.68); font-size:15px; max-width:420px;}
   .process-icon-wrap{
     width:150px; height:150px; border-radius:50%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
@@ -633,7 +651,7 @@ Text Domain: uid-theme
   .res-body{padding:22px 22px 26px;}
   .res-meta{font-size:12.5px; color:var(--neutral-600); margin-bottom:10px; display:flex; gap:8px; align-items:center;}
   .res-meta .pill{color:var(--navy-900); font-weight:700;}
-  .res-body h4{font-size:16.5px; line-height:1.6; margin-bottom:12px;}
+  .res-body h4{font-size:var(--fs-h4); line-height:1.6; margin-bottom:12px;}
   .res-body .link{font-size:13.5px; font-weight:600; color:var(--navy-900);}
   @media (max-width:900px){ .res-grid{grid-template-columns:1fr;} .resources-head{flex-direction:column; align-items:flex-start; gap:16px;} }
   @media (max-width:640px){
@@ -661,7 +679,7 @@ Text Domain: uid-theme
   .contact::after{content:''; position:absolute; width:220px; height:220px; border-radius:50%; background:var(--orange-500); opacity:.9; top:-70px; left:-50px; z-index:0;}
   .contact-grid{display:grid; grid-template-columns:.8fr 1.2fr; gap:56px; position:relative; z-index:2;}
   .contact-info .eyebrow{background:rgba(255,255,255,.12); color:var(--white);}
-  .contact-info h2{font-size:30px; margin-bottom:16px;}
+  .contact-info h2{font-size:var(--fs-h2); margin-bottom:16px;}
   .contact-info p{color:rgba(255,255,255,.75); margin-bottom:28px;}
   .contact-methods{display:flex; flex-direction:column; gap:12px;}
   .contact-method{display:flex; align-items:center; gap:12px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); border-radius:10px; padding:14px 18px;}
@@ -719,7 +737,7 @@ Text Domain: uid-theme
   .bento-item{border-radius:16px; padding:26px; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end; isolation:isolate;}
   .bento-item .bg-icon{position:absolute; left:-10px; top:-10px; width:110px; height:110px; opacity:.16; z-index:0; color:var(--white);}
   .bento-item .b-icon{width:36px; height:36px; color:var(--white); margin-bottom:auto; position:relative; z-index:1;}
-  .bento-item h4{font-size:18px; color:var(--white); margin-bottom:6px; position:relative; z-index:1;}
+  .bento-item h4{font-size:var(--fs-h4); color:var(--white); margin-bottom:6px; position:relative; z-index:1;}
   .bento-item p{font-size:13px; color:rgba(255,255,255,.78); position:relative; z-index:1; line-height:1.6;}
   .bento-item.bg-navy{background:var(--navy-900);}
   .bento-item.bg-navy2{background:var(--navy-700);}
@@ -732,7 +750,7 @@ Text Domain: uid-theme
   .bento-e{grid-column:1/3; grid-row:3/4;}
   .bento-f{grid-column:3/5; grid-row:3/4;}
   .bento-a .b-icon{width:44px; height:44px;}
-  .bento-a h4{font-size:23px;}
+  .bento-a h4{font-size:var(--fs-h4);}
   @media (max-width:900px){
     .bento-grid{grid-template-columns:1fr 1fr; grid-template-rows:none;}
     .bento-a,.bento-b,.bento-c,.bento-d,.bento-e,.bento-f{grid-column:span 2; grid-row:auto; min-height:160px;}
@@ -769,7 +787,7 @@ Text Domain: uid-theme
   .tab-badges{position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:8px;}
   .mini-badge{display:inline-flex; align-items:center; font-size:12px; font-weight:600; color:var(--navy-900); background:var(--white); border:1px solid var(--neutral-200); padding:7px 13px; border-radius:999px;}
   .tab-copy .eyebrow{margin-bottom:14px;}
-  .tab-copy h3{font-size:25px; margin-bottom:14px;}
+  .tab-copy h3{font-size:var(--fs-h3); margin-bottom:14px;}
   .tab-copy p{color:var(--neutral-600); margin-bottom:10px;}
   .tab-copy ul{margin-top:18px;}
   .tab-copy ul li{display:flex; gap:10px; align-items:flex-start; font-size:14.5px; margin-bottom:12px;}
@@ -831,7 +849,7 @@ Text Domain: uid-theme
   .footer-lead-band::after{content:''; position:absolute; width:200px; height:200px; background:var(--teal-500); opacity:.45; bottom:-80px; right:6%; clip-path:polygon(50% 0,100% 100%,0 100%);}
   .lead-band-grid{position:relative; z-index:2; display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center;}
   .lead-band-copy .eyebrow{background:rgba(255,255,255,.12); color:var(--white); margin-bottom:16px;}
-  .lead-band-copy h2{color:var(--white); font-size:30px; margin-bottom:14px; line-height:1.4;}
+  .lead-band-copy h2{color:var(--white); font-size:var(--fs-h2); margin-bottom:14px; line-height:1.4;}
   .lead-band-copy p{color:rgba(255,255,255,.75); font-size:15px; margin-bottom:20px;}
   .lead-band-trust{display:flex; gap:18px; flex-wrap:wrap;}
   .lead-band-trust span{display:flex; align-items:center; gap:7px; font-size:13px; color:rgba(255,255,255,.85);}
@@ -1007,7 +1025,7 @@ Text Domain: uid-theme
   .cfab-row:hover .go{color:var(--navy-900);transform:translateX(-3px)}
 
   .ic-phone{background:linear-gradient(135deg,var(--navy-7),var(--navy-900))}
-  .ic-whats{background:linear-gradient(135deg,#3BE07C,#1FAF52)}
+  .ic-raychat{background:linear-gradient(135deg,#2DD4BF,#0D9488)}
   .ic-tg{background:linear-gradient(135deg,#43BDF0,#2094CF)}
   .ic-form{background:linear-gradient(135deg,#FCA53F,var(--orange-d))}
 
@@ -1100,7 +1118,7 @@ Text Domain: uid-theme
   .pwa-num{width:44px; height:44px; border-radius:50%; background:var(--navy-900); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16.5px; flex-shrink:0; position:relative; z-index:1;}
   .pwa-step-row.start .pwa-num, .pwa-step-row.end .pwa-num{background:var(--teal-500);}
   .pwa-content{flex:1; background:var(--white); border:1px solid var(--neutral-200); border-radius:12px; padding:16px 20px; box-shadow:var(--shadow-sm);}
-  .pwa-content h4{font-size:15.5px; margin-bottom:5px; display:flex; align-items:center; gap:8px; font-weight:600; flex-wrap:wrap;}
+  .pwa-content h4{font-size:var(--fs-h4); margin-bottom:5px; display:flex; align-items:center; gap:8px; font-weight:600; flex-wrap:wrap;}
   .pwa-content p{font-size:13.5px; color:var(--neutral-600); line-height:1.75;}
   .pwa-badge{display:inline-flex; align-items:center; background:var(--neutral-950); color:#fff; font-size:10px; font-weight:700; padding:3px 9px; border-radius:5px; margin-right:2px;}
   .pwa-flow-footer{display:flex; align-items:center; justify-content:center; gap:28px; flex-wrap:wrap; margin-top:40px; padding-top:32px; border-top:1px solid var(--neutral-200);}
@@ -1108,7 +1126,6 @@ Text Domain: uid-theme
   .pwa-flow-stat b{display:block; font-size:22px; font-weight:700; color:var(--navy-900);}
   .pwa-flow-stat span{font-size:12px; color:var(--neutral-600);}
   @media (max-width:700px){
-    .pwa-content h4{font-size:14.5px;}
     .pwa-num{width:38px; height:38px; font-size:14.5px;}
     .pwa-step-row::before{top:38px; right:18px;}
     .pwa-flow-footer{gap:20px;}
@@ -1130,7 +1147,7 @@ Text Domain: uid-theme
   @keyframes modalIn{ from{opacity:0; transform:translateY(16px) scale(.97);} to{opacity:1; transform:none;} }
   .lead-modal-close{position:absolute; top:16px; left:16px; width:32px; height:32px; border-radius:50%; border:none; background:var(--neutral-050); display:flex; align-items:center; justify-content:center; cursor:pointer;}
   .lead-modal-close svg{width:15px; height:15px;}
-  .lead-modal h3{font-size:21px; margin-bottom:8px;}
+  .lead-modal h3{font-size:var(--fs-h3); margin-bottom:8px;}
   .lead-modal p{font-size:13.5px; color:var(--neutral-600); margin-bottom:20px;}
   .lead-modal .field{margin-bottom:12px;}
   .lead-modal input, .lead-modal select{

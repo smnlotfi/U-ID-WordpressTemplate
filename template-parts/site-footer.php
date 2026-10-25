@@ -83,11 +83,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
       <span class="tx"><b><?php esc_html_e( 'تماس تلفنی', 'uid-theme' ); ?></b><span class="sub mono"><?php echo esc_html( uid_phone_display() ); ?></span></span>
       <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     </a>
-    <a class="cfab-row" href="<?php echo esc_url( uid_whatsapp_url() ); ?>" target="_blank" rel="noopener">
-      <span class="ic ic-whats"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1112 20zm4.5-5.8c-.2-.1-1.4-.7-1.7-.8s-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.6 6.6 0 01-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 00-.7.3A3 3 0 006 9.9c0 1.7 1.3 3.4 1.5 3.6a10 10 0 003.8 3.3c1.8.7 1.8.5 2.2.4a2.6 2.6 0 001.7-1.2 2.1 2.1 0 00.2-1.2z"/></svg></span>
-      <span class="tx"><b><?php esc_html_e( 'واتساپ', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'گفتگوی متنی با پشتیبانی', 'uid-theme' ); ?></span></span>
+    <button class="cfab-row" type="button" data-open-raychat>
+      <span class="ic ic-raychat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 01-9 8.4 8.9 8.9 0 01-4-.9L3 20.5l1.5-4.4A8.4 8.4 0 013 11.5a8.4 8.4 0 019-8.4 8.4 8.4 0 019 8.4z"/></svg></span>
+      <span class="tx"><b><?php esc_html_e( 'رایچت', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'گفتگوی زنده با پشتیبانی', 'uid-theme' ); ?></span></span>
       <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-    </a>
+    </button>
     <a class="cfab-row" href="<?php echo esc_url( uid_telegram_url() ); ?>" target="_blank" rel="noopener">
       <span class="ic ic-tg"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg></span>
       <span class="tx"><b><?php esc_html_e( 'تلگرام', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'ارسال پیام به کانال پشتیبانی', 'uid-theme' ); ?></span></span>
@@ -124,11 +124,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         <div class="field">
           <select name="service">
             <option value=""><?php esc_html_e( 'نوع خدمت مورد نیاز', 'uid-theme' ); ?></option>
-            <option value="sana"><?php esc_html_e( 'سامانه ثنا', 'uid-theme' ); ?></option>
-            <option value="pwa"><?php esc_html_e( 'یوآیدی‌پلاس', 'uid-theme' ); ?></option>
-            <option value="shahkar"><?php esc_html_e( 'استعلام شاهکار', 'uid-theme' ); ?></option>
-            <option value="enterprise"><?php esc_html_e( 'وب‌سرویس‌های سازمانی', 'uid-theme' ); ?></option>
-            <option value="other"><?php esc_html_e( 'سایر', 'uid-theme' ); ?></option>
+            <?php foreach ( uid_lead_modal_service_options() as $uid_lead_service ) : ?>
+            <option><?php echo esc_html( $uid_lead_service ); ?></option>
+            <?php endforeach; ?>
           </select>
         </div>
         <button type="button" class="btn btn-primary" data-submit><?php esc_html_e( 'ارسال درخواست', 'uid-theme' ); ?></button>
@@ -157,10 +155,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
   </a>
 
   <div class="csheet-grid">
-    <a class="csheet-tile" href="<?php echo esc_url( uid_whatsapp_url() ); ?>" target="_blank" rel="noopener">
-      <span class="ic ic-whats"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1112 20zm4.5-5.8c-.2-.1-1.4-.7-1.7-.8s-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.6 6.6 0 01-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 00-.7.3A3 3 0 006 9.9c0 1.7 1.3 3.4 1.5 3.6a10 10 0 003.8 3.3c1.8.7 1.8.5 2.2.4a2.6 2.6 0 001.7-1.2 2.1 2.1 0 00.2-1.2z"/></svg></span>
-      <span class="tx"><b><?php esc_html_e( 'واتساپ', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'گفتگوی متنی', 'uid-theme' ); ?></span></span>
-    </a>
+    <button class="csheet-tile" type="button" data-open-raychat>
+      <span class="ic ic-raychat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 01-9 8.4 8.9 8.9 0 01-4-.9L3 20.5l1.5-4.4A8.4 8.4 0 013 11.5a8.4 8.4 0 019-8.4 8.4 8.4 0 019 8.4z"/></svg></span>
+      <span class="tx"><b><?php esc_html_e( 'رایچت', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'گفتگوی زنده', 'uid-theme' ); ?></span></span>
+    </button>
     <a class="csheet-tile" href="<?php echo esc_url( uid_telegram_url() ); ?>" target="_blank" rel="noopener">
       <span class="ic ic-tg"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg></span>
       <span class="tx"><b><?php esc_html_e( 'تلگرام', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'ارسال پیام', 'uid-theme' ); ?></span></span>
@@ -189,4 +187,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
   <button class="mnav-item" id="mnavMore" aria-label="<?php esc_attr_e( 'باز کردن منو', 'uid-theme' ); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span><?php esc_html_e( 'منو', 'uid-theme' ); ?></span></button>
 </nav>
+
+<?php
+$uid_raychat_code = uid_raychat_embed_code();
+if ( $uid_raychat_code ) :
+	// خروجی خام کد Embed رایچت — از تنظیمات قالب > اطلاعات تماس وارد می‌شود، فقط برای مدیران قالب قابل‌ویرایش است.
+	echo $uid_raychat_code;
+endif;
+?>
 

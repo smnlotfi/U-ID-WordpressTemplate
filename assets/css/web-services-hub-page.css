@@ -282,7 +282,7 @@ body.mopen .msheet{opacity:1;visibility:visible;transform:none}
 .pcard.feat .pcard-hd::before{content:'اقتصادی‌ترین';position:absolute;inset-block-start:22px;
   inset-inline-end:24px;font-size:11.5px;font-weight:700;color:#fff;background:var(--orange);
   padding:4px 11px;border-radius:var(--r-s)}
-.pcard-hd h3{font-size:17px;margin-bottom:4px}
+.pcard-hd h3{font-size:var(--fs-h3);margin-bottom:4px}
 .pcard-hd .sub{font-size:12.5px;color:var(--n400)}
 .pcard-amt{padding:16px 24px 20px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .pcard-amt .from{font-size:13px;color:var(--n400)}
@@ -333,7 +333,7 @@ body.mopen .msheet{opacity:1;visibility:visible;transform:none}
 .cta-tel .num{font-family:var(--mono);font-size:17px;color:#7FE0EC;letter-spacing:.02em}
 .cta-form{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14);
   border-radius:var(--r-l);padding:24px;backdrop-filter:blur(8px)}
-.cta-form h3{color:#fff;font-size:16px;margin-bottom:16px}
+.cta-form h3{color:#fff;font-size:var(--fs-h3);margin-bottom:16px}
 .fld{margin-bottom:12px}
 .fld label{display:block;font-size:12.5px;color:#A9BBD8;margin-bottom:6px;font-weight:500}
 .fld input,.fld select,.fld textarea{
@@ -401,7 +401,7 @@ footer{background:var(--navy-x);color:#B9C6E0;padding-block:clamp(48px,6vw,76px)
   border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);
   color:#fff;display:grid;place-items:center;cursor:pointer;transition:.2s}
 .modal-x:hover{background:rgba(255,255,255,.16);transform:rotate(90deg)}
-.modal-box h3{color:#fff;font-size:19px;margin-bottom:6px}
+.modal-box h3{color:#fff;font-size:var(--fs-h3);margin-bottom:6px}
 .modal-box > p{font-size:13.5px;color:#A9BBD8;margin-bottom:20px;line-height:1.8}
 
 .tabbar{display:none;position:fixed;inset-block-end:0;inset-inline:0;z-index:1060;
@@ -555,13 +555,13 @@ footer{background:var(--navy-x);color:#B9C6E0;padding-block:clamp(48px,6vw,76px)
   opacity:.45;bottom:-80px;right:6%;clip-path:polygon(50% 0,100% 100%,0 100%)}
 .lb-grid{position:relative;z-index:2;display:grid;grid-template-columns:1.1fr .9fr;
   gap:clamp(26px,4vw,48px);align-items:center}
-.lb-copy h2{color:#fff;font-size:clamp(22px,2.7vw,30px);margin-block:16px 14px;line-height:1.4}
+.lb-copy h2{color:#fff;font-size:var(--fs-h2);margin-block:16px 14px;line-height:1.4}
 .lb-copy p{color:rgba(255,255,255,.78);font-size:15px;margin-block-end:20px;line-height:1.85}
 .lb-trust{display:flex;gap:18px;flex-wrap:wrap}
 .lb-trust span{display:flex;align-items:center;gap:7px;font-size:13px;color:rgba(255,255,255,.86)}
 .lb-trust svg{width:16px;height:16px;color:var(--teal);flex:none}
 .lb-form{background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
-.lb-form h3{font-size:16px;margin-block-end:4px}
+.lb-form h3{font-size:var(--fs-h3);margin-block-end:4px}
 .lb-form > p.hint{font-size:12.5px;color:var(--n400);margin-block-end:16px;line-height:1.7}
 .lb-form .frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-block-end:10px}
 .lb-form input,.lb-form select{width:100%;min-height:46px;border:1.5px solid var(--n200);
@@ -688,7 +688,7 @@ input[type=range]:focus-visible{outline:2px solid var(--teal);outline-offset:4px
 .leak-bad .tag{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;
   color:#A32530;margin-block-end:9px}
 .leak-bad .tag svg{width:13px;height:13px}
-.leak-bad h3{font-size:16.5px;color:#7E1D26;margin-block-end:7px}
+.leak-bad h3{font-size:var(--fs-h3);color:#7E1D26;margin-block-end:7px}
 .leak-bad p{font-size:13.5px;color:#8A3A42;line-height:1.8}
 .leak-fix{padding:20px 24px 22px;flex:1}
 .leak-fix .tag{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;
@@ -826,7 +826,7 @@ input[type=range]:focus-visible{outline:2px solid var(--teal);outline-offset:4px
   display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:14px;margin-block-end:14px}
 .flow3 .fl-node:nth-child(2) .fl-num{background:var(--teal-d)}
 .flow3 .fl-node:nth-child(3) .fl-num{background:var(--orange-d)}
-.flow3 .fl-card h4{font-size:15.5px;margin-block-end:7px}
+.flow3 .fl-card h4{font-size:var(--fs-h4);margin-block-end:7px}
 .flow3 .fl-card p{font-size:13px;color:var(--n600);line-height:1.85}
 .flow3 .fl-arrow{position:absolute;inset-inline-end:-14px;inset-block-start:34px;z-index:2;
   width:28px;height:28px;border-radius:50%;background:var(--n50);border:1px solid var(--n200);
@@ -927,7 +927,6 @@ input[type=range]:focus-visible{outline:2px solid var(--teal);outline-offset:4px
   .forn{flex-direction:column;text-align:center;justify-content:center}
   .leak-grid{grid-template-columns:repeat(2,1fr);gap:10px}
   .leak-bad,.leak-fix{padding:16px 14px 14px}
-  .leak-bad h3{font-size:14px}
   .leak-bad p,.leak-fix p{font-size:12px}
 }
 @media (max-width:480px){
@@ -1179,7 +1178,6 @@ input[type=range]:focus-visible{outline:2px solid var(--teal);outline-offset:4px
   .leak-grid.deck > .leak{display:flex;flex-direction:column}
   .leak-grid.deck .leak-bad{padding:20px 20px 18px}
   .leak-grid.deck .leak-fix{padding:18px 20px 20px}
-  .leak-grid.deck .leak-bad h3{font-size:16px}
   .leak-grid.deck .leak-bad p,.leak-grid.deck .leak-fix p{font-size:13.5px}
   .leak-grid.deck > .leak:hover{transform:none}
 }
@@ -1243,7 +1241,7 @@ input[type=range]:focus-visible{outline:2px solid var(--teal);outline-offset:4px
 .plan.feat::before{content:'پیشنهاد کارشناسان';position:absolute;inset-block-start:-11px;
   inset-inline-start:50%;transform:translateX(50%);font-size:11px;font-weight:700;color:#fff;
   background:var(--orange);padding:4px 12px;border-radius:var(--r-pill);white-space:nowrap}
-.plan h3{font-size:16.5px;margin-block-end:6px}
+.plan h3{font-size:var(--fs-h3);margin-block-end:6px}
 .plan .sub{font-size:12.5px;color:var(--n400);margin-block-end:16px;line-height:1.7}
 .plan ul{display:flex;flex-direction:column;gap:10px;flex:1;margin-block-end:20px}
 .plan li{display:flex;gap:9px;font-size:13.5px;color:var(--n600);line-height:1.75}
@@ -1272,7 +1270,6 @@ input[type=range]:focus-visible{outline:2px solid var(--teal);outline-offset:4px
      here, so no deck) but lose their desktop padding */
   .flow3 .fl-card{padding:17px 16px}
   .flow3 .fl-num{width:30px;height:30px;font-size:13px;margin-block-end:11px}
-  .flow3 .fl-card h4{font-size:14.5px}
   .flow3 .fl-card p{font-size:12.5px;line-height:1.8}
   .flow3{gap:12px}
   /* hero trust tags become a single-line rail instead of three stacked pills */

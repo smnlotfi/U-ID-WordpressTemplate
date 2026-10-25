@@ -38,6 +38,19 @@ function uid_register_settings() {
 	add_settings_field( 'phone', __( 'شماره تلفن (فقط ارقام انگلیسی، بدون فاصله)', 'uid-theme' ), 'uid_field_text', 'uid_contact_options', 'uid_contact_main', array( 'group' => 'uid_contact_options', 'key' => 'phone', 'default' => '02166123290', 'desc' => __( 'در هدر، فوتر، دکمه‌های شناور و پنجره گفتگو استفاده می‌شود.', 'uid-theme' ) ) );
 	add_settings_field( 'whatsapp', __( 'لینک واتساپ', 'uid-theme' ), 'uid_field_text', 'uid_contact_options', 'uid_contact_main', array( 'group' => 'uid_contact_options', 'key' => 'whatsapp', 'default' => 'https://wa.me/989120000000' ) );
 	add_settings_field( 'telegram', __( 'لینک تلگرام', 'uid-theme' ), 'uid_field_text', 'uid_contact_options', 'uid_contact_main', array( 'group' => 'uid_contact_options', 'key' => 'telegram', 'default' => 'https://t.me/uid_support' ) );
+	add_settings_field( 'raychat_embed', __( 'کد Embed رایچت', 'uid-theme' ), 'uid_field_textarea', 'uid_contact_options', 'uid_contact_main', array(
+		'group'   => 'uid_contact_options',
+		'key'     => 'raychat_embed',
+		'default' => '',
+		'rows'    => 6,
+		'desc'    => __( 'کد Embed دریافت‌شده از پنل Raychat.io را اینجا جای‌گذاری کنید. تا وقتی این کد خالی است، دکمه «رایچت» در دکمه‌های شناور سایت نمایش داده می‌شود ولی گفتگو باز نمی‌کند.', 'uid-theme' ),
+	) );
+	add_settings_field( 'lead_service_options', __( 'گزینه‌های «نوع خدمت مورد نیاز» در فرم شناور (هر خط یک گزینه)', 'uid-theme' ), 'uid_field_textarea', 'uid_contact_options', 'uid_contact_main', array(
+		'group'   => 'uid_contact_options',
+		'key'     => 'lead_service_options',
+		'default' => "وب‌سرویس شاهکار\nوب‌سرویس ثبت احوال\nاستعلام آدرس با کد پستی\nوب‌سرویس استعلام شبا\nتطبیق شماره کارت با کد ملی\nتطبیق شماره شبا با کد ملی\nوب‌سرویس تبدیل شماره کارت به شبا\nاحراز هویت تصویری\nیوآیدی‌پلاس",
+		'rows'    => 10,
+	) );
 	add_settings_field( 'notify_email', __( 'ایمیل دریافت فرم‌ها (پیش‌فرض سراسری)', 'uid-theme' ), 'uid_field_text', 'uid_contact_options', 'uid_contact_main', array(
 		'group'   => 'uid_contact_options',
 		'key'     => 'notify_email',
@@ -758,10 +771,12 @@ function uid_field_repeater( $args ) {
 
 function uid_sanitize_contact_options( $input ) {
 	return array(
-		'phone'        => sanitize_text_field( $input['phone'] ?? '' ),
-		'whatsapp'     => esc_url_raw( $input['whatsapp'] ?? '' ),
-		'telegram'     => esc_url_raw( $input['telegram'] ?? '' ),
-		'notify_email' => uid_sanitize_email_list( $input['notify_email'] ?? '' ),
+		'phone'                => sanitize_text_field( $input['phone'] ?? '' ),
+		'whatsapp'             => esc_url_raw( $input['whatsapp'] ?? '' ),
+		'telegram'             => esc_url_raw( $input['telegram'] ?? '' ),
+		'notify_email'         => uid_sanitize_email_list( $input['notify_email'] ?? '' ),
+		'raychat_embed'        => trim( (string) ( $input['raychat_embed'] ?? '' ) ),
+		'lead_service_options' => sanitize_textarea_field( $input['lead_service_options'] ?? '' ),
 	);
 }
 

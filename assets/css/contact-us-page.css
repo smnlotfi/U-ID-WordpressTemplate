@@ -306,7 +306,7 @@
 .rp-copy .tag{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;
   color:var(--teal-d);background:var(--teal-l);border-radius:var(--r-s);padding:5px 10px;
   margin-block-end:11px}
-.rp-copy h3{font-size:clamp(17px,2vw,21px);margin-block-end:9px}
+.rp-copy h3{font-size:var(--fs-h3);margin-block-end:9px}
 .rp-copy p{font-size:13.5px;color:var(--n600);line-height:1.9}
 .rp-routes{display:flex;flex-direction:column;gap:9px;margin-block-start:16px}
 .rp-route{display:flex;align-items:center;gap:12px;padding:13px 14px;background:#fff;
@@ -324,7 +324,7 @@
 /* ───────────── THE THREE-FIELD FORM ───────────── */
 .cform{background:#fff;border:1px solid var(--n200);border-radius:var(--r-l);
   padding:clamp(20px,2.6vw,26px);box-shadow:var(--sh-1)}
-.cform h4{font-size:16px;margin-block-end:5px}
+.cform h4{font-size:var(--fs-h4);margin-block-end:5px}
 .cform > .hint{font-size:12.5px;color:var(--n400);line-height:1.7;margin-block-end:16px}
 .fld{margin-block-end:12px}
 .fld label{display:block;font-size:12.5px;color:#324268;margin-block-end:6px;font-weight:600}

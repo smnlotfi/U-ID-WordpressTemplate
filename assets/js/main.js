@@ -336,6 +336,20 @@
       b.addEventListener('click', function(){ openModal(); });
     });
 
+    // Raychat trigger — opens the live-chat widget once its embed script (added in
+    // theme settings) has loaded; falls back to the lead modal until then.
+    document.querySelectorAll('[data-open-raychat]').forEach(function(b){
+      b.addEventListener('click', function(){
+        if (window.Raychat && typeof window.Raychat === 'function') {
+          window.Raychat('open');
+        } else if (window.RaychatWidget && typeof window.RaychatWidget.open === 'function') {
+          window.RaychatWidget.open();
+        } else {
+          openModal();
+        }
+      });
+    });
+
     // the modal's own form: validate + actually send the request to the server
     var lmf = document.getElementById('leadModalForm');
     if(lmf){
