@@ -83,16 +83,16 @@ if ( ! defined( 'ABSPATH' ) ) exit;
       <span class="tx"><b><?php esc_html_e( 'تماس تلفنی', 'uid-theme' ); ?></b><span class="sub mono"><?php echo esc_html( uid_phone_display() ); ?></span></span>
       <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     </a>
-    <button class="cfab-row" type="button" data-open-raychat>
-      <span class="ic ic-raychat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 01-9 8.4 8.9 8.9 0 01-4-.9L3 20.5l1.5-4.4A8.4 8.4 0 013 11.5a8.4 8.4 0 019-8.4 8.4 8.4 0 019 8.4z"/></svg></span>
-      <span class="tx"><b><?php esc_html_e( 'رایچت', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'گفتگوی زنده با پشتیبانی', 'uid-theme' ); ?></span></span>
-      <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-    </button>
     <a class="cfab-row" href="<?php echo esc_url( uid_telegram_url() ); ?>" target="_blank" rel="noopener">
       <span class="ic ic-tg"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg></span>
       <span class="tx"><b><?php esc_html_e( 'تلگرام', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'ارسال پیام به کانال پشتیبانی', 'uid-theme' ); ?></span></span>
       <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     </a>
+    <button class="cfab-row" type="button" data-open-raychat>
+      <span class="ic ic-raychat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 01-9 8.4 8.9 8.9 0 01-4-.9L3 20.5l1.5-4.4A8.4 8.4 0 013 11.5a8.4 8.4 0 019-8.4 8.4 8.4 0 019 8.4z"/></svg></span>
+      <span class="tx"><b><?php esc_html_e( 'رایچت', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'گفتگوی زنده با پشتیبانی', 'uid-theme' ); ?></span></span>
+      <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
     <button class="cfab-row" type="button" data-open-lead-modal>
       <span class="ic ic-form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg></span>
       <span class="tx"><b><?php esc_html_e( 'مشاوره رایگان', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'کلید آزمایشی و تعرفه اختصاصی', 'uid-theme' ); ?></span></span>
@@ -155,14 +155,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
   </a>
 
   <div class="csheet-grid">
-    <button class="csheet-tile" type="button" data-open-raychat>
-      <span class="ic ic-raychat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 01-9 8.4 8.9 8.9 0 01-4-.9L3 20.5l1.5-4.4A8.4 8.4 0 013 11.5a8.4 8.4 0 019-8.4 8.4 8.4 0 019 8.4z"/></svg></span>
-      <span class="tx"><b><?php esc_html_e( 'رایچت', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'گفتگوی زنده', 'uid-theme' ); ?></span></span>
-    </button>
     <a class="csheet-tile" href="<?php echo esc_url( uid_telegram_url() ); ?>" target="_blank" rel="noopener">
       <span class="ic ic-tg"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3L18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.79 12.47.83 10.92c-1.08-.34-1.1-1.08.23-1.6L20.5 2.73c.9-.33 1.69.2 1.4 1.57z"/></svg></span>
       <span class="tx"><b><?php esc_html_e( 'تلگرام', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'ارسال پیام', 'uid-theme' ); ?></span></span>
     </a>
+    <button class="csheet-tile" type="button" data-open-raychat>
+      <span class="ic ic-raychat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 01-9 8.4 8.9 8.9 0 01-4-.9L3 20.5l1.5-4.4A8.4 8.4 0 013 11.5a8.4 8.4 0 019-8.4 8.4 8.4 0 019 8.4z"/></svg></span>
+      <span class="tx"><b><?php esc_html_e( 'رایچت', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'گفتگوی زنده', 'uid-theme' ); ?></span></span>
+    </button>
     <button class="csheet-tile wide" type="button" data-open-lead-modal>
       <span class="ic ic-form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg></span>
       <span class="tx"><b><?php esc_html_e( 'مشاوره رایگان و کلید آزمایشی', 'uid-theme' ); ?></b><span class="sub"><?php esc_html_e( 'فرم کوتاه، کارشناس تماس می‌گیرد', 'uid-theme' ); ?></span></span>

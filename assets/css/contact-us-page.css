@@ -159,11 +159,11 @@
 .faq-i.open .faq-q .pm::before{background:#fff}
 .faq-i.open .faq-q .pm::after{opacity:0}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.3,.8,.3,1)}
-.faq-a p{padding-block-end:22px;font-size:14.5px;color:var(--n600);line-height:1.9;max-width:78ch}
+.faq-a p{padding-block-end:22px;font-size:var(--fs-text);color:var(--n600);line-height:1.9;max-width:78ch}
 @media (max-width:720px){
   .faq-q{padding:16px 0;font-size:14.5px;gap:12px;line-height:1.55}
   .faq-q .pm{width:24px;height:24px}
-  .faq-a p{padding-block-end:16px;font-size:13.5px;line-height:1.85}
+  .faq-a p{padding-block-end:16px;font-size:var(--fs-text);line-height:1.85}
 }
 
 /* ═══════════════════════ REVEAL / MOTION ════════════════════════════════ */
@@ -307,7 +307,7 @@
   color:var(--teal-d);background:var(--teal-l);border-radius:var(--r-s);padding:5px 10px;
   margin-block-end:11px}
 .rp-copy h3{font-size:var(--fs-h3);margin-block-end:9px}
-.rp-copy p{font-size:13.5px;color:var(--n600);line-height:1.9}
+.rp-copy p{font-size:var(--fs-text);color:var(--n600);line-height:1.9}
 .rp-routes{display:flex;flex-direction:column;gap:9px;margin-block-start:16px}
 .rp-route{display:flex;align-items:center;gap:12px;padding:13px 14px;background:#fff;
   border:1px solid var(--n200);border-radius:var(--r);transition:.2s}
@@ -398,7 +398,7 @@
 .namad-seal small{display:block;font-family:var(--lat);font-size:9px;color:var(--n600);
   margin-block-start:4px;letter-spacing:.02em}
 .namad-tx b{display:block;font-size:15px;color:var(--navy);font-weight:600;line-height:1.55}
-.namad-tx p{font-size:12.5px;color:#0E5C68;line-height:1.8;margin-block-start:5px}
+.namad-tx p{font-size:var(--fs-text);color:#0E5C68;line-height:1.8;margin-block-start:5px}
 
 /* ───────────── COPY TOAST ───────────── */
 .toast{position:fixed;inset-block-end:96px;inset-inline:0;z-index:1400;display:flex;

@@ -338,7 +338,7 @@
 .col{max-width:760px;margin-inline:auto}
 .col.wide{max-width:980px}
 
-.prose p{font-size:16.5px;line-height:2.05;color:#26324A;margin-block-end:18px}
+.prose p{font-size:var(--fs-text);line-height:2.05;color:#26324A;margin-block-end:18px}
 .prose p:last-child{margin-block-end:0}
 .prose p .lat,.prose p .mono{font-weight:600;color:var(--navy)}
 .prose strong,.prose b{font-weight:700;color:var(--ink)}
@@ -380,7 +380,7 @@
 .callout{display:flex;gap:13px;border-radius:var(--r-l);padding:18px 19px;
   background:var(--teal-l);border:1px solid rgba(41,188,206,.3);margin-block:22px}
 .callout > svg{width:20px;height:20px;flex:none;color:var(--teal-d);margin-block-start:4px}
-.callout p{font-size:14.5px;line-height:1.9;color:#0E5C68;margin:0}
+.callout p{font-size:var(--fs-text);line-height:1.9;color:#0E5C68;margin:0}
 .callout b{color:#08444E}
 .callout.warm{background:var(--orange-l);border-color:rgba(248,148,40,.32)}
 .callout.warm > svg{color:var(--orange-d)}
@@ -470,7 +470,7 @@
   font-size:11px;font-weight:700;color:#fff;background:var(--navy);border-radius:var(--r-pill);
   padding:4px 12px;align-self:flex-start}
 .pipe-stage h4{font-size:var(--fs-h4);margin-block:13px 9px;line-height:1.45}
-.pipe-stage p{font-size:14px;color:var(--n600);line-height:1.9}
+.pipe-stage p{font-size:var(--fs-text);color:var(--n600);line-height:1.9}
 
 .pipe-out{margin-block-start:16px;border:1px solid var(--n200);border-radius:var(--r);
   background:#fff;overflow:hidden}
@@ -607,7 +607,7 @@
   background:var(--teal-l);color:var(--teal-d);flex:none}
 .tp-top .ic svg{width:22px;height:22px}
 .tp-top h4{font-size:var(--fs-h4);line-height:1.45;margin-block-end:6px}
-.tp-top p{font-size:14.5px;color:var(--n600);line-height:1.9}
+.tp-top p{font-size:var(--fs-text);color:var(--n600);line-height:1.9}
 .tp-cells{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-block-end:18px}
 .tp-cells > *{min-width:0}
 .tp-cell{border:1px solid var(--n200);border-radius:var(--r);background:var(--n50);padding:14px 15px}
@@ -664,7 +664,7 @@
   background:var(--teal-l);color:var(--teal-d);margin-block-end:14px}
 .ucard .ic svg{width:20px;height:20px}
 .ucard h4{font-size:var(--fs-h4);margin-block-end:8px;line-height:1.5}
-.ucard > p{font-size:13.8px;color:var(--n600);line-height:1.85;margin-block-end:12px}
+.ucard > p{font-size:var(--fs-text);color:var(--n600);line-height:1.85;margin-block-end:12px}
 .ucard ul{display:flex;flex-direction:column;gap:7px}
 .ucard li{display:flex;gap:8px;font-size:13px;color:var(--n600);line-height:1.75}
 .ucard li svg{width:14px;height:14px;color:var(--teal-d);flex:none;margin-block-start:5px}
@@ -682,7 +682,7 @@
   background:rgba(21,57,124,.08);color:var(--navy);flex:none}
 .scard .top .ic svg{width:19px;height:19px}
 .scard .top h4{font-size:var(--fs-h4);line-height:1.45;min-width:0}
-.scard > p{font-size:13.8px;color:var(--n600);line-height:1.85;margin-block-end:13px}
+.scard > p{font-size:var(--fs-text);color:var(--n600);line-height:1.85;margin-block-end:13px}
 .scard ul{display:flex;flex-direction:column;gap:9px}
 .scard li{display:flex;gap:9px;font-size:13.5px;color:var(--n600);line-height:1.8}
 .scard li svg{width:15px;height:15px;color:var(--ok);flex:none;margin-block-start:5px}
@@ -699,7 +699,7 @@
 .ctx::after{content:'';position:absolute;inset-block-end:-120px;inset-inline-end:8%;
   width:230px;height:230px;border-radius:50%;border:1px solid rgba(255,255,255,.12)}
 .ctx h4{color:#fff;font-size:var(--fs-h4);line-height:1.5;margin-block:12px 10px}
-.ctx p{color:#B9C6E0;font-size:14.5px;line-height:1.9}
+.ctx p{color:#B9C6E0;font-size:var(--fs-text);line-height:1.9}
 .ctx .acts{display:flex;flex-direction:column;gap:10px}
 .ctx .acts .op-btn{width:100%}
 .ctx .acts .tiny{color:#8FA3C4;text-align:center}
@@ -724,7 +724,7 @@
 .closing .q{display:flex;gap:11px;margin-block-start:18px;padding-block-start:18px;
   border-block-start:1px solid var(--n200)}
 .closing .q svg{width:19px;height:19px;color:var(--orange-d);flex:none;margin-block-start:4px}
-.closing .q p{font-size:14.5px;color:#33405C;line-height:1.9;margin:0}
+.closing .q p{font-size:var(--fs-text);color:#33405C;line-height:1.9;margin:0}
 
 /* ═══════════════════════════════════ FAQ ════════════════════════════════ */
 .faq{border-block-start:1px solid var(--n200)}
@@ -743,7 +743,7 @@
 .faq-i.open .faq-q .pm::before{background:#fff}
 .faq-i.open .faq-q .pm::after{opacity:0}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.3,.8,.3,1)}
-.faq-a p{padding-block-end:22px;font-size:14.5px;color:var(--n600);line-height:1.9;max-width:78ch}
+.faq-a p{padding-block-end:22px;font-size:var(--fs-text);color:var(--n600);line-height:1.9;max-width:78ch}
 
 /* ═════════════════ PRE-FOOTER LEAD BAND (this page's only form) ═══════════ */
 .lead-band{position:relative;z-index:1;background:var(--navy);border-radius:24px;overflow:hidden;
@@ -756,7 +756,7 @@
   gap:clamp(26px,4vw,48px);align-items:center}
 .lb-grid > *{min-width:0}
 .lb-copy h2{color:#fff;font-size:var(--fs-h2);margin-block:16px 14px;line-height:1.4}
-.lb-copy p{color:rgba(255,255,255,.78);font-size:15px;margin-block-end:20px;line-height:1.85}
+.lb-copy p{color:rgba(255,255,255,.78);font-size:var(--fs-text);margin-block-end:20px;line-height:1.85}
 .lb-trust{display:flex;gap:18px;flex-wrap:wrap}
 .lb-trust span{display:flex;align-items:center;gap:7px;font-size:13px;color:rgba(255,255,255,.86)}
 .lb-trust svg{width:16px;height:16px;color:var(--teal);flex:none}
@@ -834,7 +834,7 @@
   color:#fff;display:grid;place-items:center;cursor:pointer;transition:.2s}
 .modal-x:hover{background:rgba(255,255,255,.16);transform:rotate(90deg)}
 .modal-box h3{color:#fff;font-size:var(--fs-h3);margin-bottom:6px}
-.modal-box > p{font-size:13.5px;color:#A9BBD8;margin-bottom:20px;line-height:1.8}
+.modal-box > p{font-size:var(--fs-text);color:#A9BBD8;margin-bottom:20px;line-height:1.8}
 
 /* ═══════════════════════════ REVEAL / MOTION ════════════════════════════ */
 .rv{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.7,.3,1),transform .7s cubic-bezier(.2,.7,.3,1)}
@@ -847,7 +847,7 @@
 
 /* ───────────── editorial rhythm for folded chapters ───────────── */
 @media (max-width:900px){
-  .prose p{font-size:15.8px;line-height:1.98}
+  .prose p{font-size:var(--fs-text);line-height:1.98}
   .col,.col.wide{max-width:none}
   .pull{font-size:17.5px}
 }

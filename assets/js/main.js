@@ -298,39 +298,92 @@
 
   // Raychat bridge — Raychat has no public open()/API. Their embed script builds
   // #raychat_widget by calling iframe.contentDocument.write() on a blank (src-less)
-  // frame, which keeps that document same-origin with the page, so we can reach
-  // its own launcher button directly instead of duplicating it with our own bubble.
-  // Internal class name (.sc_launcher_hitbox), so this can break on a Raychat
-  // redesign — degrades to the lead modal if the selector ever stops matching.
+  // frame, which keeps the document same-origin with the page, so we can both
+  // reveal the iframe (see style.css, #raychat_widget / .uid-raychat-open) and
+  // reach its own launcher element directly. Internal class name
+  // (.sc_launcher_hitbox), so this can break on a Raychat redesign — degrades
+  // to the lead modal if it ever stops matching.
+  //
+  // NOTE: the earlier "it never opens" failures traced back to WP Rocket
+  // rewriting Raychat's <script> to type="rocketlazyloadscript", which defers
+  // it until a real user interaction — see the rocket_delay_js_exclusions
+  // filter in functions.php. With that fixed, the retry loop below only has
+  // to cover normal network/script load time, not an open-ended wait on a
+  // script that may not have even been requested yet.
   (function(){
-    var HIDE_CSS = '.sc_launcher_hitbox{display:none!important}';
-    var styleInjected = false;
-
+    function frameEl(){ return document.getElementById('raychat_widget'); }
     function raychatDoc(){
-      var frame = document.getElementById('raychat_widget');
+      var frame = frameEl();
       if(!frame) return null;
       try { return frame.contentDocument || (frame.contentWindow && frame.contentWindow.document) || null; }
       catch(e){ return null; }
     }
-
-    var poll = setInterval(function(){
+    function findLauncher(){
       var doc = raychatDoc();
-      if(!doc || !doc.head || styleInjected) return;
-      var style = doc.createElement('style');
-      style.textContent = HIDE_CSS;
-      doc.head.appendChild(style);
-      styleInjected = true;
-    }, 500);
-    setTimeout(function(){ clearInterval(poll); }, 30000);
+      try { return doc && doc.querySelector('.sc_launcher_hitbox'); }
+      catch(e){ return null; }
+    }
 
-    window.uidRaychatBridge = {
-      open: function(){
-        var doc = raychatDoc();
-        var launcher = doc && doc.querySelector('.sc_launcher_hitbox');
-        if(!launcher) return false;
-        launcher.click();
-        return true;
-      }
+    // a bare .click() should be enough (React's onClick listens for the native
+    // 'click' event regardless of isTrusted), but dispatch the fuller
+    // pointer/mouse sequence too in case any internal state depends on it —
+    // cheap insurance, each call is wrapped so one failing type can't block the rest
+    function simulateClick(el){
+      var opts = {bubbles:true, cancelable:true, composed:true, view:window};
+      ['pointerdown','mousedown','pointerup','mouseup','click'].forEach(function(type){
+        try {
+          var Ctor = (type.indexOf('pointer') === 0 && window.PointerEvent) ? window.PointerEvent : window.MouseEvent;
+          el.dispatchEvent(new Ctor(type, opts));
+        } catch(e){}
+      });
+      try { el.click(); } catch(e){}
+    }
+
+    // re-hide the outer iframe once Raychat's own UI shrinks back down to just
+    // its small round launcher (i.e. the visitor closed the chat) — otherwise,
+    // after the first successful open, that bubble is left revealed forever.
+    var LAUNCHER_MAX = 120; // px — bigger than any round launcher, smaller than an open panel
+    var resizeObserver = null, hasBeenLarge = false;
+    function watchForClose(frame){
+      hasBeenLarge = false;
+      if(resizeObserver || typeof ResizeObserver !== 'function') return;
+      resizeObserver = new ResizeObserver(function(entries){
+        var box = entries[0].contentRect;
+        var large = box.width > LAUNCHER_MAX || box.height > LAUNCHER_MAX;
+        if(large){ hasBeenLarge = true; return; }
+        if(hasBeenLarge){ frame.classList.remove('uid-raychat-open'); hasBeenLarge = false; }
+      });
+      resizeObserver.observe(frame);
+    }
+
+    function safeFail(frame, onFail){
+      try { frame.classList.remove('uid-raychat-open'); } catch(e){}
+      try { if(onFail) onFail(); } catch(e){}
+    }
+
+    window.uidOpenRaychat = function(onFail){
+      var frame = frameEl();
+      if(!frame){ if(onFail) onFail(); return; }
+      try {
+        frame.classList.add('uid-raychat-open');
+        watchForClose(frame);
+      } catch(e){ safeFail(frame, onFail); return; }
+
+      requestAnimationFrame(function(){
+        try {
+          var launcher = findLauncher();
+          if(launcher){ simulateClick(launcher); return; }
+          var tries = 0;
+          var retry = setInterval(function(){
+            try {
+              tries++;
+              var l = findLauncher();
+              if(l){ clearInterval(retry); simulateClick(l); return; }
+              if(tries >= 30){ clearInterval(retry); safeFail(frame, onFail); } // ~15s
+            } catch(e){ clearInterval(retry); safeFail(frame, onFail); }
+          }, 500);
+        } catch(e){ safeFail(frame, onFail); }
+      });
     };
   })();
 
@@ -374,14 +427,30 @@
       b.addEventListener('click', function(){ openModal(); });
     });
 
-    // Raychat trigger — Raychat has no public JS API, so this reaches into its
-    // (same-origin, document.write()-built) #raychat_widget iframe and clicks its
-    // own launcher element directly; see uidRaychatBridge() below. Falls back to
-    // the lead modal if the widget hasn't finished loading yet.
+    // Raychat trigger — click/tap only. See window.uidOpenRaychat above for how
+    // it reaches Raychat's own launcher. Wrapped in try/catch and always given
+    // an onFail callback so this can never silently do nothing — worst case it
+    // opens the lead modal instead of the live chat.
+    //
+    // Also bound to touchend (without preventDefault, so the sheet's own
+    // "close on click" listener registered above still runs normally):
+    // mobile browsers can suppress the synthesized 'click' that follows a tap
+    // if the finger moved even slightly during the gesture — relying on
+    // 'click' alone can silently do nothing on some devices. `busy` stops the
+    // open logic from running twice when both touchend and its click fire.
     document.querySelectorAll('[data-open-raychat]').forEach(function(b){
-      b.addEventListener('click', function(){
-        if (!window.uidRaychatBridge || !window.uidRaychatBridge.open()) openModal();
-      });
+      var busy = false;
+      function open(){
+        if (busy) return;
+        busy = true;
+        setTimeout(function(){ busy = false; }, 1200);
+        try {
+          if (window.uidOpenRaychat) window.uidOpenRaychat(openModal);
+          else openModal();
+        } catch(e){ openModal(); }
+      }
+      b.addEventListener('click', open);
+      b.addEventListener('touchend', open);
     });
 
     // the modal's own form: validate + actually send the request to the server

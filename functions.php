@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'UID_THEME_VERSION', '0.3.4' );
+define( 'UID_THEME_VERSION', '0.3.13' );
 define( 'UID_THEME_DIR', get_template_directory() );
 define( 'UID_THEME_URI', get_template_directory_uri() );
 
@@ -26,6 +26,25 @@ function uid_theme_setup() {
 	// (نه از پیشخوان > ظاهر > منوها) — نگاه کنید به inc/nav-menus.php
 }
 add_action( 'after_setup_theme', 'uid_theme_setup' );
+
+/**
+ * رایچت را از «تأخیر در اجرای جاوااسکریپت» وردپرس راکت مستثنی می‌کند.
+ *
+ * وردپرس راکت اسکریپت inline رایچت را به <script type="rocketlazyloadscript">
+ * تبدیل می‌کند تا تا اولین تعامل واقعی کاربر اصلاً اجرا نشود — یعنی ویجت
+ * رایچت ممکن است چند ثانیه (یا بیشتر، بسته به نوع تعامل) بعد از لود صفحه
+ * اصلاً شروع به بارگذاری نکرده باشد. این دقیقاً همان چیزی است که باعث
+ * رفتار نامنظم «روی رایچت بزن، کار نمی‌کند» می‌شد — نه مشکل جاوااسکریپت
+ * خود قالب. خالی‌کردن کش وردپرس راکت این تنظیم را خاموش نمی‌کند؛ فقط این
+ * فیلتر یا خاموش‌کردن دستی «Delay JavaScript Execution» از پنل راکت حلش
+ * می‌کند.
+ */
+function uid_exclude_raychat_from_rocket_delay_js( $exclusions ) {
+	$exclusions[] = 'RAYCHAT_TOKEN';
+	$exclusions[] = 'raychat.io';
+	return $exclusions;
+}
+add_filter( 'rocket_delay_js_exclusions', 'uid_exclude_raychat_from_rocket_delay_js' );
 
 /**
  * بارگذاری استایل و اسکریپت

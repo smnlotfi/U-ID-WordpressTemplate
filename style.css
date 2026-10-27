@@ -382,7 +382,7 @@ Text Domain: uid-theme
 
   /* trust bar */
   .trust{padding:40px 0; border-bottom:1px solid var(--neutral-200);}
-  .trust p{text-align:center; font-size:13.5px; font-weight:600; color:var(--neutral-600); letter-spacing:.02em; margin-bottom:28px;}
+  .trust p{text-align:center; font-size:var(--fs-text); font-weight:600; color:var(--neutral-600); letter-spacing:.02em; margin-bottom:28px;}
   .trust-logos{display:flex; justify-content:center; align-items:center; gap:44px; flex-wrap:wrap; opacity:.75;}
   .trust-logos .tl{display:flex; align-items:center; gap:8px; font-weight:700; color:var(--neutral-600); font-size:15px;}
   .trust-logos .tl svg{width:20px; height:20px;}
@@ -401,7 +401,7 @@ Text Domain: uid-theme
   .audience-card.person .icon-plate{background:var(--orange-500);}
   .audience-card .icon-plate svg{width:28px; height:28px; color:var(--white);}
   .audience-card h3{font-size:var(--fs-h3); margin-bottom:10px;}
-  .audience-card p{color:var(--neutral-600); margin-bottom:22px; font-size:15.5px;}
+  .audience-card p{color:var(--neutral-600); margin-bottom:22px; font-size:var(--fs-text);}
   .audience-card ul{margin-bottom:26px;}
   .audience-card ul li{display:flex; align-items:center; gap:10px; font-size:14.5px; color:var(--neutral-950); margin-bottom:10px;}
   .audience-card ul li svg{width:16px; height:16px; color:var(--teal-500); flex-shrink:0;}
@@ -423,7 +423,7 @@ Text Domain: uid-theme
   .service-card.c4 .chip{background:var(--navy-700);}
   .service-card .tag{display:inline-block; font-size:11.5px; font-weight:700; color:var(--orange-500); background:var(--orange-050); padding:3px 10px; border-radius:4px; margin-bottom:10px;}
   .service-card h4{font-size:var(--fs-h4); margin-bottom:8px;}
-  .service-card p{font-size:14px; color:var(--neutral-600); margin-bottom:16px; min-height:64px;}
+  .service-card p{font-size:var(--fs-text); color:var(--neutral-600); margin-bottom:16px; min-height:64px;}
   .service-card .link{font-size:14px; font-weight:600; color:var(--navy-900); display:inline-flex; align-items:center; gap:6px;}
   .service-card .link svg{width:14px; height:14px;}
   .services-footer{display:flex; justify-content:center; gap:14px; margin-top:40px;}
@@ -439,7 +439,7 @@ Text Domain: uid-theme
   .spotlight-tag{font-size:11.5px; font-weight:700; color:var(--navy-900); background:rgba(255,255,255,.85); padding:5px 12px; border-radius:999px;}
   .spotlight-body{padding:24px;}
   .spotlight-body h4{font-size:var(--fs-h4); margin-bottom:8px;}
-  .spotlight-body p{font-size:14px; color:var(--neutral-600); margin-bottom:16px; min-height:60px;}
+  .spotlight-body p{font-size:var(--fs-text); color:var(--neutral-600); margin-bottom:16px; min-height:60px;}
   .spotlight-body ul{margin-bottom:18px;}
   .spotlight-body ul li{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--neutral-950); margin-bottom:9px;}
   .spotlight-body ul li svg{width:15px; height:15px; color:var(--teal-500); flex-shrink:0;}
@@ -464,7 +464,7 @@ Text Domain: uid-theme
   .service-card.is-primary .chip{width:58px; height:58px; border-radius:12px;}
   .service-card.is-primary .chip svg{width:28px; height:28px;}
   .service-card.is-primary h4{font-size:var(--fs-h4);}
-  .service-card.is-primary p{font-size:15px; min-height:auto; margin-bottom:20px;}
+  .service-card.is-primary p{font-size:var(--fs-text); min-height:auto; margin-bottom:20px;}
   .reseller-line{display:flex; align-items:center; gap:18px; flex-wrap:wrap; padding:20px 26px; background:var(--neutral-050); border-radius:12px; border:1px solid var(--neutral-200);}
   .reseller-line .rl-label{font-size:13px; font-weight:700; color:var(--neutral-600); flex-shrink:0;}
   .reseller-line .rl-item{display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; color:var(--neutral-950); padding:9px 16px; background:var(--white); border-radius:8px; border:1px solid var(--neutral-200); transition:border-color .2s ease;}
@@ -580,7 +580,7 @@ Text Domain: uid-theme
   .process-text{display:flex; align-items:center; gap:28px; max-width:540px;}
   .process-slide .num-shape{width:76px; height:76px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; flex-shrink:0; font-family:'IBM Plex Sans'; color:var(--teal-500);}
   .process-slide h4{font-size:var(--fs-h4); margin-bottom:10px;}
-  .process-slide p{color:rgba(255,255,255,.68); font-size:15px; max-width:420px;}
+  .process-slide p{color:rgba(255,255,255,.68); font-size:var(--fs-text); max-width:420px;}
   .process-icon-wrap{
     width:150px; height:150px; border-radius:50%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
     display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative;
@@ -738,7 +738,7 @@ Text Domain: uid-theme
   .bento-item .bg-icon{position:absolute; left:-10px; top:-10px; width:110px; height:110px; opacity:.16; z-index:0; color:var(--white);}
   .bento-item .b-icon{width:36px; height:36px; color:var(--white); margin-bottom:auto; position:relative; z-index:1;}
   .bento-item h4{font-size:var(--fs-h4); color:var(--white); margin-bottom:6px; position:relative; z-index:1;}
-  .bento-item p{font-size:13px; color:rgba(255,255,255,.78); position:relative; z-index:1; line-height:1.6;}
+  .bento-item p{font-size:var(--fs-text); color:rgba(255,255,255,.78); position:relative; z-index:1; line-height:1.6;}
   .bento-item.bg-navy{background:var(--navy-900);}
   .bento-item.bg-navy2{background:var(--navy-700);}
   .bento-item.bg-teal{background:var(--teal-500);}
@@ -850,7 +850,7 @@ Text Domain: uid-theme
   .lead-band-grid{position:relative; z-index:2; display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center;}
   .lead-band-copy .eyebrow{background:rgba(255,255,255,.12); color:var(--white); margin-bottom:16px;}
   .lead-band-copy h2{color:var(--white); font-size:var(--fs-h2); margin-bottom:14px; line-height:1.4;}
-  .lead-band-copy p{color:rgba(255,255,255,.75); font-size:15px; margin-bottom:20px;}
+  .lead-band-copy p{color:rgba(255,255,255,.75); font-size:var(--fs-text); margin-bottom:20px;}
   .lead-band-trust{display:flex; gap:18px; flex-wrap:wrap;}
   .lead-band-trust span{display:flex; align-items:center; gap:7px; font-size:13px; color:rgba(255,255,255,.85);}
   .lead-band-trust svg{width:16px; height:16px; color:var(--teal-500);}
@@ -868,7 +868,7 @@ Text Domain: uid-theme
   @media (max-width:560px){ .lead-band-form .frow{grid-template-columns:1fr;} }
   /* ── grid ──────────────────────────────────────────────────────────────── */
   .f-grid{display:grid;grid-template-columns:1.55fr 1fr 1fr 1fr;gap:clamp(24px,4vw,48px);padding-block-end:clamp(30px,4vw,44px)}
-  .f-brand p{font-size:13.5px;line-height:1.95;color:#8FA3C4;max-width:40ch;margin-top:14px}
+  .f-brand p{font-size:var(--fs-text);line-height:1.95;color:#8FA3C4;max-width:40ch;margin-top:14px}
 
   .f-social{display:flex;gap:9px;margin-top:18px}
   .f-social a{width:38px;height:38px;border-radius:12px;
@@ -904,7 +904,7 @@ Text Domain: uid-theme
     border-block-start:1px solid rgba(255,255,255,.1);padding-block:20px;
     display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
   }
-  .f-bot p{font-size:12.5px;color:#7D91B4;line-height:1.7}
+  .f-bot p{font-size:var(--fs-text);color:#7D91B4;line-height:1.7}
   .f-legal{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
   .f-legal a{font-size:12.5px;color:#7D91B4;transition:color .2s}
   .f-legal a:hover{color:#fff}
@@ -936,7 +936,6 @@ Text Domain: uid-theme
 
     .f-grid{grid-template-columns:1fr;gap:0;padding-block-end:26px}
     .f-brand{margin-bottom:22px}
-    .f-brand p{font-size:13px;line-height:1.9}
     .f-social{justify-content:flex-start}
 
     /* each column collapses to one closed row on phones */
@@ -1032,6 +1031,20 @@ Text Domain: uid-theme
   .cfab-foot{padding:11px 18px;border-block-start:1px solid var(--n100);background:var(--neutral-050);font-size:11.5px;color:var(--n400);display:flex;align-items:center;gap:7px}
   .cfab-foot i{width:6px;height:6px;border-radius:50%;background:var(--ok);flex:none}
 
+  /* Raychat's own floating bubble must never show on its own — chat only opens
+     through our "رایچت" row in the cfab/csheet menus (see assets/js/main.js,
+     window.uidOpenRaychat). #raychat_widget is the iframe their embed script
+     injects into the page; this is a plain CSS rule on our own element.
+     visibility:hidden, not display:none: display:none gives the iframe zero
+     size and the browser never treats it as on-screen, which risks a widget
+     like this never building its own launcher UI if it uses any visibility/
+     intersection check internally. visibility:hidden keeps it correctly sized
+     and in normal layout — still fully invisible and non-interactive — without
+     us guessing at or overriding its own width/height (a forced size here
+     previously fought its internal resize logic and broke it on desktop). */
+  #raychat_widget{visibility:hidden!important}
+  #raychat_widget.uid-raychat-open{visibility:visible!important}
+
   @media (max-width:760px){ .cfab,.cfab-panel,.cfab-scrim{display:none} }
   @media (prefers-reduced-motion:reduce){
     .cfab-ico::before{animation:none;opacity:0}
@@ -1119,7 +1132,7 @@ Text Domain: uid-theme
   .pwa-step-row.start .pwa-num, .pwa-step-row.end .pwa-num{background:var(--teal-500);}
   .pwa-content{flex:1; background:var(--white); border:1px solid var(--neutral-200); border-radius:12px; padding:16px 20px; box-shadow:var(--shadow-sm);}
   .pwa-content h4{font-size:var(--fs-h4); margin-bottom:5px; display:flex; align-items:center; gap:8px; font-weight:600; flex-wrap:wrap;}
-  .pwa-content p{font-size:13.5px; color:var(--neutral-600); line-height:1.75;}
+  .pwa-content p{font-size:var(--fs-text); color:var(--neutral-600); line-height:1.75;}
   .pwa-badge{display:inline-flex; align-items:center; background:var(--neutral-950); color:#fff; font-size:10px; font-weight:700; padding:3px 9px; border-radius:5px; margin-right:2px;}
   .pwa-flow-footer{display:flex; align-items:center; justify-content:center; gap:28px; flex-wrap:wrap; margin-top:40px; padding-top:32px; border-top:1px solid var(--neutral-200);}
   .pwa-flow-stat{text-align:center;}
@@ -1148,7 +1161,7 @@ Text Domain: uid-theme
   .lead-modal-close{position:absolute; top:16px; left:16px; width:32px; height:32px; border-radius:50%; border:none; background:var(--neutral-050); display:flex; align-items:center; justify-content:center; cursor:pointer;}
   .lead-modal-close svg{width:15px; height:15px;}
   .lead-modal h3{font-size:var(--fs-h3); margin-bottom:8px;}
-  .lead-modal p{font-size:13.5px; color:var(--neutral-600); margin-bottom:20px;}
+  .lead-modal p{font-size:var(--fs-text); color:var(--neutral-600); margin-bottom:20px;}
   .lead-modal .field{margin-bottom:12px;}
   .lead-modal input, .lead-modal select{
     width:100%; border:1.5px solid var(--neutral-200); border-radius:8px; padding:12px 14px; font-family:inherit; font-size:14px; background:var(--neutral-050);
