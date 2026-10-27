@@ -318,6 +318,61 @@
       try { return frame.contentDocument || (frame.contentWindow && frame.contentWindow.document) || null; }
       catch(e){ return null; }
     }
+
+    // On-demand diagnostic for narrowing this down on a phone with no devtools:
+    // add ?raychat_debug=1 to any page URL and a log panel pins to the top of
+    // the screen, reporting every second whether the iframe exists yet,
+    // whether its document is reachable (same-origin), and whether the
+    // launcher selector matches inside it — screenshot that after tapping
+    // "رایچت" and send it over. Inert unless that query param is present.
+    if(/[?&]raychat_debug=1(&|$)/.test(location.search)){
+      var dbgPanel = document.createElement('div');
+      dbgPanel.style.cssText = 'position:fixed;inset-block-start:0;inset-inline:0;z-index:2147483647;background:#000;color:#4f8;font:11px/1.5 monospace;padding:8px;direction:ltr;text-align:start;white-space:pre-wrap;max-height:42vh;overflow:auto';
+      if(document.body) document.body.appendChild(dbgPanel);
+      else document.addEventListener('DOMContentLoaded', function(){ document.body.appendChild(dbgPanel); });
+      var dbgLog = [], dbgLast = '';
+      function dbg(msg){
+        if(msg === dbgLast) return;
+        dbgLast = msg;
+        dbgLog.push(new Date().toISOString().slice(11,19) + ' ' + msg);
+        dbgPanel.textContent = dbgLog.slice(-25).join('\n');
+      }
+      dbg('debug panel active, polling every 1s for 90s. UA: ' + navigator.userAgent.slice(0,60));
+      var errorsHooked = false;
+      function hookErrors(doc){
+        if(errorsHooked) return;
+        var win = doc.defaultView;
+        if(!win) return;
+        try {
+          win.addEventListener('error', function(e){
+            dbg('IFRAME JS ERROR: ' + (e.message || e.error) + ' @ ' + (e.filename || '?') + ':' + e.lineno);
+          });
+          win.addEventListener('unhandledrejection', function(e){
+            dbg('IFRAME PROMISE REJECTION: ' + (e.reason && (e.reason.message || e.reason)));
+          });
+          errorsHooked = true;
+          dbg('error listeners attached inside iframe window');
+        } catch(e){ dbg('could not attach error listeners: ' + e.message); }
+      }
+      var dbgPoll = setInterval(function(){
+        var frame = frameEl();
+        if(!frame){ dbg('iframe #raychat_widget: not in DOM yet'); return; }
+        var rect = frame.getBoundingClientRect();
+        var cs = getComputedStyle(frame);
+        var state = 'display:' + cs.display + ' visibility:' + cs.visibility + ' ' + Math.round(rect.width) + 'x' + Math.round(rect.height);
+        var doc = raychatDoc();
+        if(!doc){ dbg('iframe found (' + state + ') — document NOT accessible'); return; }
+        hookErrors(doc);
+        var launcher = doc.querySelector('.sc_launcher_hitbox');
+        var root = doc.getElementById('root_raychat');
+        var rootInfo = root ? ('root_raychat childNodes:' + root.childNodes.length) : 'root_raychat: MISSING';
+        var bundleScript = doc.querySelector('script[src*="main."]');
+        var bundleInfo = bundleScript ? 'bundle <script> tag present' : 'bundle <script> tag NOT in DOM';
+        dbg('iframe OK (' + state + '), doc OK, ' + rootInfo + ', ' + bundleInfo + ', launcher: ' + (launcher ? 'FOUND' : 'not found'));
+      }, 1000);
+      setTimeout(function(){ clearInterval(dbgPoll); dbg('stopped after 90s'); }, 90000);
+    }
+
     function findLauncher(){
       var doc = raychatDoc();
       try { return doc && doc.querySelector('.sc_launcher_hitbox'); }
