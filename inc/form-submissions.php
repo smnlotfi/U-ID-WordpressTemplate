@@ -110,6 +110,20 @@ function uid_fs_client_ip() {
 }
 
 /**
+ * nonce تازه برای ثبت فرم — چون nonce سراسری در HTML صفحه (از طریق
+ * wp_localize_script) تزریق می‌شود و وردپرس راکت همان HTML را کش می‌کند، اگر
+ * صفحه مدتی در کش بماند آن nonce منقضی می‌شود و ثبت فرم با خطای 403 از
+ * check_ajax_referer شکست می‌خورد — صرف‌نظر از اینکه کاربر لاگین باشد یا نه.
+ * به‌جای تکیه بر nonce داخل HTML کش‌شده، سمت کلاینت همیشه درست قبل از ارسال
+ * واقعی یک nonce تازه از همین‌جا می‌گیرد، که دیگر هیچ‌وقت به کش وابسته نیست.
+ */
+function uid_fs_fresh_nonce() {
+	wp_send_json_success( array( 'nonce' => wp_create_nonce( 'uid_form_submit' ) ) );
+}
+add_action( 'wp_ajax_uid_fresh_nonce', 'uid_fs_fresh_nonce' );
+add_action( 'wp_ajax_nopriv_uid_fresh_nonce', 'uid_fs_fresh_nonce' );
+
+/**
  * اندپوینت AJAX ثبت فرم — برای کاربران لاگین و مهمان هر دو فعال است
  */
 function uid_fs_handle_submit() {
@@ -171,13 +185,30 @@ function uid_fs_handle_submit() {
 			$lines[] = $k . ': ' . $v;
 		}
 		$body = implode( "\n", $lines ) . "\n\n" . $page_url;
-		wp_mail( $notify_email, $subject, $body );
+		$sent = wp_mail( $notify_email, $subject, $body );
+		// هیچ افزونه SMTP روی سایت نصب نیست، پس wp_mail از تابع mail() خام
+		// سرور استفاده می‌کند که روی بیشتر هاست‌ها قابل‌اعتماد نیست (معمولاً
+		// در اسپم می‌افتد یا بی‌صدا شکست می‌خورد). اگر وردپرس خودش گزارش
+		// شکست بده، حداقل این‌جا ثبت می‌شود تا قابل بررسی باشد — ثبت خودِ
+		// درخواست در دیتابیس (بالاتر) مستقل از نتیجه ایمیل است.
+		if ( ! $sent ) {
+			error_log( sprintf( 'UID lead form: wp_mail() to %s failed for form "%s" from %s', $notify_email, $form_id, $page_url ) );
+		}
 	}
 
 	wp_send_json_success( array( 'message' => __( 'درخواست شما ثبت شد.', 'uid-theme' ) ) );
 }
 add_action( 'wp_ajax_uid_submit_form', 'uid_fs_handle_submit' );
 add_action( 'wp_ajax_nopriv_uid_submit_form', 'uid_fs_handle_submit' );
+
+/**
+ * جزئیات دقیق‌تر شکست ارسال ایمیل (خطای واقعی PHPMailer) را در لاگ سرور ثبت
+ * می‌کند — مکمل پیام ساده‌ای که در uid_fs_handle_submit ثبت می‌شود.
+ */
+function uid_fs_log_mail_failure( $wp_error ) {
+	error_log( 'UID lead form: wp_mail_failed — ' . $wp_error->get_error_message() );
+}
+add_action( 'wp_mail_failed', 'uid_fs_log_mail_failure' );
 
 /**
  * خروجی CSV همه ارسالی‌ها

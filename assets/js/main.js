@@ -672,16 +672,29 @@
       fields[el.name] = el.value;
     });
 
-    var body = new URLSearchParams();
-    body.append('action', 'uid_submit_form');
-    body.append('nonce', cfg.nonce || '');
-    body.append('form_id', form.id || '');
-    body.append('page_title', document.title || '');
-    body.append('page_url', window.location.href);
-    Object.keys(fields).forEach(function(k){ body.append('fields[' + k + ']', fields[k]); });
+    function submitWith(nonce){
+      var body = new URLSearchParams();
+      body.append('action', 'uid_submit_form');
+      body.append('nonce', nonce || '');
+      body.append('form_id', form.id || '');
+      body.append('page_title', document.title || '');
+      body.append('page_url', window.location.href);
+      Object.keys(fields).forEach(function(k){ body.append('fields[' + k + ']', fields[k]); });
 
-    fetch(cfg.ajaxUrl, { method: 'POST', credentials: 'same-origin', body: body })
+      return fetch(cfg.ajaxUrl, { method: 'POST', credentials: 'same-origin', body: body })
+        .then(function(r){ return r.json(); });
+    }
+
+    // the nonce in UID_FORM_CFG was baked into this page's HTML when it was
+    // rendered — if WP Rocket (or any page cache) served a cached copy, that
+    // nonce can be hours/days old and already expired, failing
+    // check_ajax_referer with a 403 regardless of who's submitting. Fetching a
+    // fresh one right before the real submit makes this immune to that,
+    // whatever the cache's age or settings.
+    fetch(cfg.ajaxUrl, { method: 'POST', credentials: 'same-origin', body: new URLSearchParams({ action: 'uid_fresh_nonce' }) })
       .then(function(r){ return r.json(); })
+      .then(function(res){ return submitWith(res && res.success && res.data ? res.data.nonce : cfg.nonce); })
+      .catch(function(){ return submitWith(cfg.nonce); })
       .then(function(res){ done(!!(res && res.success)); })
       .catch(function(){ done(false); });
   };
